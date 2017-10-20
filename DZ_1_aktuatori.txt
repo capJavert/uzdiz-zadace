@@ -1,0 +1,7 @@
+naziv;tip: 0 - vanjski, 1 - unutarnji, 2 - vanjski i unutarnji;vrsta: 0=od-do cjelobrojno, 1=od-do razlomljeno 1 decimala, 2=od-do razlomljeno 5 decimala, 3=0(ne) ili 1(da); min vrijednost;max vrijednost;komentar
+otvaranje/zatvaranje vrata;2;3;0;1;
+dizanje/spuštanje rampe;0;3;0;1;
+dizanje/spuštanje platna za ploču;1;0;0;200;cm
+dizanje/spuštanje televizora;1;0;0;100;cm
+snimanje kamerom;2;3;0;1;
+paljenje/gašenje lampe;2;3;0;1;
