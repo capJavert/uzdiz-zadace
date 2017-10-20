@@ -72,8 +72,6 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
         try {
             List<List<String>> collection = this.readCsv(this.placesFile);
 
-            System.out.println(collection);
-            
             for (List<String> values : collection) {
                 if (values.get(2) == null) {
                     values.set(2, "0");
@@ -83,14 +81,18 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
                     values.set(3, "0");
                 }
 
-                Place place = new Place(
-                        values.get(0),
-                        Integer.parseInt(values.get(1)),
-                        Integer.parseInt(values.get(2)),
-                        Integer.parseInt(values.get(3))
-                );
+                try {
+                    Place place = new Place(
+                            values.get(0),
+                            Integer.parseInt(values.get(1)),
+                            Integer.parseInt(values.get(2)),
+                            Integer.parseInt(values.get(3))
+                    );
 
-                places.put(place.getName(), place);
+                    places.put(place.getName(), place);
+                } catch (NumberFormatException ex) {
+                    System.out.println("Redak nije ispravan. Preskacem...");
+                }
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(UzDizCSVAdapter.class.getName()).log(Level.SEVERE, null, ex);
@@ -108,7 +110,11 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
             List<List<String>> collection = this.readCsv(this.sensorsFile);
 
             for (List<String> values : collection) {
-                sensors.add(factory.createToF(values));
+                try {
+                    sensors.add(factory.createToF(values));
+                } catch (NumberFormatException ex) {
+                    System.out.println("Redak nije ispravan. Preskacem...");
+                }
             }
 
         } catch (FileNotFoundException ex) {
@@ -127,7 +133,11 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
             List<List<String>> collection = this.readCsv(this.actuatorsFile);
 
             for (List<String> values : collection) {
-                actuators.add(factory.createToF(values));
+                try {
+                    actuators.add(factory.createToF(values));
+                } catch (NumberFormatException ex) {
+                    System.out.println("Redak nije ispravan. Preskacem...");
+                }
             }
 
         } catch (FileNotFoundException ex) {
