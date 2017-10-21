@@ -3,3 +3,5 @@ nbproject
 .DS_Store
 dist
 /*.txt
+*.uml
+.idea
