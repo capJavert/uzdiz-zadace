@@ -95,6 +95,7 @@ public class Actuator extends Device {
         }
     }
 
+    @Override
     public Device prototype() {
         Device actuator = new Actuator(this.getName(), this.getType(), this.getUnitType(), this.getMin(), this.getMax(), this.getComment());
 

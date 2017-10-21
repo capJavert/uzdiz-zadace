@@ -78,6 +78,8 @@ public abstract class Device {
         return Generator.getInstance().getStatus();
     }
 
+    public abstract Device prototype();
+    
     public abstract void activate();
 
 }

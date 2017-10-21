@@ -151,11 +151,11 @@ public class Worker extends Thread implements Inspector {
             Logger.getInstance().add("Placing devices at '"+place.getName()+"'", true);
 
             for (Integer i = 0; i < place.getSensorsNum(); i++) {
-                place.addSensor(sensors.get(generator.selectFrom(sensors)));
+                place.addSensor(sensors.get(generator.selectFrom(sensors)).prototype());
             }
 
             for (Integer i = 0; i < place.getActuatorsNum(); i++) {
-                place.addActuator(actuators.get(generator.selectFrom(actuators)));
+                place.addActuator(actuators.get(generator.selectFrom(actuators)).prototype());
             }
 
             entry.setValue(place);

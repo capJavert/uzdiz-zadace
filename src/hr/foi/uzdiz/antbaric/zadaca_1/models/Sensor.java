@@ -38,6 +38,7 @@ public class Sensor extends Device {
         }
     }
 
+    @Override
     public Device prototype() {
         Device sensor = new Sensor(this.getName(), this.getType(), this.getUnitType(), this.getMin(), this.getMax(), this.getComment());
 
