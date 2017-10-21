@@ -6,7 +6,6 @@
 package hr.foi.uzdiz.antbaric.zadaca_1.components;
 
 import hr.foi.uzdiz.antbaric.zadaca_1.models.Device;
-import hr.foi.uzdiz.antbaric.zadaca_1.models.ToF;
 import hr.foi.uzdiz.antbaric.zadaca_1.models.DeviceEnum;
 import java.util.List;
 

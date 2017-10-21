@@ -13,7 +13,7 @@ import hr.foi.uzdiz.antbaric.zadaca_1.components.Generator;
  */
 public abstract class Device {
 
-    protected String name;
+    private final String name;
     private final Integer category;
     private final Integer Type;
     private final Double min;
@@ -57,6 +57,6 @@ public abstract class Device {
         return Generator.getInstance().getStatus();
     }
     
-    abstract Integer Activate();
+    public abstract void activate();
 
 }

@@ -9,17 +9,21 @@ package hr.foi.uzdiz.antbaric.zadaca_1.models;
  *
  * @author javert
  */
-
 public class Actuator extends Device {
- 
+
     public Actuator(String name, Integer Category, Integer Type, Double min, Double max, String comment) {
         super(name, Category, Type, min, max, comment);
     }
 
     @Override
-    public Integer Activate() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void activate() {
+        System.out.println("Actuator activated!");
     }
-    
-}
 
+    public Device prototype() {
+        Device actuator = new Actuator(this.getName(), this.getCategory(), this.getType(), this.getMin(), this.getMax(), this.getComment());
+
+        return actuator;
+    }
+
+}

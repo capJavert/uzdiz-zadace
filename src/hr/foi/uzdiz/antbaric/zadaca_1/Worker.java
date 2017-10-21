@@ -10,10 +10,13 @@ import hr.foi.uzdiz.antbaric.zadaca_1.components.CSVAdapter;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.Generator;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.Inspector;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.UzDizCSVAdapter;
+import hr.foi.uzdiz.antbaric.zadaca_1.models.Actuator;
 import hr.foi.uzdiz.antbaric.zadaca_1.models.Configuration;
 import hr.foi.uzdiz.antbaric.zadaca_1.models.Device;
 import hr.foi.uzdiz.antbaric.zadaca_1.models.Place;
+import hr.foi.uzdiz.antbaric.zadaca_1.models.Sensor;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -33,8 +36,7 @@ public class Worker extends Thread implements Inspector {
     private static List<Map.Entry<String, Place>> PLACES;
     private static List<Device> SENSORS;
     private static List<Device> ACTUATORS;
-    private static List<Integer> FAILED_SENSORS;
-    private static List<Integer> FAILED_ACTUATORS;
+    private static HashMap<String, Integer> FAILED_DEVICES;
 
     static {
         INSTANCE = new Worker();
@@ -68,6 +70,7 @@ public class Worker extends Thread implements Inspector {
         Worker.PLACES = adapter.getPlaces();
         Worker.SENSORS = adapter.getSensors();
         Worker.ACTUATORS = adapter.getActuators();
+        Worker.FAILED_DEVICES = new HashMap<>();
 
         this.configSystem();
         this.initSystem();
@@ -78,8 +81,38 @@ public class Worker extends Thread implements Inspector {
                 System.out.println("Working...");
 
                 for (final ListIterator<Map.Entry<String, Place>> iterator = Worker.PLACES.listIterator(); iterator.hasNext();) {
-                    iterator.next();
-                    // do work
+                    final Map.Entry<String, Place> entry = iterator.next();
+                    Place place = entry.getValue();
+                    List<Device> sensors = this.getSensorsByCategory(place.getCategory());
+
+                    for (final ListIterator<Device> deviceIterator = place.getSensors().listIterator(); deviceIterator.hasNext();) {
+                        Sensor sensor = (Sensor) deviceIterator.next();
+
+                        if (!this.activateDevice(place.getName(), sensor)) {
+                            deviceIterator.remove();
+                            sensor = (Sensor) sensor.prototype();
+
+                            if (sensor.getStatus() == 1) {
+                                deviceIterator.add(sensor);
+                            }
+                        };
+                    }
+
+                    for (final ListIterator<Device> deviceIterator = place.getActuators().listIterator(); deviceIterator.hasNext();) {
+                        Actuator actuator = (Actuator) deviceIterator.next();
+
+                        if (!this.activateDevice(place.getName(), actuator)) {
+                            deviceIterator.remove();
+                            actuator = (Actuator) actuator.prototype();
+
+                            if (actuator.getStatus() == 1) {
+                                deviceIterator.add(actuator);
+                            }
+                        };
+                    }
+
+                    entry.setValue(place);
+                    iterator.set(entry);
                 }
 
                 sleep(Worker.CONFIG.getInterval());
@@ -129,6 +162,8 @@ public class Worker extends Thread implements Inspector {
 
                 if (sensor.getStatus() == 0) {
                     deviceIterator.remove();
+                } else {
+                    Worker.FAILED_DEVICES.put(place.getName() + "." + sensor.getName(), 0);
                 }
             }
 
@@ -137,6 +172,8 @@ public class Worker extends Thread implements Inspector {
 
                 if (actuator.getStatus() == 0) {
                     deviceIterator.remove();
+                } else {
+                    Worker.FAILED_DEVICES.put(place.getName() + "." + actuator.getName(), 0);
                 }
             }
 
@@ -167,6 +204,28 @@ public class Worker extends Thread implements Inspector {
         }
 
         return actuators;
+    }
+
+    private Boolean activateDevice(String placeName, Device device) {
+        String deviceId = placeName + "." + device.getName();
+        Integer overload = Worker.FAILED_DEVICES.get(deviceId);
+
+        if (device.getStatus() == 0) {
+            overload++;
+
+            if (overload.equals(3)) {
+                Worker.FAILED_DEVICES.remove(deviceId);
+
+                return false;
+            }
+        } else {
+            overload = 0;
+            device.activate();
+        }
+
+        Worker.FAILED_DEVICES.put(deviceId, overload);
+
+        return true;
     }
 
     @Override
