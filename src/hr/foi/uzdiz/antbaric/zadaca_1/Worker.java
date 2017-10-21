@@ -71,30 +71,37 @@ public class Worker extends Thread implements Inspector {
         Worker.ACTUATORS = adapter.getActuators();
         Worker.FAILED_DEVICES = new HashMap<>();
 
+        Logger.getInstance().add("Thread started", true);
+
         this.configSystem();
         this.initSystem();
         this.order();
 
         for (Integer i = 0; i < Worker.CONFIG.getExecutionLimit(); i++) {
             try {
-                Logger.getInstance().add("Working, interval #"+(i+1), true);
+                Logger.getInstance().add("Working, interval #" + (i + 1), true);
 
                 for (final ListIterator<Map.Entry<String, Place>> iterator = Worker.PLACES.listIterator(); iterator.hasNext();) {
                     final Map.Entry<String, Place> entry = iterator.next();
                     Place place = entry.getValue();
                     List<Device> sensors = this.getSensorsByCategory(place.getCategory());
+                    Logger.getInstance().add("Checking Place '" + place.getName() + "'", true);
 
                     for (final ListIterator<Device> deviceIterator = place.getSensors().listIterator(); deviceIterator.hasNext();) {
                         Sensor sensor = (Sensor) deviceIterator.next();
 
                         if (!this.activateDevice(place.getName(), sensor)) {
                             deviceIterator.remove();
+                            Logger.getInstance().add("Replacing Sensor '" + sensor.getName() + "'", true);
                             sensor = (Sensor) sensor.prototype();
 
                             if (sensor.getStatus() == 1) {
                                 deviceIterator.add(sensor);
+                                Logger.getInstance().add("Init OK '" + sensor.getName() + "'", true);
+                            } else {
+                                Logger.getInstance().add("Init FAILED '" + sensor.getName() + "'", true);
                             }
-                        };
+                        }
                     }
 
                     for (final ListIterator<Device> deviceIterator = place.getActuators().listIterator(); deviceIterator.hasNext();) {
@@ -102,12 +109,16 @@ public class Worker extends Thread implements Inspector {
 
                         if (!this.activateDevice(place.getName(), actuator)) {
                             deviceIterator.remove();
+                            Logger.getInstance().add("Replacing Actuator '" + actuator.getName() + "'", true);
                             actuator = (Actuator) actuator.prototype();
 
                             if (actuator.getStatus() == 1) {
                                 deviceIterator.add(actuator);
+                                Logger.getInstance().add("Init OK '" + actuator.getName() + "'", true);
+                            } else {
+                                Logger.getInstance().add("Init FAILED '" + actuator.getName() + "'", true);
                             }
-                        };
+                        }
                     }
 
                     entry.setValue(place);
@@ -119,7 +130,7 @@ public class Worker extends Thread implements Inspector {
                 Logger.getInstance().add(ex.getMessage(), true);
             }
         }
-        
+
         Logger.getInstance().add("Writting log to output file...", true);
         Logger.getInstance().writeToFile(Worker.CONFIG.getOutFilePath());
     }
@@ -137,6 +148,7 @@ public class Worker extends Thread implements Inspector {
             Place place = entry.getValue();
             List<Device> sensors = this.getSensorsByCategory(place.getCategory());
             List<Device> actuators = this.getActuatorsByCategory(place.getCategory());
+            Logger.getInstance().add("Placing devices at '"+place.getName()+"'", true);
 
             for (Integer i = 0; i < place.getSensorsNum(); i++) {
                 place.addSensor(sensors.get(generator.selectFrom(sensors)));
@@ -158,14 +170,17 @@ public class Worker extends Thread implements Inspector {
             final Map.Entry<String, Place> entry = iterator.next();
             Place place = entry.getValue();
             List<Device> sensors = this.getSensorsByCategory(place.getCategory());
+            Logger.getInstance().add("Init devices at '"+place.getName()+"'", true);
 
             for (final ListIterator<Device> deviceIterator = place.getSensors().listIterator(); deviceIterator.hasNext();) {
                 final Device sensor = deviceIterator.next();
 
                 if (sensor.getStatus() == 0) {
                     deviceIterator.remove();
+                    Logger.getInstance().add("  Init FAILED '" + sensor.getName() + "'", true);
                 } else {
                     Worker.FAILED_DEVICES.put(place.getName() + "." + sensor.getName(), 0);
+                    Logger.getInstance().add("  Init OK '" + sensor.getName() + "'", true);
                 }
             }
 
@@ -174,8 +189,10 @@ public class Worker extends Thread implements Inspector {
 
                 if (actuator.getStatus() == 0) {
                     deviceIterator.remove();
+                    Logger.getInstance().add("  Init FAILED '" + actuator.getName() + "'", true);
                 } else {
                     Worker.FAILED_DEVICES.put(place.getName() + "." + actuator.getName(), 0);
+                    Logger.getInstance().add("  Init OK '" + actuator.getName() + "'", true);
                 }
             }
 
@@ -217,7 +234,8 @@ public class Worker extends Thread implements Inspector {
 
             if (overload.equals(3)) {
                 Worker.FAILED_DEVICES.remove(deviceId);
-
+                Logger.getInstance().add("Device '" + device.getName() + "'@'"+placeName+"' need replacement...", true);
+                
                 return false;
             }
         } else {

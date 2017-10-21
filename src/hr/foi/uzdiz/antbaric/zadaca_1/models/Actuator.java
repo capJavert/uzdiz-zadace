@@ -6,6 +6,7 @@
 package hr.foi.uzdiz.antbaric.zadaca_1.models;
 
 import hr.foi.uzdiz.antbaric.zadaca_1.components.Generator;
+import hr.foi.uzdiz.antbaric.zadaca_1.components.Logger;
 
 /**
  *
@@ -25,16 +26,16 @@ public class Actuator extends Device {
 
         switch (this.getUnitType()) {
             case 0:
-                System.out.println("Actuator '" + this.getName() + "'");
-                System.out.println("    MIN: " + generator.parseDecimalRound(this.getMin()) + this.getComment() + ", MAX: " + generator.parseDecimalRound(this.getMax()) + this.getComment());
+                Logger.getInstance().add("Actuator '" + this.getName() + "'", true);
+                Logger.getInstance().add("    MIN: " + generator.parseDecimalRound(this.getMin()) + this.getComment() + ", MAX: " + generator.parseDecimalRound(this.getMax()) + this.getComment(), true);
 
                 number = generator.fromInterval(this.getMin(), this.getMax()).doubleValue();
-                System.out.println("    Value: " + generator.parseDecimalRound(this.getValue()) + this.getComment() + ", Movement " + generator.parseDecimalRound(number) + this.getComment() + ":");
+                Logger.getInstance().add("    Value: " + generator.parseDecimalRound(this.getValue()) + this.getComment() + ", Movement " + generator.parseDecimalRound(number) + this.getComment() + ":", true);
                 direction = 1;
                 while (number > 0) {
                     Double oldValue = this.getValue();
                     this.setValue(this.getValue() + number * direction);
-                    System.out.println("    " + generator.parseDecimalRound(oldValue) + this.getComment() + " -> " + generator.parseDecimalRound(this.getValue()) + this.getComment());
+                    Logger.getInstance().add("    " + generator.parseDecimalRound(oldValue) + this.getComment() + " -> " + generator.parseDecimalRound(this.getValue()) + this.getComment(), true);
 
                     if (oldValue + number * direction > this.getMax()) {
                         number = (oldValue.longValue() + number * direction) % this.getMax().longValue();
@@ -46,16 +47,16 @@ public class Actuator extends Device {
                 }
                 break;
             case 1:
-                System.out.println("Actuator '" + this.getName() + "'");
-                System.out.println("    MIN: " + generator.parseDecimal1(this.getMin()) + this.getComment() + ", MAX: " + generator.parseDecimal1(this.getMax()) + this.getComment());
+                Logger.getInstance().add("Actuator '" + this.getName() + "'", true);
+                Logger.getInstance().add("    MIN: " + generator.parseDecimal1(this.getMin()) + this.getComment() + ", MAX: " + generator.parseDecimal1(this.getMax()) + this.getComment(), true);
 
                 number = generator.fromIntervalPrecision1(this.getMin(), this.getMax());
-                System.out.println("    Value: " + generator.parseDecimal1(this.getValue()) + this.getComment() + ", Movement " + generator.parseDecimal1(number) + this.getComment() + ":");
+                Logger.getInstance().add("    Value: " + generator.parseDecimal1(this.getValue()) + this.getComment() + ", Movement " + generator.parseDecimal1(number) + this.getComment() + ":", true);
                 direction = 1;
                 while (number > 0) {
                     Double oldValue = this.getValue();
                     this.setValue(this.getValue() + number * direction);
-                    System.out.println("    " + generator.parseDecimal1(oldValue) + this.getComment() + " -> " + generator.parseDecimal1(this.getValue()) + this.getComment());
+                    Logger.getInstance().add("    " + generator.parseDecimal1(oldValue) + this.getComment() + " -> " + generator.parseDecimal1(this.getValue()) + this.getComment(), true);
 
                     if (oldValue + number * direction > this.getMax()) {
                         number = (oldValue + number * direction) % this.getMax();
@@ -67,16 +68,16 @@ public class Actuator extends Device {
                 }
                 break;
             case 2:
-                System.out.println("Actuator '" + this.getName() + "'");
-                System.out.println("    MIN: " + generator.parseDecimal5(this.getMin()) + this.getComment() + ", MAX: " + generator.parseDecimal5(this.getMax()) + this.getComment());
+                Logger.getInstance().add("Actuator '" + this.getName() + "'", true);
+                Logger.getInstance().add("    MIN: " + generator.parseDecimal5(this.getMin()) + this.getComment() + ", MAX: " + generator.parseDecimal5(this.getMax()) + this.getComment(), true);
                 
                 number = generator.fromIntervalPrecision5(this.getMin(), this.getMax());
-                System.out.println("    Value: " + generator.parseDecimal5(this.getValue()) + this.getComment() + ", Movement " + generator.parseDecimal5(number) + this.getComment() + ":");
+                Logger.getInstance().add("    Value: " + generator.parseDecimal5(this.getValue()) + this.getComment() + ", Movement " + generator.parseDecimal5(number) + this.getComment() + ":", true);
                 direction = 1;
                 while (number > 0) {
                     Double oldValue = this.getValue();
                     this.setValue(this.getValue() + number * direction);
-                    System.out.println("    " + generator.parseDecimal5(oldValue) + this.getComment() + " -> " + generator.parseDecimal5(this.getValue()) + this.getComment());
+                    Logger.getInstance().add("    " + generator.parseDecimal5(oldValue) + this.getComment() + " -> " + generator.parseDecimal5(this.getValue()) + this.getComment(), true);
 
                     if (oldValue + number * direction > this.getMax()) {
                         number = (oldValue + number * direction) % this.getMax();
@@ -89,7 +90,7 @@ public class Actuator extends Device {
                 break;
             case 3:
                 this.setValue(this.getValue() * -1);
-                System.out.println("    Value: " + generator.parseDecimalRound(this.getValue() * -1) + ", New Value " + generator.parseDecimalRound(this.getValue()) + this.getComment());
+                Logger.getInstance().add("    Value: " + generator.parseDecimalRound(this.getValue() * -1) + ", New Value " + generator.parseDecimalRound(this.getValue()) + this.getComment(), true);
                 break;
         }
     }

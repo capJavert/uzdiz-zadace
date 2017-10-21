@@ -12,6 +12,7 @@ import hr.foi.uzdiz.antbaric.zadaca_1.algorithms.Sequential;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.CliConfigurationBuilder;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.ConfigurationBuilder;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.Generator;
+import hr.foi.uzdiz.antbaric.zadaca_1.components.Logger;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.SyntaxValidator;
 import hr.foi.uzdiz.antbaric.zadaca_1.models.Configuration;
 
@@ -25,9 +26,12 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        //Logger.getInstance().setUsePrintDelay(false); //uncomment for CLI debugging
         final Configuration config;
 
         if (SyntaxValidator.validateArguments(args)) {
+            Logger.getInstance().add("Reading arguments..", true);
+
             ConfigurationBuilder builder = new CliConfigurationBuilder();
             config = builder.setSeed(args[0])
                     .setPlacesFilePath(args[1])
@@ -43,7 +47,7 @@ public class Main {
             generator.setSeed(config.getSeed());
 
             Algorithm algorithm = null;
-            
+
             switch (config.getAlgoritham()) {
                 case "Sequential":
                     algorithm = new Sequential();
@@ -55,8 +59,13 @@ public class Main {
                     algorithm = new Random();
                     break;
             }
-            
+
+            Logger.getInstance().add("Loaded inspector algorithm '" +config.getAlgoritham()+"'", true);
+
             Worker.setConfig(config);
+            
+            Logger.getInstance().add("Loaded thread configuration: Execution limit: " +config.getExecutionLimit()+"x, Interval: "+config.getInterval()+" sec", true);
+            
             final Worker worker = Worker.getInstance(algorithm);
             worker.start();
         } else {

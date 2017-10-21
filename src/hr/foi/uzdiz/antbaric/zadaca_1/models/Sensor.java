@@ -6,6 +6,7 @@
 package hr.foi.uzdiz.antbaric.zadaca_1.models;
 
 import hr.foi.uzdiz.antbaric.zadaca_1.components.Generator;
+import hr.foi.uzdiz.antbaric.zadaca_1.components.Logger;
 
 /**
  *
@@ -23,16 +24,16 @@ public class Sensor extends Device {
 
         switch (this.getUnitType()) {
             case 1:
-                System.out.println("Sensor '" + this.getName() + "'");
-                System.out.println("    MIN: " + generator.parseDecimal1(this.getMin()) + this.getComment() + ", MAX: " + generator.parseDecimal1(this.getMax()) + this.getComment());
+                Logger.getInstance().add("Sensor '" + this.getName() + "'", true);
+                Logger.getInstance().add("    MIN: " + generator.parseDecimal1(this.getMin()) + this.getComment() + ", MAX: " + generator.parseDecimal1(this.getMax()) + this.getComment(), true);
                 break;
             case 2:
-                System.out.println("Sensor '" + this.getName() + "'");
-                System.out.println("    MIN: " + generator.parseDecimal5(this.getMin()) + this.getComment() + ", MAX: " + generator.parseDecimal5(this.getMax()) + this.getComment());
+                Logger.getInstance().add("Sensor '" + this.getName() + "'", true);
+                Logger.getInstance().add("    MIN: " + generator.parseDecimal5(this.getMin()) + this.getComment() + ", MAX: " + generator.parseDecimal5(this.getMax()) + this.getComment(), true);
                 break;
             default:
-                System.out.println("Sensor '" + this.getName() + "'");
-                System.out.println("    MIN: " + generator.parseDecimalRound(this.getMin()) + this.getComment() + ", MAX: " + generator.parseDecimalRound(this.getMax()) + this.getComment());
+                Logger.getInstance().add("Sensor '" + this.getName() + "'", true);
+                Logger.getInstance().add("    MIN: " + generator.parseDecimalRound(this.getMin()) + this.getComment() + ", MAX: " + generator.parseDecimalRound(this.getMax()) + this.getComment(), true);
                 break;
         }
     }
