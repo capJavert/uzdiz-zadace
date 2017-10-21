@@ -15,9 +15,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -66,8 +67,8 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
     }
 
     @Override
-    public HashMap<String, Place> getPlaces() {
-        HashMap<String, Place> places = new HashMap<>();
+    public List<Map.Entry<String, Place>> getPlaces() {
+        List<Map.Entry<String, Place>> places = new ArrayList<>();
 
         try {
             List<List<String>> collection = this.readCsv(this.placesFile);
@@ -89,7 +90,7 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
                             Integer.parseInt(values.get(3))
                     );
 
-                    places.put(place.getName(), place);
+                    places.add(new AbstractMap.SimpleEntry<>(place.getName(), place));
                 } catch (NumberFormatException ex) {
                     System.out.println("Redak nije ispravan. Preskacem...");
                 }
