@@ -5,6 +5,7 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca_1.components;
 
+import hr.foi.uzdiz.antbaric.zadaca_1.models.Device;
 import java.util.List;
 import java.util.Random;
 
@@ -31,7 +32,7 @@ public class Generator extends Random {
         return INSTANCE.nextInt(10) + 1 > 1 ? 1 : 0;
     }
 
-    public Integer selectFrom(List<Object> list) {
+    public Integer selectFrom(List<Device> list) {
         return INSTANCE.nextInt(list.size());
     }
 

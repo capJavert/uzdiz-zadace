@@ -5,6 +5,8 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca_1.models;
 
+import hr.foi.uzdiz.antbaric.zadaca_1.components.Generator;
+
 /**
  *
  * @author javert
@@ -51,8 +53,10 @@ public abstract class Device {
         return comment;
     }
 
+    public Integer getStatus() {
+        return Generator.getInstance().getStatus();
+    }
+    
     abstract Integer Activate();
-
-    abstract Integer Initialize();
 
 }

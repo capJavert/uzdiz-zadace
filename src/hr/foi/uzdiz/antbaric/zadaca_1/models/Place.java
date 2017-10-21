@@ -17,9 +17,9 @@ public class Place {
     private final Integer category;
     private final Integer actuatorsNum;
     private final Integer sensorsNum;
-    private final List<Actuator> actuators;
-    private final List<Sensor> sensors;
-    
+    private final List<Device> actuators;
+    private final List<Device> sensors;
+
     public Place(String name, Integer category, Integer sensorsNum, Integer actuatorsNum) {
         this.name = name;
         this.category = category;
@@ -45,20 +45,20 @@ public class Place {
         return sensorsNum;
     }
 
-    public List<Actuator> getActuators() {
+    public List<Device> getActuators() {
         return actuators;
     }
 
-    public List<Sensor> getSensors() {
+    public List<Device> getSensors() {
         return sensors;
     }
-    
-    public void addSensor(Sensor sensor) {
+
+    public void addSensor(Device sensor) {
         this.sensors.add(sensor);
     }
-    
-    public void addActuator(Actuator actuator) {
+
+    public void addActuator(Device actuator) {
         this.actuators.add(actuator);
     }
-    
+
 }

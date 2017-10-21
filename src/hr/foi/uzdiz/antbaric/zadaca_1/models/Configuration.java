@@ -10,7 +10,7 @@ package hr.foi.uzdiz.antbaric.zadaca_1.models;
  * @author javert
  */
 public class Configuration {
-    private Integer seed;
+    private Long seed;
     private String placesFilePath;
     private String sensorsFilePath;
     private String actuatorsFielPath;
@@ -19,11 +19,11 @@ public class Configuration {
     private Integer executionLimit;
     private String outFilePath; 
 
-    public Integer getSeed() {
+    public Long getSeed() {
         return seed;
     }
 
-    public void setSeed(Integer seed) {
+    public void setSeed(Long seed) {
         this.seed = seed;
     }
 

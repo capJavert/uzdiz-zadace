@@ -5,14 +5,10 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca_1.components;
 
-import hr.foi.uzdiz.antbaric.zadaca_1.models.Place;
-import java.util.List;
-import java.util.Map;
-
 /**
  *
  * @author javert
  */
 public interface Inspector {
-    List<Map.Entry<String, Place>> order();
+    void order();
 }

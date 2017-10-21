@@ -24,7 +24,7 @@ public class CliConfigurationBuilder implements ConfigurationBuilder {
 
     @Override
     public ConfigurationBuilder setSeed(String seed) {
-        this.configuration.setSeed(Integer.parseInt(seed));
+        this.configuration.setSeed(Long.parseLong(seed));
 
         return this;
     }
