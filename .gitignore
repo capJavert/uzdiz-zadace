@@ -5,3 +5,5 @@ dist
 /*.txt
 *.uml
 .idea
+/*.pdf
+/*.docx

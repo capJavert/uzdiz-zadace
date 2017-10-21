@@ -60,16 +60,16 @@ public class Main {
                     break;
             }
 
-            Logger.getInstance().add("Loaded inspector algorithm '" +config.getAlgoritham()+"'", true);
+            Logger.getInstance().add("Loaded inspector algorithm '" + config.getAlgoritham() + "'", true);
 
             Worker.setConfig(config);
-            
-            Logger.getInstance().add("Loaded thread configuration: Execution limit: " +config.getExecutionLimit()+"x, Interval: "+config.getInterval()+" sec", true);
-            
+
+            Logger.getInstance().add("Loaded thread configuration: Execution limit: " + config.getExecutionLimit() + "x, Interval: " + config.getInterval() + " sec", true);
+
             final Worker worker = Worker.getInstance(algorithm);
             worker.start();
         } else {
-            System.out.println("Error: Please check your arguments");
+            Logger.getInstance().add("Error: Please check your arguments", true);
         }
     }
 
