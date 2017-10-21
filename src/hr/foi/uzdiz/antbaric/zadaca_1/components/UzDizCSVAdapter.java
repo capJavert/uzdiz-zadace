@@ -92,7 +92,7 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
 
                     places.add(new AbstractMap.SimpleEntry<>(place.getName(), place));
                 } catch (NumberFormatException ex) {
-                    System.out.println("Redak nije ispravan. Preskacem...");
+                    System.out.println("Line is not valid. Skipping..");
                 }
             }
         } catch (FileNotFoundException ex) {
@@ -114,7 +114,7 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
                 try {
                     sensors.add(factory.createToF(values));
                 } catch (NumberFormatException ex) {
-                    System.out.println("Redak nije ispravan. Preskacem...");
+                    System.out.println("Line is not valid. Skipping..");
                 }
             }
 
@@ -137,7 +137,7 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
                 try {
                     actuators.add(factory.createToF(values));
                 } catch (NumberFormatException ex) {
-                    System.out.println("Redak nije ispravan. Preskacem...");
+                    System.out.println("Line is not valid. Skipping..");
                 }
             }
 

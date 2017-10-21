@@ -9,6 +9,7 @@ import hr.foi.uzdiz.antbaric.zadaca_1.algorithms.Algorithm;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.CSVAdapter;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.Generator;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.Inspector;
+import hr.foi.uzdiz.antbaric.zadaca_1.components.Logger;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.UzDizCSVAdapter;
 import hr.foi.uzdiz.antbaric.zadaca_1.models.Actuator;
 import hr.foi.uzdiz.antbaric.zadaca_1.models.Configuration;
@@ -21,8 +22,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -78,7 +77,7 @@ public class Worker extends Thread implements Inspector {
 
         for (Integer i = 0; i < Worker.CONFIG.getExecutionLimit(); i++) {
             try {
-                System.out.println("Working...");
+                Logger.getInstance().add("Working, interval #"+(i+1), true);
 
                 for (final ListIterator<Map.Entry<String, Place>> iterator = Worker.PLACES.listIterator(); iterator.hasNext();) {
                     final Map.Entry<String, Place> entry = iterator.next();
@@ -117,9 +116,12 @@ public class Worker extends Thread implements Inspector {
 
                 sleep(Worker.CONFIG.getInterval());
             } catch (InterruptedException ex) {
-                Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getInstance().add(ex.getMessage(), true);
             }
         }
+        
+        Logger.getInstance().add("Writting log to output file...", true);
+        Logger.getInstance().writeToFile(Worker.CONFIG.getOutFilePath());
     }
 
     @Override
