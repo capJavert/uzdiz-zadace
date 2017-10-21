@@ -15,7 +15,7 @@ import java.util.List;
 public class SensorFactory extends DeviceFactory {
 
     @Override
-    public Sensor createToF(List<String> values) {
+    public Sensor createToF(List<String> values) throws Exception {
         if(values.get(5) == null) {
             values.set(5, "");
         }

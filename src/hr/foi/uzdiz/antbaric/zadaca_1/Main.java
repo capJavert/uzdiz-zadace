@@ -26,7 +26,7 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        //Logger.getInstance().setUsePrintDelay(false); //uncomment for CLI debugging
+        Logger.getInstance().setUsePrintDelay(false); //uncomment for CLI debugging
         final Configuration config;
 
         if (SyntaxValidator.validateArguments(args)) {
@@ -64,7 +64,7 @@ public class Main {
 
             Worker.setConfig(config);
 
-            Logger.getInstance().add("Loaded thread configuration: Execution limit: " + config.getExecutionLimit() + "x, Interval: " + config.getInterval() + " sec", true);
+            Logger.getInstance().add("Loaded thread configuration: Execution limit: " + config.getExecutionLimit() + "x, Interval: " + (config.getInterval()/1000) + " sec", true);
 
             final Worker worker = Worker.getInstance(algorithm);
             worker.start();

@@ -6,6 +6,7 @@
 package hr.foi.uzdiz.antbaric.zadaca_1.components;
 
 import hr.foi.uzdiz.antbaric.zadaca_1.models.Configuration;
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -82,7 +83,7 @@ public class CliConfigurationBuilder implements ConfigurationBuilder {
         Path p = Paths.get(path);
         
         if (!p.isAbsolute()) {
-            path = System.getProperty("user.dir") + "/" + path;
+            path = System.getProperty("user.dir") + File.separator + path;
         }
         
         return path;

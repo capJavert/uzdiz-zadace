@@ -45,13 +45,13 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
             }
 
         } catch (FileNotFoundException | UnsupportedEncodingException ex) {
-            Logger.getInstance().add("CSV file path '"+file.getAbsolutePath()+"' not valid", true);
+            Logger.getInstance().add("CSV file path '" + file.getAbsolutePath() + "' not valid", true);
         } catch (Exception ex) {
-           Logger.getInstance().add(ex.getMessage(), true);
+            Logger.getInstance().add(ex.getMessage(), true);
         } finally {
             try {
                 fileInputStream.close();
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 Logger.getInstance().add(ex.getMessage(), true);
             }
         }
@@ -71,25 +71,33 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
 
         List<List<String>> collection = this.readCsv(this.placesFile);
         for (List<String> values : collection) {
-            if (values.get(2) == null) {
-                values.set(2, "0");
-            }
-            
-            if (values.get(3) == null) {
-                values.set(3, "0");
-            }
-            
             try {
+                if(values.get(0).equals("") 
+                        || values.get(0) == null
+                        || Integer.parseInt(values.get(1)) < 0 
+                        || Integer.parseInt(values.get(1)) > 1) {
+                    
+                    throw new Exception();
+                }
+                
+                if (values.get(2) == null) {
+                    values.set(2, "0");
+                }
+
+                if (values.get(3) == null) {
+                    values.set(3, "0");
+                }
+                
                 Place place = new Place(
                         values.get(0),
                         Integer.parseInt(values.get(1)),
                         Integer.parseInt(values.get(2)),
                         Integer.parseInt(values.get(3))
                 );
-                
+
                 places.add(new AbstractMap.SimpleEntry<>(place.getName(), place));
-            } catch (NumberFormatException ex) {
-                Logger.getInstance().add("Line is not valid. Skipping...", true);
+            } catch (Exception ex) {
+                Logger.getInstance().add("Line is not valid. Skipping Place...", true);
             }
         }
 
@@ -105,8 +113,8 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
         for (List<String> values : collection) {
             try {
                 sensors.add(factory.createToF(values));
-            } catch (NumberFormatException ex) {
-                Logger.getInstance().add("Line is not valid. Skipping...", true);
+            } catch (Exception ex) {
+                Logger.getInstance().add("Line is not valid. Skipping Sensor...", true);
             }
         }
 
@@ -122,8 +130,8 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
         for (List<String> values : collection) {
             try {
                 actuators.add(factory.createToF(values));
-            } catch (NumberFormatException ex) {
-                Logger.getInstance().add("Line is not valid. Skipping...", true);
+            } catch (Exception ex) {
+                Logger.getInstance().add("Line is not valid. Skipping Actuator...", true);
             }
         }
 

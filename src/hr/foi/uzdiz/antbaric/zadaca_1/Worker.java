@@ -66,12 +66,13 @@ public class Worker extends Thread implements Inspector {
     @Override
     public void run() {
         CSVAdapter adapter = new UzDizCSVAdapter(Worker.CONFIG.getPlacesFilePath(), Worker.CONFIG.getActuatorsFielPath(), Worker.CONFIG.getSensorsFilePath());
+        Logger.getInstance().add("Reading CSV files...", true);
         Worker.PLACES = adapter.getPlaces();
         Worker.SENSORS = adapter.getSensors();
         Worker.ACTUATORS = adapter.getActuators();
         Worker.FAILED_DEVICES = new HashMap<>();
 
-        Logger.getInstance().add("Thread started", true);
+        Logger.getInstance().add("Worker Thread started", true);
 
         this.configSystem();
         this.initSystem();
@@ -148,14 +149,18 @@ public class Worker extends Thread implements Inspector {
             Place place = entry.getValue();
             List<Device> sensors = this.getSensorsByCategory(place.getCategory());
             List<Device> actuators = this.getActuatorsByCategory(place.getCategory());
-            Logger.getInstance().add("Placing devices at '"+place.getName()+"'", true);
+            Logger.getInstance().add("Placing devices at '" + place.getName() + "'", true);
 
-            for (Integer i = 0; i < place.getSensorsNum(); i++) {
-                place.addSensor(sensors.get(generator.selectFrom(sensors)).prototype());
+            if (!Worker.SENSORS.isEmpty()) {
+                for (Integer i = 0; i < place.getSensorsNum(); i++) {
+                    place.addSensor(sensors.get(generator.selectFrom(sensors)).prototype());
+                }
             }
 
-            for (Integer i = 0; i < place.getActuatorsNum(); i++) {
-                place.addActuator(actuators.get(generator.selectFrom(actuators)).prototype());
+            if (!Worker.ACTUATORS.isEmpty()) {
+                for (Integer i = 0; i < place.getActuatorsNum(); i++) {
+                    place.addActuator(actuators.get(generator.selectFrom(actuators)).prototype());
+                }
             }
 
             entry.setValue(place);
@@ -170,7 +175,7 @@ public class Worker extends Thread implements Inspector {
             final Map.Entry<String, Place> entry = iterator.next();
             Place place = entry.getValue();
             List<Device> sensors = this.getSensorsByCategory(place.getCategory());
-            Logger.getInstance().add("Init devices at '"+place.getName()+"'", true);
+            Logger.getInstance().add("Init devices at '" + place.getName() + "'", true);
 
             for (final ListIterator<Device> deviceIterator = place.getSensors().listIterator(); deviceIterator.hasNext();) {
                 final Device sensor = deviceIterator.next();
@@ -205,7 +210,7 @@ public class Worker extends Thread implements Inspector {
         List<Device> sensors = new ArrayList();
 
         for (Device sensor : Worker.SENSORS) {
-            if (Objects.equals(sensor.getType(), category)) {
+            if (Objects.equals(sensor.getType(), category) || Objects.equals(sensor.getType(), 2)) {
                 sensors.add(sensor);
             }
         }
@@ -217,7 +222,7 @@ public class Worker extends Thread implements Inspector {
         List<Device> actuators = new ArrayList();
 
         for (Device actuator : Worker.ACTUATORS) {
-            if (Objects.equals(actuator.getType(), category)) {
+            if (Objects.equals(actuator.getType(), category) || Objects.equals(actuator.getType(), 2)) {
                 actuators.add(actuator);
             }
         }
@@ -234,8 +239,8 @@ public class Worker extends Thread implements Inspector {
 
             if (overload.equals(3)) {
                 Worker.FAILED_DEVICES.remove(deviceId);
-                Logger.getInstance().add("Device '" + device.getName() + "'@'"+placeName+"' need replacement...", true);
-                
+                Logger.getInstance().add("Device '" + device.getName() + "'@'" + placeName + "' need replacement...", true);
+
                 return false;
             }
         } else {

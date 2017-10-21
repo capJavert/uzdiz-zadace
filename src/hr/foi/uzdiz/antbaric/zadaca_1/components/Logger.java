@@ -39,6 +39,10 @@ public class Logger {
     }
 
     public void add(String log, Boolean printToConsole) {
+        if(log == null) {
+            return;
+        }
+        
         LOG.add(log);
 
         if (printToConsole) {

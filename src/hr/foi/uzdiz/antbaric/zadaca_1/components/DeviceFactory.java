@@ -25,5 +25,5 @@ abstract class DeviceFactory {
         }
     }
     
-    public abstract Device createToF(List<String> values);
+    public abstract Device createToF(List<String> values) throws Exception;
 }
