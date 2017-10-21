@@ -186,7 +186,7 @@ public class Worker extends Thread implements Inspector {
         List<Device> sensors = new ArrayList();
 
         for (Device sensor : Worker.SENSORS) {
-            if (Objects.equals(sensor.getCategory(), category)) {
+            if (Objects.equals(sensor.getType(), category)) {
                 sensors.add(sensor);
             }
         }
@@ -198,7 +198,7 @@ public class Worker extends Thread implements Inspector {
         List<Device> actuators = new ArrayList();
 
         for (Device actuator : Worker.ACTUATORS) {
-            if (Objects.equals(actuator.getCategory(), category)) {
+            if (Objects.equals(actuator.getType(), category)) {
                 actuators.add(actuator);
             }
         }
