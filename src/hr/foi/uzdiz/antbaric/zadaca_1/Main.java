@@ -12,6 +12,7 @@ import hr.foi.uzdiz.antbaric.zadaca_1.algorithms.Sequential;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.CliConfigurationBuilder;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.ConfigurationBuilder;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.Generator;
+import hr.foi.uzdiz.antbaric.zadaca_1.components.SyntaxValidator;
 import hr.foi.uzdiz.antbaric.zadaca_1.models.Configuration;
 
 /**
@@ -26,8 +27,7 @@ public class Main {
     public static void main(String[] args) {
         final Configuration config;
 
-        //Matcher m = SyntaxValidator.validateArguments(args);
-        if (args.length == 8) {
+        if (SyntaxValidator.validateArguments(args)) {
             ConfigurationBuilder builder = new CliConfigurationBuilder();
             config = builder.setSeed(args[0])
                     .setPlacesFilePath(args[1])
@@ -60,7 +60,7 @@ public class Main {
             final Worker worker = Worker.getInstance(algorithm);
             worker.start();
         } else {
-            System.out.println("Nos ti posran!");
+            System.out.println("Error: Please check your arguments");
         }
     }
 
