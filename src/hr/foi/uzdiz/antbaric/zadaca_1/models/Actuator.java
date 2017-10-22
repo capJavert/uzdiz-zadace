@@ -89,8 +89,9 @@ public class Actuator extends Device {
                 }
                 break;
             case 3:
-                this.setValue(this.getValue() * -1);
-                Logger.getInstance().add("    Value: " + generator.parseDecimalRound(this.getValue() * -1) + ", New Value " + generator.parseDecimalRound(this.getValue()) + this.getComment(), true);
+                Logger.getInstance().add("Actuator '" + this.getName() + "'", true);
+                this.setValue((this.getValue() == 1 ? new Double(0) : new Double(1)));
+                Logger.getInstance().add("    Value: " + (this.getValue() == 1 ? 0 : 1) + ", New Value " + generator.parseDecimalRound(this.getValue()) + this.getComment(), true);
                 break;
         }
     }
