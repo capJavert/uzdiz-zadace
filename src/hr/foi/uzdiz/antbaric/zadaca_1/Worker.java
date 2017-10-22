@@ -132,7 +132,7 @@ public class Worker extends Thread implements Inspector {
             }
         }
 
-        Logger.getInstance().add("Writting log to output file...", true);
+        Logger.getInstance().add("Writing log to output file...", true);
         Logger.getInstance().writeToFile(Worker.CONFIG.getOutFilePath());
     }
 
