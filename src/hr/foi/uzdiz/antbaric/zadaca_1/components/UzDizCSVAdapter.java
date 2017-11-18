@@ -5,6 +5,7 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca_1.components;
 
+import hr.foi.uzdiz.antbaric.zadaca_1.iterators.PlaceIterator;
 import hr.foi.uzdiz.antbaric.zadaca_1.models.Device;
 import hr.foi.uzdiz.antbaric.zadaca_1.models.Place;
 import hr.foi.uzdiz.antbaric.zadaca_1.models.DeviceEnum;
@@ -66,8 +67,8 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
     }
 
     @Override
-    public List<Map.Entry<String, Place>> getPlaces() {
-        List<Map.Entry<String, Place>> places = new ArrayList<>();
+    public PlaceIterator getPlaces() {
+        PlaceIterator places = new PlaceIterator();
 
         List<List<String>> collection = this.readCsv(this.placesFile);
         for (List<String> values : collection) {
@@ -95,7 +96,7 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
                         Integer.parseInt(values.get(3))
                 );
 
-                places.add(new AbstractMap.SimpleEntry<>(place.getName(), place));
+                places.add(place);
             } catch (Exception ex) {
                 Logger.getInstance().add("Line is not valid. Skipping Place...", true);
             }

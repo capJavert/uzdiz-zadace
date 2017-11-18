@@ -7,6 +7,7 @@ package hr.foi.uzdiz.antbaric.zadaca_1.components;
 
 import hr.foi.uzdiz.antbaric.zadaca_1.models.Device;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -20,6 +21,7 @@ public class Generator extends Random {
     private static final DecimalFormat DECIMAL_FORMATER_ROUND = new DecimalFormat("#0");
     private static final DecimalFormat DECIMAL_FORMATER_1 = new DecimalFormat("#0.0");
     private static final DecimalFormat DECIMAL_FORMATER_5 = new DecimalFormat("#0.00000");
+    private static final List<Integer> USED_IDENTIFIERS = new ArrayList<>();
 
     static {
         INSTANCE = new Generator();
@@ -32,12 +34,44 @@ public class Generator extends Random {
         return INSTANCE;
     }
 
+    public List<Integer> getUsedIdentifiers() {
+        return USED_IDENTIFIERS;
+    }
+    
     public Integer getStatus() {
         return this.nextInt(10) + 1 > 1 ? 1 : 0;
     }
 
     public Double getDouble() {
         return this.nextLong()+this.nextDouble();
+    }
+    
+    public Integer getUniqueIdentifier() {
+        Integer identifier;
+        
+        while(true) {
+            identifier = this.nextInt();
+            
+            if(!USED_IDENTIFIERS.contains(identifier)) {
+                USED_IDENTIFIERS.add(identifier);
+                
+                break;
+            }
+        }
+        
+        return identifier;
+    }
+    
+    public int fromInterval(int min, int max) {
+        int number = min + (this.nextInt() * (max - min));
+        
+        return number;
+    }
+    
+    public float fromInterval(float min, float max) {
+        float number = min + (this.nextFloat() * (max - min));
+        
+        return number;
     }
     
     public Long fromInterval(Double min, Double max) {

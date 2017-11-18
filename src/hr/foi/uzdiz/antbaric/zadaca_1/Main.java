@@ -5,15 +5,12 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca_1;
 
-import hr.foi.uzdiz.antbaric.zadaca_1.algorithms.Algorithm;
-import hr.foi.uzdiz.antbaric.zadaca_1.algorithms.Alphabetical;
-import hr.foi.uzdiz.antbaric.zadaca_1.algorithms.Random;
-import hr.foi.uzdiz.antbaric.zadaca_1.algorithms.Sequential;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.CliConfigurationBuilder;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.ConfigurationBuilder;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.Generator;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.Logger;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.SyntaxValidator;
+import hr.foi.uzdiz.antbaric.zadaca_1.models.AlgorithmEnum;
 import hr.foi.uzdiz.antbaric.zadaca_1.models.Configuration;
 
 /**
@@ -46,17 +43,17 @@ public class Main {
             Generator generator = Generator.getInstance();
             generator.setSeed(config.getSeed());
 
-            Algorithm algorithm = null;
+            AlgorithmEnum algorithm = null;
 
             switch (config.getAlgoritham()) {
                 case "Sequential":
-                    algorithm = new Sequential();
-                    break;
-                case "Alphabetical":
-                    algorithm = new Alphabetical();
+                    algorithm = AlgorithmEnum.SEQUENTIAL;
                     break;
                 case "Random":
-                    algorithm = new Random();
+                    algorithm = AlgorithmEnum.RANDOM;
+                    break;
+                case "Index":
+                    algorithm = AlgorithmEnum.INDEX;
                     break;
             }
 

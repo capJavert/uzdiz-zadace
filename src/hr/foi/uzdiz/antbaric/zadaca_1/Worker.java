@@ -5,13 +5,16 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca_1;
 
-import hr.foi.uzdiz.antbaric.zadaca_1.algorithms.Algorithm;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.CSVAdapter;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.Generator;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.Inspector;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.Logger;
 import hr.foi.uzdiz.antbaric.zadaca_1.components.UzDizCSVAdapter;
+import hr.foi.uzdiz.antbaric.zadaca_1.iterators.PlaceIterator;
+import hr.foi.uzdiz.antbaric.zadaca_1.iterators.UEntry;
+import hr.foi.uzdiz.antbaric.zadaca_1.iterators.UIterator;
 import hr.foi.uzdiz.antbaric.zadaca_1.models.Actuator;
+import hr.foi.uzdiz.antbaric.zadaca_1.models.AlgorithmEnum;
 import hr.foi.uzdiz.antbaric.zadaca_1.models.Configuration;
 import hr.foi.uzdiz.antbaric.zadaca_1.models.Device;
 import hr.foi.uzdiz.antbaric.zadaca_1.models.Place;
@@ -20,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -31,8 +33,8 @@ public class Worker extends Thread implements Inspector {
 
     private static volatile Worker INSTANCE;
     private static Configuration CONFIG = null;
-    private static Algorithm ALGORITHM;
-    private static List<Map.Entry<String, Place>> PLACES;
+    private static AlgorithmEnum ALGORITHM;
+    private static PlaceIterator PLACES;
     private static List<Device> SENSORS;
     private static List<Device> ACTUATORS;
     private static HashMap<String, Integer> FAILED_DEVICES;
@@ -44,7 +46,7 @@ public class Worker extends Thread implements Inspector {
     private Worker() {
     }
 
-    public static Worker getInstance(Algorithm algorithm) {
+    public static Worker getInstance(AlgorithmEnum algorithm) {
         Worker.ALGORITHM = algorithm;
 
         return INSTANCE;
@@ -76,14 +78,13 @@ public class Worker extends Thread implements Inspector {
 
         this.configSystem();
         this.initSystem();
-        this.order();
 
         for (Integer i = 0; i < Worker.CONFIG.getExecutionLimit(); i++) {
             try {
                 Logger.getInstance().add("Working, interval #" + (i + 1), true);
 
-                for (final ListIterator<Map.Entry<String, Place>> iterator = Worker.PLACES.listIterator(); iterator.hasNext();) {
-                    final Map.Entry<String, Place> entry = iterator.next();
+                for (final UIterator<UEntry<String, Place>> iterator = Worker.PLACES.getIterator(Worker.ALGORITHM); iterator.hasNext();) {
+                    final UEntry<String, Place> entry = iterator.next();
                     Place place = entry.getValue();
                     List<Device> sensors = this.getSensorsByCategory(place.getCategory());
                     Logger.getInstance().add("Checking Place '" + place.getName() + "'", true);
@@ -144,8 +145,8 @@ public class Worker extends Thread implements Inspector {
     private void configSystem() {
         Generator generator = Generator.getInstance();
 
-        for (final ListIterator<Map.Entry<String, Place>> iterator = Worker.PLACES.listIterator(); iterator.hasNext();) {
-            final Map.Entry<String, Place> entry = iterator.next();
+        for (final UIterator<UEntry<String, Place>> iterator = Worker.PLACES.getIterator(Worker.ALGORITHM); iterator.hasNext();) {
+            final UEntry<String, Place> entry = iterator.next();
             Place place = entry.getValue();
             List<Device> sensors = this.getSensorsByCategory(place.getCategory());
             List<Device> actuators = this.getActuatorsByCategory(place.getCategory());
@@ -171,8 +172,8 @@ public class Worker extends Thread implements Inspector {
     private void initSystem() {
         Generator generator = Generator.getInstance();
 
-        for (final ListIterator<Map.Entry<String, Place>> iterator = Worker.PLACES.listIterator(); iterator.hasNext();) {
-            final Map.Entry<String, Place> entry = iterator.next();
+        for (final UIterator<UEntry<String, Place>> iterator = Worker.PLACES.getIterator(AlgorithmEnum.SEQUENTIAL); iterator.hasNext();) {
+            final UEntry<String, Place> entry = iterator.next();
             Place place = entry.getValue();
             List<Device> sensors = this.getSensorsByCategory(place.getCategory());
             Logger.getInstance().add("Init devices at '" + place.getName() + "'", true);
@@ -251,11 +252,6 @@ public class Worker extends Thread implements Inspector {
         Worker.FAILED_DEVICES.put(deviceId, overload);
 
         return true;
-    }
-
-    @Override
-    public void order() {
-        Worker.PLACES = Worker.ALGORITHM.order(Worker.PLACES);
     }
 
 }

@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hr.foi.uzdiz.antbaric.zadaca_1.components;
+package hr.foi.uzdiz.antbaric.zadaca_1.models;
 
 /**
  *
  * @author javert
  */
-public interface Inspector {
+public enum AlgorithmEnum {
+    SEQUENTIAL, RANDOM, INDEX
 }

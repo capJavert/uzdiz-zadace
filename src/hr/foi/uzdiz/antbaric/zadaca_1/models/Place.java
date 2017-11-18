@@ -5,6 +5,7 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca_1.models;
 
+import hr.foi.uzdiz.antbaric.zadaca_1.components.Generator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
  * @author javert
  */
 public class Place {
+    private final Integer id;
     private final String name;
     private final Integer category;
     private final Integer actuatorsNum;
@@ -21,12 +23,17 @@ public class Place {
     private final List<Device> sensors;
 
     public Place(String name, Integer category, Integer sensorsNum, Integer actuatorsNum) {
+        this.id = Generator.getInstance().getUniqueIdentifier();
         this.name = name;
         this.category = category;
         this.sensorsNum = sensorsNum;
         this.actuatorsNum = actuatorsNum;
         this.actuators = new ArrayList();
         this.sensors = new ArrayList();
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getName() {
