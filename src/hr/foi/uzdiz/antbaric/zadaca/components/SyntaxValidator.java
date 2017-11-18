@@ -15,7 +15,7 @@ public class SyntaxValidator {
      */
     private static List<String> rules() {
         return Stream.of(
-                "^\\d{3,} [^\\s]{1,} [^\\s]{1,} [^\\s]{1,} (Sequential|Aplhabetical|Random) \\d{1,} \\d{1,} [^\\s]{1,}$"
+            "^($^)|(-g \\d{3,5})? ?(-m [^\\s]{1,}) (-s [^\\s]{1,}) (-a [^\\s]{1,}) (-alg hr\\.foi\\.uzdiz\\.antbaric\\.zadaca\\.iterators\\.(Sequential|Random|Index)) ?(-tcd \\d{1,})? ?(-bcd \\d{1,})? ?(-i [^\\s]{1,})? ?(-brl \\d{1,})?$"
         ).collect(Collectors.toList());
     }
 
