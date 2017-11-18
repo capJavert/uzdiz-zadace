@@ -37,7 +37,7 @@ public class Main {
         Matcher matcher = SyntaxValidator.validateArguments(args);
 
         if (matcher != null) {
-            Logger.getInstance().add("Reading arguments..", true);
+            Logger.getInstance().log("Reading arguments..", true);
 
             Configuration config = Main.buildConfig(matcher);
 
@@ -61,16 +61,16 @@ public class Main {
                     break;
             }
 
-            Logger.getInstance().add("Loaded inspector algorithm '" + config.getAlgoritham() + "'", true);
+            Logger.getInstance().log("Loaded inspector algorithm '" + config.getAlgoritham() + "'", true);
 
             Worker.setConfig(config);
 
-            Logger.getInstance().add("Loaded thread configuration: Execution limit: " + config.getExecutionLimit() + "x, Interval: " + (config.getInterval() / 1000) + " sec", true);
+            Logger.getInstance().log("Loaded thread configuration: Execution limit: " + config.getExecutionLimit() + "x, Interval: " + (config.getInterval() / 1000) + " sec", true);
 
             final Worker worker = Worker.getInstance(algorithm);
             worker.start();
         } else {
-            Logger.getInstance().add("Error: Please check your arguments", true);
+            Logger.getInstance().log("Error: Please check your arguments", true);
         }
     }
 
@@ -116,7 +116,7 @@ public class Main {
     }
 
     private static void help() {
-        Logger.getInstance().add(Main.HELP, true);
+        Logger.getInstance().log(Main.HELP, true);
     }
 
     private static Boolean needHelp(String[] args) {

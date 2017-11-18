@@ -48,7 +48,7 @@ public class Logger {
         INSTANCE.filePath = filePath;
     }
 
-    public void add(String log, Boolean printToConsole) {
+    public void log(String log, Boolean printToConsole) {
         if (log == null) {
             return;
         }
@@ -86,7 +86,7 @@ public class Logger {
                 outputWriter.flush();
             }
         } catch (IOException ex) {
-            this.add("Error: Output file path '" + INSTANCE.filePath + "' not valid", true);
+            this.log("Error: Output file path '" + INSTANCE.filePath + "' not valid", true);
         }
         
         INSTANCE.emptyBuffer();

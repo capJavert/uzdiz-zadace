@@ -24,16 +24,16 @@ public class Sensor extends Device {
 
         switch (this.getUnitType()) {
             case 1:
-                Logger.getInstance().add("Sensor '" + this.getName() + "'", true);
-                Logger.getInstance().add("    MIN: " + generator.parseDecimal1(this.getMin()) + this.getComment() + ", MAX: " + generator.parseDecimal1(this.getMax()) + this.getComment(), true);
+                Logger.getInstance().log("Sensor '" + this.getName() + "'", true);
+                Logger.getInstance().log("    MIN: " + generator.parseDecimal1(this.getMin()) + this.getComment() + ", MAX: " + generator.parseDecimal1(this.getMax()) + this.getComment(), true);
                 break;
             case 2:
-                Logger.getInstance().add("Sensor '" + this.getName() + "'", true);
-                Logger.getInstance().add("    MIN: " + generator.parseDecimal5(this.getMin()) + this.getComment() + ", MAX: " + generator.parseDecimal5(this.getMax()) + this.getComment(), true);
+                Logger.getInstance().log("Sensor '" + this.getName() + "'", true);
+                Logger.getInstance().log("    MIN: " + generator.parseDecimal5(this.getMin()) + this.getComment() + ", MAX: " + generator.parseDecimal5(this.getMax()) + this.getComment(), true);
                 break;
             default:
-                Logger.getInstance().add("Sensor '" + this.getName() + "'", true);
-                Logger.getInstance().add("    MIN: " + generator.parseDecimalRound(this.getMin()) + this.getComment() + ", MAX: " + generator.parseDecimalRound(this.getMax()) + this.getComment(), true);
+                Logger.getInstance().log("Sensor '" + this.getName() + "'", true);
+                Logger.getInstance().log("    MIN: " + generator.parseDecimalRound(this.getMin()) + this.getComment() + ", MAX: " + generator.parseDecimalRound(this.getMax()) + this.getComment(), true);
                 break;
         }
     }

@@ -38,7 +38,7 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
         try {
             fileInputStream = new FileInputStream(file);
             Reader reader = new InputStreamReader(fileInputStream, "UTF-8");
-            CSVHelper.parseLine(reader); // TODO add header handling
+            CSVHelper.parseLine(reader); // TODO log header handling
             List<String> values = CSVHelper.parseLine(reader);
             while (values != null) {
                 collection.add(values);
@@ -46,14 +46,14 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
             }
 
         } catch (FileNotFoundException | UnsupportedEncodingException ex) {
-            Logger.getInstance().add("CSV file path '" + file.getAbsolutePath() + "' not valid", true);
+            Logger.getInstance().log("CSV file path '" + file.getAbsolutePath() + "' not valid", true);
         } catch (Exception ex) {
-            Logger.getInstance().add(ex.getMessage(), true);
+            Logger.getInstance().log(ex.getMessage(), true);
         } finally {
             try {
                 fileInputStream.close();
             } catch (Exception ex) {
-                Logger.getInstance().add(ex.getMessage(), true);
+                Logger.getInstance().log(ex.getMessage(), true);
             }
         }
 
@@ -98,7 +98,7 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
 
                 places.add(place);
             } catch (Exception ex) {
-                Logger.getInstance().add("Line is not valid. Skipping Place...", true);
+                Logger.getInstance().log("Line is not valid. Skipping Place...", true);
             }
         }
 
@@ -115,7 +115,7 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
             try {
                 sensors.add(factory.createToF(values));
             } catch (Exception ex) {
-                Logger.getInstance().add("Line is not valid. Skipping Sensor...", true);
+                Logger.getInstance().log("Line is not valid. Skipping Sensor...", true);
             }
         }
 
@@ -132,7 +132,7 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
             try {
                 actuators.add(factory.createToF(values));
             } catch (Exception ex) {
-                Logger.getInstance().add("Line is not valid. Skipping Actuator...", true);
+                Logger.getInstance().log("Line is not valid. Skipping Actuator...", true);
             }
         }
 
