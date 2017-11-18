@@ -26,6 +26,12 @@ public class Main {
         Logger.getInstance().setUsePrintDelay(false); //uncomment for CLI debugging
         final Configuration config;
 
+        if(Main.needHelp(args)) {
+            Main.help();
+            
+            return;
+        }
+        
         if (SyntaxValidator.validateArguments(args)) {
             Logger.getInstance().add("Reading arguments..", true);
 
@@ -69,5 +75,33 @@ public class Main {
             Logger.getInstance().add("Error: Please check your arguments", true);
         }
     }
+    
+    private static void help() {
+        Logger.getInstance().add(Main.help, true);
+    }
+    
+    private static Boolean needHelp(String[] args) {
+        return args.length == 1 && args[0].equals("--help");
+    }
+    
+    private static String help = "-g sjeme za generator slučajnog broja (u intervalu 100 - 65535). Ako nije upisana opcija, uzima se broj milisekundi u trenutnom vremenu na bazi njegovog broja sekundi i broja milisekundi.\n" +
+        "\n" +
+        "-m naziv datoteke mjesta\n" +
+        "\n" +
+        "-s naziv datoteke senzora\n" +
+        "\n" +
+        "-a naziv datoteke aktuatora\n" +
+        "\n" +
+        "-alg puni naziv klase algoritma provjere koja se dinamički učitava\n" +
+        "\n" +
+        "-tcd trajanje ciklusa dretve u sek. Ako nije upisana opcija, uzima se slučajni broj u intervalu 1 - 17.\n" +
+        "\n" +
+        "-bcd broj ciklusa dretve. Ako nije upisana opcija, uzima se slučajni broj u intervalu 1 - 23.\n" +
+        "\n" +
+        "-i naziv datoteke u koju se sprema izlaz programa. Ako nije upisana opcija, uzima se vlastito korisničko ime kojem se dodaje trenutni podaci vremena po formatu _ggggmmdd_hhmmss.txt npr. dkermek_20171105_203128.txt\n" +
+        "\n" +
+        "-brl broj linija u spremniku za upis u datoteku za izlaz. Ako nije upisana opcija, uzima se slučajni broj u intervalu 100 - 999.\n" +
+        "\n" +
+        "--help pomoć za korištenje opcija u programu.";
 
 }
