@@ -235,7 +235,7 @@ public class Worker extends Thread implements Inspector {
         Integer overload = Worker.FAILED_DEVICES.get(deviceId);
 
         if (device.getStatus() == 0) {
-            overload++;
+            overload = overload==null ? 1 : overload+1;
 
             if (overload.equals(3)) {
                 Worker.FAILED_DEVICES.remove(deviceId);
