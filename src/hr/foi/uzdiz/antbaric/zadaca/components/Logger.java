@@ -20,8 +20,10 @@ import java.util.logging.Level;
 public class Logger {
 
     private static volatile Logger INSTANCE;
-    private static final List<String> LOG = new ArrayList<>();
+    private static List<String> LOG = new ArrayList<>();
     private static Boolean USE_PRINT_DELAY = true;
+    private static Integer BUFFER_SIZE = 0;
+    private String filePath = "";
 
     static {
         INSTANCE = new Logger();
@@ -38,11 +40,23 @@ public class Logger {
         USE_PRINT_DELAY = usePrintDelay;
     }
 
+    public void setBufferSize(Integer bufferSize) {
+        Logger.BUFFER_SIZE = bufferSize;
+    }
+
+    public void setFilePath(String filePath) {
+        INSTANCE.filePath = filePath;
+    }
+
     public void add(String log, Boolean printToConsole) {
-        if(log == null) {
+        if (log == null) {
             return;
         }
-        
+
+        if (INSTANCE.isBufferFull()) {
+            INSTANCE.writeToFile();
+        }
+
         LOG.add(log);
 
         if (printToConsole) {
@@ -58,19 +72,27 @@ public class Logger {
         }
     }
 
-    public void writeToFile(String filePath) {
-        try {
-            BufferedWriter outputWriter = new BufferedWriter(new FileWriter(filePath));
-            for (String line : Logger.LOG) {
-                outputWriter.write(line);
-                outputWriter.newLine();
-            }
-            outputWriter.flush();
-            outputWriter.close();
-        } catch (IOException ex) {
-            this.add("Error: Output file path '" + filePath + "' not valid", true);
-        }
+    public Boolean isBufferFull() {
+        return Logger.LOG.size() >= Logger.BUFFER_SIZE && Logger.BUFFER_SIZE != 0;
+    }
 
-        this.add("Done!", true);
+    public void writeToFile() {
+        try {
+            try (BufferedWriter outputWriter = new BufferedWriter(new FileWriter(INSTANCE.filePath))) {
+                for (String line : Logger.LOG) {
+                    outputWriter.write(line);
+                    outputWriter.newLine();
+                }
+                outputWriter.flush();
+            }
+        } catch (IOException ex) {
+            this.add("Error: Output file path '" + INSTANCE.filePath + "' not valid", true);
+        }
+        
+        INSTANCE.emptyBuffer();
+    }
+
+    private void emptyBuffer() {
+        Logger.LOG = new ArrayList<>();
     }
 }

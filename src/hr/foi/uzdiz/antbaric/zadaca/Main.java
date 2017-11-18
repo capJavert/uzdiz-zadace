@@ -41,6 +41,9 @@ public class Main {
 
             Configuration config = Main.buildConfig(matcher);
 
+            Logger.getInstance().setBufferSize(config.getLoggerBufferSize());
+            Logger.getInstance().setFilePath(config.getOutFilePath());
+
             Generator generator = Generator.getInstance();
             generator.setSeed(config.getSeed());
 
@@ -100,7 +103,7 @@ public class Main {
         if (matcher.group(10) != null) {
             builder.setInterval(matcher.group(10));
         } else {
-             builder.setInterval("-i antbaric" + String.valueOf(new SimpleDateFormat("_yyyyMMdd_HHmmss").format(new Date())+".txt"));
+            builder.setInterval("-i antbaric" + String.valueOf(new SimpleDateFormat("_yyyyMMdd_HHmmss").format(new Date()) + ".txt"));
         }
 
         if (matcher.group(11) != null) {
