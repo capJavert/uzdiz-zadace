@@ -24,17 +24,17 @@ public class SyntaxValidator {
      * @param match String to match
      * @return Matcher
      */
-    public static Boolean validate(Object match) {
+    public static Matcher validate(Object match) {
         for(String rule : rules()) {
             Pattern pattern = Pattern.compile(rule);
             Matcher m = pattern.matcher(match.toString());
 
             if(m.matches()) {
-                return true;
+                return m;
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -43,7 +43,7 @@ public class SyntaxValidator {
      * @param args Command
      * @return Returns true if valid
      */
-    public static Boolean validateArguments(String[] args) {
+    public static Matcher validateArguments(String[] args) {
         StringBuilder sb = new StringBuilder();
         for (String arg : args) {
             sb.append(arg).append(" ");

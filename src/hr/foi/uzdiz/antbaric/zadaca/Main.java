@@ -12,6 +12,9 @@ import hr.foi.uzdiz.antbaric.zadaca.components.Logger;
 import hr.foi.uzdiz.antbaric.zadaca.components.SyntaxValidator;
 import hr.foi.uzdiz.antbaric.zadaca.models.AlgorithmEnum;
 import hr.foi.uzdiz.antbaric.zadaca.models.Configuration;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.regex.Matcher;
 
 /**
  *
@@ -24,27 +27,19 @@ public class Main {
      */
     public static void main(String[] args) {
         Logger.getInstance().setUsePrintDelay(false); //uncomment for CLI debugging
-        final Configuration config;
 
-        if(Main.needHelp(args)) {
+        if (Main.needHelp(args)) {
             Main.help();
-            
+
             return;
         }
-        
-        if (SyntaxValidator.validateArguments(args)) {
+
+        Matcher matcher = SyntaxValidator.validateArguments(args);
+
+        if (matcher != null) {
             Logger.getInstance().add("Reading arguments..", true);
 
-            ConfigurationBuilder builder = new CliConfigurationBuilder();
-            config = builder.setSeed(args[0])
-                    .setPlacesFilePath(args[1])
-                    .setSensorsFilePath(args[2])
-                    .setActuatorsFielPath(args[3])
-                    .setAlgoritham(args[4])
-                    .setInterval(args[5])
-                    .setExecutionLimit(args[6])
-                    .setOutFilePath(args[7])
-                    .build();
+            Configuration config = Main.buildConfig(matcher);
 
             Generator generator = Generator.getInstance();
             generator.setSeed(config.getSeed());
@@ -67,7 +62,7 @@ public class Main {
 
             Worker.setConfig(config);
 
-            Logger.getInstance().add("Loaded thread configuration: Execution limit: " + config.getExecutionLimit() + "x, Interval: " + (config.getInterval()/1000) + " sec", true);
+            Logger.getInstance().add("Loaded thread configuration: Execution limit: " + config.getExecutionLimit() + "x, Interval: " + (config.getInterval() / 1000) + " sec", true);
 
             final Worker worker = Worker.getInstance(algorithm);
             worker.start();
@@ -75,33 +70,74 @@ public class Main {
             Logger.getInstance().add("Error: Please check your arguments", true);
         }
     }
-    
-    private static void help() {
-        Logger.getInstance().add(Main.help, true);
+
+    private static Configuration buildConfig(Matcher matcher) {
+        ConfigurationBuilder builder = new CliConfigurationBuilder();
+
+        if (matcher.group(2) != null) {
+            builder.setSeed(matcher.group(2));
+        } else {
+            builder.setSeed("-g " + String.valueOf(System.currentTimeMillis()));
+        }
+
+        builder.setPlacesFilePath(matcher.group(3))
+                .setSensorsFilePath(matcher.group(4))
+                .setActuatorsFielPath(matcher.group(5))
+                .setAlgoritham(matcher.group(7));
+
+        if (matcher.group(8) != null) {
+            builder.setInterval(matcher.group(8));
+        } else {
+            builder.setInterval("-tcd " + String.valueOf(Generator.getInstance().fromInterval(1, 17)));
+        }
+
+        if (matcher.group(9) != null) {
+            builder.setInterval(matcher.group(9));
+        } else {
+            builder.setInterval("-bcd " + String.valueOf(Generator.getInstance().fromInterval(1, 23)));
+        }
+
+        if (matcher.group(10) != null) {
+            builder.setInterval(matcher.group(10));
+        } else {
+             builder.setInterval("-i antbaric" + String.valueOf(new SimpleDateFormat("_yyyyMMdd_HHmmss").format(new Date())+".txt"));
+        }
+
+        if (matcher.group(11) != null) {
+            builder.setInterval(matcher.group(11));
+        } else {
+            builder.setInterval("-brl " + String.valueOf(Generator.getInstance().fromInterval(100, 999)));
+        }
+
+        return builder.build();
     }
-    
+
+    private static void help() {
+        Logger.getInstance().add(Main.HELP, true);
+    }
+
     private static Boolean needHelp(String[] args) {
         return args.length == 1 && args[0].equals("--help");
     }
-    
-    private static String help = "-g sjeme za generator slučajnog broja (u intervalu 100 - 65535). Ako nije upisana opcija, uzima se broj milisekundi u trenutnom vremenu na bazi njegovog broja sekundi i broja milisekundi.\n" +
-        "\n" +
-        "-m naziv datoteke mjesta\n" +
-        "\n" +
-        "-s naziv datoteke senzora\n" +
-        "\n" +
-        "-a naziv datoteke aktuatora\n" +
-        "\n" +
-        "-alg puni naziv klase algoritma provjere koja se dinamički učitava\n" +
-        "\n" +
-        "-tcd trajanje ciklusa dretve u sek. Ako nije upisana opcija, uzima se slučajni broj u intervalu 1 - 17.\n" +
-        "\n" +
-        "-bcd broj ciklusa dretve. Ako nije upisana opcija, uzima se slučajni broj u intervalu 1 - 23.\n" +
-        "\n" +
-        "-i naziv datoteke u koju se sprema izlaz programa. Ako nije upisana opcija, uzima se vlastito korisničko ime kojem se dodaje trenutni podaci vremena po formatu _ggggmmdd_hhmmss.txt npr. dkermek_20171105_203128.txt\n" +
-        "\n" +
-        "-brl broj linija u spremniku za upis u datoteku za izlaz. Ako nije upisana opcija, uzima se slučajni broj u intervalu 100 - 999.\n" +
-        "\n" +
-        "--help pomoć za korištenje opcija u programu.";
+
+    private static final String HELP = "-g sjeme za generator slučajnog broja (u intervalu 100 - 65535). Ako nije upisana opcija, uzima se broj milisekundi u trenutnom vremenu na bazi njegovog broja sekundi i broja milisekundi.\n"
+            + "\n"
+            + "-m naziv datoteke mjesta\n"
+            + "\n"
+            + "-s naziv datoteke senzora\n"
+            + "\n"
+            + "-a naziv datoteke aktuatora\n"
+            + "\n"
+            + "-alg puni naziv klase algoritma provjere koja se dinamički učitava\n"
+            + "\n"
+            + "-tcd trajanje ciklusa dretve u sek. Ako nije upisana opcija, uzima se slučajni broj u intervalu 1 - 17.\n"
+            + "\n"
+            + "-bcd broj ciklusa dretve. Ako nije upisana opcija, uzima se slučajni broj u intervalu 1 - 23.\n"
+            + "\n"
+            + "-i naziv datoteke u koju se sprema izlaz programa. Ako nije upisana opcija, uzima se vlastito korisničko ime kojem se dodaje trenutni podaci vremena po formatu _ggggmmdd_hhmmss.txt npr. dkermek_20171105_203128.txt\n"
+            + "\n"
+            + "-brl broj linija u spremniku za upis u datoteku za izlaz. Ako nije upisana opcija, uzima se slučajni broj u intervalu 100 - 999.\n"
+            + "\n"
+            + "--help pomoć za korištenje opcija u programu.";
 
 }

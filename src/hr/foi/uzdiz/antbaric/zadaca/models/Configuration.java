@@ -10,6 +10,7 @@ package hr.foi.uzdiz.antbaric.zadaca.models;
  * @author javert
  */
 public class Configuration {
+
     private Long seed;
     private String placesFilePath;
     private String sensorsFilePath;
@@ -17,7 +18,8 @@ public class Configuration {
     private String algoritham;
     private Integer interval;
     private Integer executionLimit;
-    private String outFilePath; 
+    private String outFilePath;
+    private Integer loggerBufferSize;
 
     public Long getSeed() {
         return seed;
@@ -82,6 +84,13 @@ public class Configuration {
     public void setOutFilePath(String outFilePath) {
         this.outFilePath = outFilePath;
     }
-    
-    
+
+    public Integer getLoggerBufferSize() {
+        return loggerBufferSize;
+    }
+
+    public void setLoggerBufferSize(Integer loggerBufferSize) {
+        this.loggerBufferSize = loggerBufferSize;
+    }
+
 }

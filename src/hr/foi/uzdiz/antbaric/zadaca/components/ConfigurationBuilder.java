@@ -29,5 +29,7 @@ public interface ConfigurationBuilder {
     ConfigurationBuilder setExecutionLimit(String executionLimit);
 
     ConfigurationBuilder setOutFilePath(String outFilePath);
+    
+    ConfigurationBuilder setLoggerBufferSize(String loggerBufferSize);
 
 }
