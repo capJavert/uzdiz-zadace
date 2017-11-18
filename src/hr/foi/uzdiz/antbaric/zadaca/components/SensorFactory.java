@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hr.foi.uzdiz.antbaric.zadaca_1.components;
+package hr.foi.uzdiz.antbaric.zadaca.components;
 
-import hr.foi.uzdiz.antbaric.zadaca_1.models.Sensor;
+import hr.foi.uzdiz.antbaric.zadaca.models.Sensor;
 import java.util.List;
 
 /**

@@ -1,4 +1,4 @@
-package hr.foi.uzdiz.antbaric.zadaca_1.components;
+package hr.foi.uzdiz.antbaric.zadaca.components;
 
 import java.util.*;
 import java.util.regex.Matcher;

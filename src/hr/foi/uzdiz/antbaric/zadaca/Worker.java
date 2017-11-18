@@ -3,22 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hr.foi.uzdiz.antbaric.zadaca_1;
+package hr.foi.uzdiz.antbaric.zadaca;
 
-import hr.foi.uzdiz.antbaric.zadaca_1.components.CSVAdapter;
-import hr.foi.uzdiz.antbaric.zadaca_1.components.Generator;
-import hr.foi.uzdiz.antbaric.zadaca_1.components.Inspector;
-import hr.foi.uzdiz.antbaric.zadaca_1.components.Logger;
-import hr.foi.uzdiz.antbaric.zadaca_1.components.UzDizCSVAdapter;
-import hr.foi.uzdiz.antbaric.zadaca_1.iterators.PlaceIterator;
-import hr.foi.uzdiz.antbaric.zadaca_1.iterators.UEntry;
-import hr.foi.uzdiz.antbaric.zadaca_1.iterators.UIterator;
-import hr.foi.uzdiz.antbaric.zadaca_1.models.Actuator;
-import hr.foi.uzdiz.antbaric.zadaca_1.models.AlgorithmEnum;
-import hr.foi.uzdiz.antbaric.zadaca_1.models.Configuration;
-import hr.foi.uzdiz.antbaric.zadaca_1.models.Device;
-import hr.foi.uzdiz.antbaric.zadaca_1.models.Place;
-import hr.foi.uzdiz.antbaric.zadaca_1.models.Sensor;
+import hr.foi.uzdiz.antbaric.zadaca.components.CSVAdapter;
+import hr.foi.uzdiz.antbaric.zadaca.components.Generator;
+import hr.foi.uzdiz.antbaric.zadaca.components.Inspector;
+import hr.foi.uzdiz.antbaric.zadaca.components.Logger;
+import hr.foi.uzdiz.antbaric.zadaca.components.UzDizCSVAdapter;
+import hr.foi.uzdiz.antbaric.zadaca.iterators.PlaceIterator;
+import hr.foi.uzdiz.antbaric.zadaca.iterators.UEntry;
+import hr.foi.uzdiz.antbaric.zadaca.iterators.UIterator;
+import hr.foi.uzdiz.antbaric.zadaca.models.Actuator;
+import hr.foi.uzdiz.antbaric.zadaca.models.AlgorithmEnum;
+import hr.foi.uzdiz.antbaric.zadaca.models.Configuration;
+import hr.foi.uzdiz.antbaric.zadaca.models.Device;
+import hr.foi.uzdiz.antbaric.zadaca.models.Place;
+import hr.foi.uzdiz.antbaric.zadaca.models.Sensor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

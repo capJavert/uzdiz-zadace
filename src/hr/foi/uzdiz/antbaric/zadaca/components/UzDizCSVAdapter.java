@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hr.foi.uzdiz.antbaric.zadaca_1.components;
+package hr.foi.uzdiz.antbaric.zadaca.components;
 
-import hr.foi.uzdiz.antbaric.zadaca_1.iterators.PlaceIterator;
-import hr.foi.uzdiz.antbaric.zadaca_1.models.Device;
-import hr.foi.uzdiz.antbaric.zadaca_1.models.Place;
-import hr.foi.uzdiz.antbaric.zadaca_1.models.DeviceEnum;
+import hr.foi.uzdiz.antbaric.zadaca.iterators.PlaceIterator;
+import hr.foi.uzdiz.antbaric.zadaca.models.Device;
+import hr.foi.uzdiz.antbaric.zadaca.models.Place;
+import hr.foi.uzdiz.antbaric.zadaca.models.DeviceEnum;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

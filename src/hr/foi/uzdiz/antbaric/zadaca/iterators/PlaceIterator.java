@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hr.foi.uzdiz.antbaric.zadaca_1.iterators;
+package hr.foi.uzdiz.antbaric.zadaca.iterators;
 
-import hr.foi.uzdiz.antbaric.zadaca_1.components.Generator;
-import hr.foi.uzdiz.antbaric.zadaca_1.models.AlgorithmEnum;
-import hr.foi.uzdiz.antbaric.zadaca_1.models.Place;
+import hr.foi.uzdiz.antbaric.zadaca.components.Generator;
+import hr.foi.uzdiz.antbaric.zadaca.models.AlgorithmEnum;
+import hr.foi.uzdiz.antbaric.zadaca.models.Place;
 import java.util.Collections;
 import java.util.List;
 

@@ -3,12 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hr.foi.uzdiz.antbaric.zadaca_1.models;
+package hr.foi.uzdiz.antbaric.zadaca.components;
 
 /**
  *
  * @author javert
  */
-public enum DeviceEnum {
-    SENSOR, ACTUATOR
+public interface Inspector {
 }

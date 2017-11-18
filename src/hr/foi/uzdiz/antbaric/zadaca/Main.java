@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hr.foi.uzdiz.antbaric.zadaca_1;
+package hr.foi.uzdiz.antbaric.zadaca;
 
-import hr.foi.uzdiz.antbaric.zadaca_1.components.CliConfigurationBuilder;
-import hr.foi.uzdiz.antbaric.zadaca_1.components.ConfigurationBuilder;
-import hr.foi.uzdiz.antbaric.zadaca_1.components.Generator;
-import hr.foi.uzdiz.antbaric.zadaca_1.components.Logger;
-import hr.foi.uzdiz.antbaric.zadaca_1.components.SyntaxValidator;
-import hr.foi.uzdiz.antbaric.zadaca_1.models.AlgorithmEnum;
-import hr.foi.uzdiz.antbaric.zadaca_1.models.Configuration;
+import hr.foi.uzdiz.antbaric.zadaca.components.CliConfigurationBuilder;
+import hr.foi.uzdiz.antbaric.zadaca.components.ConfigurationBuilder;
+import hr.foi.uzdiz.antbaric.zadaca.components.Generator;
+import hr.foi.uzdiz.antbaric.zadaca.components.Logger;
+import hr.foi.uzdiz.antbaric.zadaca.components.SyntaxValidator;
+import hr.foi.uzdiz.antbaric.zadaca.models.AlgorithmEnum;
+import hr.foi.uzdiz.antbaric.zadaca.models.Configuration;
 
 /**
  *

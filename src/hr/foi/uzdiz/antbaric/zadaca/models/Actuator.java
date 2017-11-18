@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hr.foi.uzdiz.antbaric.zadaca_1.models;
+package hr.foi.uzdiz.antbaric.zadaca.models;
 
-import hr.foi.uzdiz.antbaric.zadaca_1.components.Generator;
-import hr.foi.uzdiz.antbaric.zadaca_1.components.Logger;
+import hr.foi.uzdiz.antbaric.zadaca.components.Generator;
+import hr.foi.uzdiz.antbaric.zadaca.components.Logger;
 
 /**
  *
