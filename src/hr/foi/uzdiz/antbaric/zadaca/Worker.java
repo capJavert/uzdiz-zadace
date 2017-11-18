@@ -80,56 +80,56 @@ public class Worker extends Thread implements Inspector {
         this.initSystem();
 
         for (Integer i = 0; i < Worker.CONFIG.getExecutionLimit(); i++) {
-            try {
-                Logger.getInstance().log("Working, interval #" + (i + 1), true);
+            Long startTimestamp = System.currentTimeMillis() / 1000;
 
-                for (final UIterator<UEntry<String, Place>> iterator = Worker.PLACES.getIterator(Worker.ALGORITHM); iterator.hasNext();) {
-                    final UEntry<String, Place> entry = iterator.next();
-                    Place place = entry.getValue();
-                    List<Device> sensors = this.getSensorsByCategory(place.getCategory());
-                    Logger.getInstance().log("Checking Place '" + place.getName() + "'", true);
+            Logger.getInstance().log("Working, interval #" + (i + 1), true);
 
-                    for (final ListIterator<Device> deviceIterator = place.getSensors().listIterator(); deviceIterator.hasNext();) {
-                        Sensor sensor = (Sensor) deviceIterator.next();
+            for (final UIterator<UEntry<String, Place>> iterator = Worker.PLACES.getIterator(Worker.ALGORITHM); iterator.hasNext();) {
+                final UEntry<String, Place> entry = iterator.next();
+                Place place = entry.getValue();
+                List<Device> sensors = this.getSensorsByCategory(place.getCategory());
+                Logger.getInstance().log("Checking Place '" + place.getName() + "'", true);
 
-                        if (!this.activateDevice(place.getName(), sensor)) {
-                            deviceIterator.remove();
-                            Logger.getInstance().log("Replacing Sensor '" + sensor.getName() + "'", true);
-                            sensor = (Sensor) sensor.prototype();
+                for (final ListIterator<Device> deviceIterator = place.getSensors().listIterator(); deviceIterator.hasNext();) {
+                    Sensor sensor = (Sensor) deviceIterator.next();
 
-                            if (sensor.getStatus() == 1) {
-                                deviceIterator.add(sensor);
-                                Logger.getInstance().log("Init OK '" + sensor.getName() + "'", true);
-                            } else {
-                                Logger.getInstance().log("Init FAILED '" + sensor.getName() + "'", true);
-                            }
+                    if (!this.activateDevice(place.getName(), sensor)) {
+                        deviceIterator.remove();
+                        Logger.getInstance().log("Replacing Sensor '" + sensor.getName() + "'", true);
+                        sensor = (Sensor) sensor.prototype();
+
+                        if (sensor.getStatus() == 1) {
+                            deviceIterator.add(sensor);
+                            Logger.getInstance().log("Init OK '" + sensor.getName() + "'", true);
+                        } else {
+                            Logger.getInstance().log("Init FAILED '" + sensor.getName() + "'", true);
                         }
                     }
-
-                    for (final ListIterator<Device> deviceIterator = place.getActuators().listIterator(); deviceIterator.hasNext();) {
-                        Actuator actuator = (Actuator) deviceIterator.next();
-
-                        if (!this.activateDevice(place.getName(), actuator)) {
-                            deviceIterator.remove();
-                            Logger.getInstance().log("Replacing Actuator '" + actuator.getName() + "'", true);
-                            actuator = (Actuator) actuator.prototype();
-
-                            if (actuator.getStatus() == 1) {
-                                deviceIterator.add(actuator);
-                                Logger.getInstance().log("Init OK '" + actuator.getName() + "'", true);
-                            } else {
-                                Logger.getInstance().log("Init FAILED '" + actuator.getName() + "'", true);
-                            }
-                        }
-                    }
-
-                    entry.setValue(place);
-                    iterator.set(entry);
                 }
 
-                sleep(Worker.CONFIG.getInterval());
-            } catch (InterruptedException ex) {
-                Logger.getInstance().log(ex.getMessage(), true);
+                for (final ListIterator<Device> deviceIterator = place.getActuators().listIterator(); deviceIterator.hasNext();) {
+                    Actuator actuator = (Actuator) deviceIterator.next();
+
+                    if (!this.activateDevice(place.getName(), actuator)) {
+                        deviceIterator.remove();
+                        Logger.getInstance().log("Replacing Actuator '" + actuator.getName() + "'", true);
+                        actuator = (Actuator) actuator.prototype();
+
+                        if (actuator.getStatus() == 1) {
+                            deviceIterator.add(actuator);
+                            Logger.getInstance().log("Init OK '" + actuator.getName() + "'", true);
+                        } else {
+                            Logger.getInstance().log("Init FAILED '" + actuator.getName() + "'", true);
+                        }
+                    }
+                }
+
+                entry.setValue(place);
+                iterator.set(entry);
+                
+                if(this.isLimitExceeded(startTimestamp)) {
+                    break;
+                }
             }
         }
 
@@ -236,7 +236,7 @@ public class Worker extends Thread implements Inspector {
         Integer overload = Worker.FAILED_DEVICES.get(deviceId);
 
         if (device.getStatus() == 0) {
-            overload = overload==null ? 1 : overload+1;
+            overload = overload == null ? 1 : overload + 1;
 
             if (overload.equals(3)) {
                 Worker.FAILED_DEVICES.remove(deviceId);
@@ -252,6 +252,10 @@ public class Worker extends Thread implements Inspector {
         Worker.FAILED_DEVICES.put(deviceId, overload);
 
         return true;
+    }
+    
+    private Boolean isLimitExceeded(Long startTimestamp) {
+        return System.currentTimeMillis() - startTimestamp > Worker.CONFIG.getInterval() * 1000;
     }
 
 }
