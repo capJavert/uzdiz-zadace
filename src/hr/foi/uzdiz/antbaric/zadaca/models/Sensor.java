@@ -14,12 +14,16 @@ import hr.foi.uzdiz.antbaric.zadaca.components.Logger;
  */
 public class Sensor extends Device {
 
+    private Boolean changed = false;
+
     public Sensor(String name, Integer category, Integer unitType, Double min, Double max, String comment) {
         super(name, category, unitType, min, max, comment);
     }
 
     @Override
     public void activate() {
+        this.changed = true;
+
         Generator generator = Generator.getInstance();
 
         switch (this.getUnitType()) {
@@ -42,7 +46,7 @@ public class Sensor extends Device {
     public Device prototype() {
         Device sensor = new Sensor(this.getName(), this.getType(), this.getUnitType(), this.getMin(), this.getMax(), this.getComment());
         sensor.setId();
-        
+
         return sensor;
     }
 
@@ -52,4 +56,32 @@ public class Sensor extends Device {
             this.id = Generator.getInstance().getUniqueIdentifier(DeviceEnum.SENSOR.toString());
         }
     }
+
+    @Override
+    public Integer getStatus() {
+        this.changed = false;
+
+        return super.getStatus();
+    }
+
+    public Boolean isChanged() {
+        return changed;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof Sensor)) {
+            return false;
+        }
+        Sensor other = (Sensor) object;
+        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
+    }
+
 }

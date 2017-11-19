@@ -84,6 +84,10 @@ public abstract class Device {
         return Generator.getInstance().getStatus();
     }
 
+    public String getNameAndId() {
+        return this.name + " ID: " + this.id;
+    }
+    
     public abstract Device prototype();
 
     public abstract void activate();

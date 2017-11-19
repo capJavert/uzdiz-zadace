@@ -7,6 +7,8 @@ package hr.foi.uzdiz.antbaric.zadaca.models;
 
 import hr.foi.uzdiz.antbaric.zadaca.components.Generator;
 import hr.foi.uzdiz.antbaric.zadaca.components.Logger;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -14,6 +16,8 @@ import hr.foi.uzdiz.antbaric.zadaca.components.Logger;
  */
 public class Actuator extends Device {
 
+    public final List<Sensor> sensors = new ArrayList<>();
+    
     public Actuator(String name, Integer category, Integer unitType, Double min, Double max, String comment) {
         super(name, category, unitType, min, max, comment);
     }
@@ -109,6 +113,16 @@ public class Actuator extends Device {
         if (this.id == null) {
             this.id = Generator.getInstance().getUniqueIdentifier(DeviceEnum.ACTUATOR.toString());
         }
+    }
+    
+    public Boolean isSensorChanged() {
+        for(Sensor sensor : this.sensors) {
+            if(sensor.isChanged()) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
 }

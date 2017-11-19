@@ -111,24 +111,31 @@ public class Worker extends Thread implements Inspector {
                 for (final ListIterator<Device> deviceIterator = place.getActuators().listIterator(); deviceIterator.hasNext();) {
                     Actuator actuator = (Actuator) deviceIterator.next();
 
-                    if (!this.activateDevice(place.getName(), actuator)) {
-                        deviceIterator.remove();
-                        Logger.getInstance().log("Replacing Actuator '" + actuator.getName() + "'", true);
-                        actuator = (Actuator) actuator.prototype();
+                    if (actuator.isSensorChanged()) {
+                        if (!this.activateDevice(place.getName(), actuator)) {
+                            deviceIterator.remove();
+                            Logger.getInstance().log("Replacing Actuator '" + actuator.getName() + "'", true);
+                            actuator = (Actuator) actuator.prototype();
 
-                        if (actuator.getStatus() == 1) {
-                            deviceIterator.add(actuator);
-                            Logger.getInstance().log("Init OK '" + actuator.getName() + "'", true);
-                        } else {
-                            Logger.getInstance().log("Init FAILED '" + actuator.getName() + "'", true);
+                            if (actuator.getStatus() == 1) {
+                                deviceIterator.add(actuator);
+                                Logger.getInstance().log("Init OK '" + actuator.getName() + "'", true);
+                            } else {
+                                Logger.getInstance().log("Init FAILED '" + actuator.getName() + "'", true);
+                            }
                         }
+                    } else {
+                        Logger.getInstance().log("No change to sensors Actuator '" + actuator.getName() + "'", true);
+                        actuator.activate();
+                        Worker.FAILED_DEVICES.put(place.getName() + "." + actuator.getName(), 0);
                     }
+
                 }
 
                 entry.setValue(place);
                 iterator.set(entry);
-                
-                if(this.isLimitExceeded(startTimestamp)) {
+
+                if (this.isLimitExceeded(startTimestamp)) {
                     // break; TODO enable before prod 
                 }
             }
@@ -181,10 +188,10 @@ public class Worker extends Thread implements Inspector {
 
                 if (sensor.getStatus() == 0) {
                     deviceIterator.remove();
-                    Logger.getInstance().log("  Init FAILED '" + sensor.getName() + "'", true);
+                    Logger.getInstance().log("  Init FAILED '" + sensor.getNameAndId() + "'", true);
                 } else {
                     Worker.FAILED_DEVICES.put(place.getName() + "." + sensor.getName(), 0);
-                    Logger.getInstance().log("  Init OK '" + sensor.getName() + "'", true);
+                    Logger.getInstance().log("  Init OK '" + sensor.getNameAndId() + "'", true);
                 }
             }
 
@@ -193,15 +200,33 @@ public class Worker extends Thread implements Inspector {
 
                 if (actuator.getStatus() == 0) {
                     deviceIterator.remove();
-                    Logger.getInstance().log("  Init FAILED '" + actuator.getName() + "'", true);
+                    Logger.getInstance().log("  Init FAILED '" + actuator.getNameAndId() + "'", true);
                 } else {
                     Worker.FAILED_DEVICES.put(place.getName() + "." + actuator.getName(), 0);
-                    Logger.getInstance().log("  Init OK '" + actuator.getName() + "'", true);
+                    Logger.getInstance().log("  Init OK '" + actuator.getNameAndId() + "'", true);
+
+                    this.configActuator((Actuator) actuator, place.getSensors());
                 }
             }
 
             entry.setValue(place);
             iterator.set(entry);
+        }
+    }
+
+    private void configActuator(Actuator actuator, List<Device> sensors) {
+        Logger.getInstance().log("  Assigning Sensors to Actuator '" + actuator.getNameAndId() + "'", true);
+
+        for (int i = 0; i < Generator.getInstance().fromInterval(1, sensors.size()); i++) {
+            while (true) {
+                Sensor sensor = (Sensor) sensors.get(Generator.getInstance().selectFrom(sensors));
+
+                if (!actuator.sensors.contains(sensor)) {
+                    actuator.sensors.add(sensor);
+                    Logger.getInstance().log("      Added Sensor '" + sensor.getNameAndId() + "' to Actuator '" + actuator.getNameAndId() + "'", true);
+                    break;
+                }
+            }
         }
     }
 
@@ -251,7 +276,7 @@ public class Worker extends Thread implements Inspector {
 
         return true;
     }
-    
+
     private Boolean isLimitExceeded(Long startTimestamp) {
         return System.currentTimeMillis() - startTimestamp > Worker.CONFIG.getInterval() * 1000;
     }
