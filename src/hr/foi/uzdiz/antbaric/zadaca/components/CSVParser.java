@@ -10,6 +10,7 @@ import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
 import hr.foi.uzdiz.antbaric.zadaca.models.Device;
 import hr.foi.uzdiz.antbaric.zadaca.models.Place;
 import hr.foi.uzdiz.antbaric.zadaca.models.DeviceEnum;
+import hr.foi.uzdiz.antbaric.zadaca.models.LError;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -44,14 +45,14 @@ public class CSVParser extends CSVHelper {
             }
 
         } catch (FileNotFoundException | UnsupportedEncodingException ex) {
-            Logger.getInstance().log("CSV file path '" + file.getAbsolutePath() + "' not valid", true);
+            Logger.getInstance().log(new LError("CSV file path '" + file.getAbsolutePath() + "' not valid"), true);
         } catch (Exception ex) {
-            Logger.getInstance().log(ex.getMessage(), true);
+            Logger.getInstance().log(new LError(ex.getMessage()), true);
         } finally {
             try {
                 fileInputStream.close();
             } catch (Exception ex) {
-                Logger.getInstance().log(ex.getMessage(), true);
+                Logger.getInstance().log(new LError(ex.getMessage()), true);
             }
         }
 
@@ -74,8 +75,6 @@ public class CSVParser extends CSVHelper {
                         || values.get(0) == null
                         || Integer.parseInt(values.get(1)) < 0 
                         || Integer.parseInt(values.get(1)) > 1) {
-                    
-                    Logger.getInstance().log("Kurac", true);
                 }
                 
                 if (values.get(2) == null) {
@@ -95,8 +94,7 @@ public class CSVParser extends CSVHelper {
 
                 places.add(place);
             } catch (NumberFormatException ex) {
-                Logger.getInstance().log(ex.getMessage(), true);
-                Logger.getInstance().log("Line is not valid. Skipping Place...", true);
+                Logger.getInstance().log(new LError("Line is not valid. Skipping Place..."), true);
             }
         }
 
@@ -112,7 +110,7 @@ public class CSVParser extends CSVHelper {
             try {
                 sensors.add(factory.createToF(values));
             } catch (Exception ex) {
-                Logger.getInstance().log("Line is not valid. Skipping Sensor...", true);
+                Logger.getInstance().log(new LError("Line is not valid. Skipping Sensor..."), true);
             }
         }
 
@@ -128,7 +126,7 @@ public class CSVParser extends CSVHelper {
             try {
                 actuators.add(factory.createToF(values));
             } catch (Exception ex) {
-                Logger.getInstance().log("Line is not valid. Skipping Actuator...", true);
+                Logger.getInstance().log(new LError("Line is not valid. Skipping Actuator..."), true);
             }
         }
 

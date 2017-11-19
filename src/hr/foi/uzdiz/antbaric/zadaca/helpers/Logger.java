@@ -5,6 +5,10 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca.helpers;
 
+import hr.foi.uzdiz.antbaric.zadaca.extensions.LogElement;
+import hr.foi.uzdiz.antbaric.zadaca.extensions.LogElementVisitor;
+import hr.foi.uzdiz.antbaric.zadaca.extensions.PimpMyLogVisitor;
+import hr.foi.uzdiz.antbaric.zadaca.models.LWarning;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,6 +19,9 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+import org.fusesource.jansi.Ansi;
+import static org.fusesource.jansi.Ansi.ansi;
+import org.fusesource.jansi.AnsiConsole;
 
 /**
  *
@@ -27,6 +34,7 @@ public class Logger {
     private static Boolean USE_PRINT_DELAY = true;
     private static Integer BUFFER_SIZE = 0;
     private String filePath = "";
+    private final LogElementVisitor pimpMyLogVisitor = new PimpMyLogVisitor();
 
     static {
         INSTANCE = new Logger();
@@ -51,20 +59,20 @@ public class Logger {
         INSTANCE.filePath = filePath;
     }
 
-    public void log(String log, Boolean printToConsole) {
+    public void log(LogElement log, Boolean printToConsole) {
         if (log == null) {
             return;
         }
 
         if (INSTANCE.isBufferFull()) {
             INSTANCE.writeToFile();
-            this.log("Buffer full, writing log to output file...", true);
+            this.log(new LWarning("Buffer full, writing log to output file..."), true);
         }
 
-        LOG.add(log);
+        LOG.add(log.toString());
 
         if (printToConsole) {
-            System.out.println(log);
+            log.accept(this.pimpMyLogVisitor);
 
             if (Logger.USE_PRINT_DELAY) {
                 try {
@@ -84,7 +92,7 @@ public class Logger {
         try {
             Files.write(Paths.get(INSTANCE.filePath), Logger.LOG, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } catch (IOException ex) {
-            System.out.println("Error: Output file path '" + INSTANCE.filePath + "' not valid");
+            AnsiConsole.out.println(ansi().fg(Ansi.Color.RED).a("Error: Output file path '" + INSTANCE.filePath + "' not valid"));
         }
 
         INSTANCE.emptyBuffer();
@@ -101,7 +109,7 @@ public class Logger {
                 outputWriter.flush();
             }
         } catch (IOException ex) {
-            System.out.println("Error: Output file path '" + filePath + "' not valid");
+            AnsiConsole.out.println(ansi().fg(Ansi.Color.RED).a("Error: Output file path '" + INSTANCE.filePath + "' not valid"));
         }
     }
 }

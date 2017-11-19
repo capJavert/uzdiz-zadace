@@ -12,6 +12,9 @@ import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.SyntaxValidator;
 import hr.foi.uzdiz.antbaric.zadaca.models.AlgorithmEnum;
 import hr.foi.uzdiz.antbaric.zadaca.models.Configuration;
+import hr.foi.uzdiz.antbaric.zadaca.models.LError;
+import hr.foi.uzdiz.antbaric.zadaca.models.LInfo;
+import hr.foi.uzdiz.antbaric.zadaca.models.LMessage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -37,41 +40,45 @@ public class Main {
         Matcher matcher = SyntaxValidator.validateArguments(args);
 
         if (matcher != null) {
-            Logger.getInstance().log("Reading arguments..", true);
+            Logger.getInstance().log(new LMessage("Reading arguments.."), true);
 
-            Configuration config = Main.buildConfig(matcher);
+            try {
+                Configuration config = Main.buildConfig(matcher);
 
-            Logger.getInstance().setBufferSize(config.getLoggerBufferSize());
-            Logger.getInstance().setFilePath(config.getOutFilePath());
-            Logger.getInstance().clearFile();
+                Logger.getInstance().setBufferSize(config.getLoggerBufferSize());
+                Logger.getInstance().setFilePath(config.getOutFilePath());
+                Logger.getInstance().clearFile();
 
-            Generator generator = Generator.getInstance();
-            generator.setSeed(config.getSeed());
+                Generator generator = Generator.getInstance();
+                generator.setSeed(config.getSeed());
 
-            AlgorithmEnum algorithm = null;
+                AlgorithmEnum algorithm = null;
 
-            switch (config.getAlgoritham()) {
-                case "Sequential":
-                    algorithm = AlgorithmEnum.SEQUENTIAL;
-                    break;
-                case "Random":
-                    algorithm = AlgorithmEnum.RANDOM;
-                    break;
-                case "Index":
-                    algorithm = AlgorithmEnum.INDEX;
-                    break;
+                switch (config.getAlgoritham()) {
+                    case "Sequential":
+                        algorithm = AlgorithmEnum.SEQUENTIAL;
+                        break;
+                    case "Random":
+                        algorithm = AlgorithmEnum.RANDOM;
+                        break;
+                    case "Index":
+                        algorithm = AlgorithmEnum.INDEX;
+                        break;
+                }
+
+                Logger.getInstance().log(new LMessage("Loaded inspector algorithm '" + config.getAlgoritham() + "'"), true);
+
+                Worker.setConfig(config);
+
+                Logger.getInstance().log(new LMessage("Loaded thread configuration: Execution limit: " + config.getExecutionLimit() + "x, Interval: " + (config.getInterval() / 1000) + " sec"), true);
+
+                final Worker worker = Worker.getInstance(algorithm);
+                worker.start();
+            } catch (NullPointerException ex) {
+                Logger.getInstance().log(new LError("Error: Invalid arguments"), true);
             }
-
-            Logger.getInstance().log("Loaded inspector algorithm '" + config.getAlgoritham() + "'", true);
-
-            Worker.setConfig(config);
-
-            Logger.getInstance().log("Loaded thread configuration: Execution limit: " + config.getExecutionLimit() + "x, Interval: " + (config.getInterval() / 1000) + " sec", true);
-
-            final Worker worker = Worker.getInstance(algorithm);
-            worker.start();
         } else {
-            Logger.getInstance().log("Error: Please check your arguments", true);
+            Logger.getInstance().log(new LError("Error: Please check your arguments"), true);
         }
     }
 
@@ -87,7 +94,7 @@ public class Main {
         builder.setPlacesFilePath(matcher.group(3))
                 .setSensorsFilePath(matcher.group(4))
                 .setActuatorsFielPath(matcher.group(5))
-                .setAlgoritham("-alg "+matcher.group(7));
+                .setAlgoritham("-alg " + matcher.group(7));
 
         if (matcher.group(8) != null) {
             builder.setInterval(matcher.group(8));
@@ -117,7 +124,7 @@ public class Main {
     }
 
     private static void help() {
-        Logger.getInstance().log(Main.HELP, true);
+        Logger.getInstance().log(new LInfo(Main.HELP), true);
     }
 
     private static Boolean needHelp(String[] args) {
