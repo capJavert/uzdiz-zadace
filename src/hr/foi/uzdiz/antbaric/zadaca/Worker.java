@@ -221,16 +221,20 @@ public class Worker extends Thread implements Inspector {
     private void configActuator(Actuator actuator, List<Device> sensors) {
         Logger.getInstance().log(new LMessage("  Assigning Sensors to Actuator '" + actuator.getNameAndId() + "'"), true);
 
-        for (int i = 0; i < Generator.getInstance().fromInterval(1, sensors.size()); i++) {
-            while (true) {
-                Sensor sensor = (Sensor) sensors.get(Generator.getInstance().selectFrom(sensors));
+        if (sensors.size() > 0) {
+            for (int i = 0; i < Generator.getInstance().fromInterval(1, sensors.size()+1); i++) {
+                while (true) {
+                    Sensor sensor = (Sensor) sensors.get(Generator.getInstance().selectFrom(sensors));
 
-                if (!actuator.sensors.contains(sensor)) {
-                    actuator.sensors.add(sensor);
-                    Logger.getInstance().log(new LMessage("      Added Sensor '" + sensor.getNameAndId() + "' to Actuator '" + actuator.getNameAndId() + "'"), true);
-                    break;
+                    if (!actuator.sensors.contains(sensor)) {
+                        actuator.sensors.add(sensor);
+                        Logger.getInstance().log(new LMessage("      Added Sensor '" + sensor.getNameAndId() + "' to Actuator '" + actuator.getNameAndId() + "'"), true);
+                        break;
+                    }
                 }
             }
+        } else {
+             Logger.getInstance().log(new LMessage("  Actuator '" + actuator.getNameAndId() + "' has no assigned sensors"), true);
         }
     }
 
