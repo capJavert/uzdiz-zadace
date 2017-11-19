@@ -21,7 +21,9 @@ public class Generator extends Random {
     private static final DecimalFormat DECIMAL_FORMATER_ROUND = new DecimalFormat("#0");
     private static final DecimalFormat DECIMAL_FORMATER_1 = new DecimalFormat("#0.0");
     private static final DecimalFormat DECIMAL_FORMATER_5 = new DecimalFormat("#0.00000");
-    private static final List<Integer> USED_IDENTIFIERS = new ArrayList<>();
+    private static final List<Integer> USED_IDENTIFIERS_PLACES = new ArrayList<>();
+    private static final List<Integer> USED_IDENTIFIERS_SENSORS = new ArrayList<>();
+    private static final List<Integer> USED_IDENTIFIERS_ACTUATORS = new ArrayList<>();
 
     static {
         INSTANCE = new Generator();
@@ -34,49 +36,56 @@ public class Generator extends Random {
         return INSTANCE;
     }
 
-    public List<Integer> getUsedIdentifiers() {
-        return USED_IDENTIFIERS;
+    private List<Integer> getUsedIdentifiers(String type) {
+        switch (type) {
+            case "SENSOR":
+                return USED_IDENTIFIERS_SENSORS;
+            case "ACTUATOR":
+                return USED_IDENTIFIERS_ACTUATORS;
+            default:
+                return USED_IDENTIFIERS_PLACES;
+        }
     }
-    
+
     public Integer getStatus() {
         return this.nextInt(10) + 1 > 1 ? 1 : 0;
     }
 
     public Double getDouble() {
-        return this.nextLong()+this.nextDouble();
+        return this.nextLong() + this.nextDouble();
     }
-    
-    public Integer getUniqueIdentifier() {
+
+    public Integer getUniqueIdentifier(String type) {
         Integer identifier;
-        
-        while(true) {
-            identifier = this.nextInt();
-            
-            if(!USED_IDENTIFIERS.contains(identifier)) {
-                USED_IDENTIFIERS.add(identifier);
-                
+
+        while (true) {
+            identifier = this.fromInterval(1, 1000);
+
+            if (!INSTANCE.getUsedIdentifiers(type).contains(identifier)) {
+                INSTANCE.getUsedIdentifiers(type).add(identifier);
+
                 break;
             }
         }
-        
+
         return identifier;
     }
-    
+
     public int fromInterval(int min, int max) {
-        int number = min + (this.nextInt() * (max - min));
-        
+        int number = this.nextInt(max - min) + min;
+
         return number;
     }
-    
+
     public float fromInterval(float min, float max) {
         float number = min + (this.nextFloat() * (max - min));
-        
+
         return number;
     }
-    
+
     public Long fromInterval(Double min, Double max) {
         Double number = min + (this.nextDouble() * (max - min));
-        
+
         return number.longValue();
     }
 

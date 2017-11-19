@@ -14,7 +14,8 @@ import java.util.List;
  * @author javert
  */
 public class Place {
-    private final Integer id;
+
+    private Integer id = null;
     private final String name;
     private final Integer category;
     private final Integer actuatorsNum;
@@ -23,7 +24,6 @@ public class Place {
     private final List<Device> sensors;
 
     public Place(String name, Integer category, Integer sensorsNum, Integer actuatorsNum) {
-        this.id = Generator.getInstance().getUniqueIdentifier();
         this.name = name;
         this.category = category;
         this.sensorsNum = sensorsNum;
@@ -34,6 +34,12 @@ public class Place {
 
     public Integer getId() {
         return id;
+    }
+
+    public void setId() {
+        if (this.id == null) {
+            this.id = Generator.getInstance().getUniqueIdentifier("PLACE");
+        }
     }
 
     public String getName() {
@@ -61,10 +67,14 @@ public class Place {
     }
 
     public void addSensor(Device sensor) {
+        sensor.setId();
+        
         this.sensors.add(sensor);
     }
 
     public void addActuator(Device actuator) {
+        actuator.setId();
+        
         this.actuators.add(actuator);
     }
 

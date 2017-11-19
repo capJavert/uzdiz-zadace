@@ -5,8 +5,8 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca.components;
 
-import hr.foi.uzdiz.antbaric.zadaca.iterators.PlaceIterator;
 import hr.foi.uzdiz.antbaric.zadaca.models.Device;
+import hr.foi.uzdiz.antbaric.zadaca.models.Place;
 import java.util.List;
 
 /**
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface CSVAdapter {
     
-    PlaceIterator getPlaces();
+    List<Place> getPlaces();
     
     List<Device> getSensors();
     

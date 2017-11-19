@@ -99,8 +99,16 @@ public class Actuator extends Device {
     @Override
     public Device prototype() {
         Device actuator = new Actuator(this.getName(), this.getType(), this.getUnitType(), this.getMin(), this.getMax(), this.getComment());
+        actuator.setId();
 
         return actuator;
+    }
+
+    @Override
+    public void setId() {
+        if (this.id == null) {
+            this.id = Generator.getInstance().getUniqueIdentifier(DeviceEnum.ACTUATOR.toString());
+        }
     }
 
 }

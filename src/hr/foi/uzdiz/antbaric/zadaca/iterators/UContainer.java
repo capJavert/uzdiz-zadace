@@ -6,6 +6,7 @@
 package hr.foi.uzdiz.antbaric.zadaca.iterators;
 
 import hr.foi.uzdiz.antbaric.zadaca.models.AlgorithmEnum;
+import java.util.List;
 
 /**
  *
@@ -13,5 +14,5 @@ import hr.foi.uzdiz.antbaric.zadaca.models.AlgorithmEnum;
  */
 public interface UContainer<E> {
     public UIterator getIterator(AlgorithmEnum type);
-    public void add(E item);
+    public void add(List<E> item);
 }

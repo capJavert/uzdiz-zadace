@@ -69,7 +69,8 @@ public class Worker extends Thread implements Inspector {
     public void run() {
         CSVAdapter adapter = new UzDizCSVAdapter(Worker.CONFIG.getPlacesFilePath(), Worker.CONFIG.getActuatorsFielPath(), Worker.CONFIG.getSensorsFilePath());
         Logger.getInstance().log("Reading CSV files...", true);
-        Worker.PLACES = adapter.getPlaces();
+        Worker.PLACES = new PlaceIterator();
+        Worker.PLACES.add(adapter.getPlaces());
         Worker.SENSORS = adapter.getSensors();
         Worker.ACTUATORS = adapter.getActuators();
         Worker.FAILED_DEVICES = new HashMap<>();
@@ -128,7 +129,7 @@ public class Worker extends Thread implements Inspector {
                 iterator.set(entry);
                 
                 if(this.isLimitExceeded(startTimestamp)) {
-                    break;
+                    // break; TODO enable before prod 
                 }
             }
         }
@@ -143,24 +144,23 @@ public class Worker extends Thread implements Inspector {
     }
 
     private void configSystem() {
-        Generator generator = Generator.getInstance();
-
-        for (final UIterator<UEntry<String, Place>> iterator = Worker.PLACES.getIterator(Worker.ALGORITHM); iterator.hasNext();) {
+        for (final UIterator<UEntry<String, Place>> iterator = Worker.PLACES.getIterator(AlgorithmEnum.INDEX); iterator.hasNext();) {
             final UEntry<String, Place> entry = iterator.next();
             Place place = entry.getValue();
+            place.setId();
             List<Device> sensors = this.getSensorsByCategory(place.getCategory());
             List<Device> actuators = this.getActuatorsByCategory(place.getCategory());
             Logger.getInstance().log("Placing devices at '" + place.getName() + "'", true);
 
             if (!Worker.SENSORS.isEmpty()) {
                 for (Integer i = 0; i < place.getSensorsNum(); i++) {
-                    place.addSensor(sensors.get(generator.selectFrom(sensors)).prototype());
+                    place.addSensor(sensors.get(Generator.getInstance().selectFrom(sensors)).prototype());
                 }
             }
 
             if (!Worker.ACTUATORS.isEmpty()) {
                 for (Integer i = 0; i < place.getActuatorsNum(); i++) {
-                    place.addActuator(actuators.get(generator.selectFrom(actuators)).prototype());
+                    place.addActuator(actuators.get(Generator.getInstance().selectFrom(actuators)).prototype());
                 }
             }
 
@@ -170,13 +170,11 @@ public class Worker extends Thread implements Inspector {
     }
 
     private void initSystem() {
-        Generator generator = Generator.getInstance();
-
         for (final UIterator<UEntry<String, Place>> iterator = Worker.PLACES.getIterator(AlgorithmEnum.SEQUENTIAL); iterator.hasNext();) {
             final UEntry<String, Place> entry = iterator.next();
             Place place = entry.getValue();
             List<Device> sensors = this.getSensorsByCategory(place.getCategory());
-            Logger.getInstance().log("Init devices at '" + place.getName() + "'", true);
+            Logger.getInstance().log("Init devices at '" + place.getName() + " ID: " + place.getId() + "'", true);
 
             for (final ListIterator<Device> deviceIterator = place.getSensors().listIterator(); deviceIterator.hasNext();) {
                 final Device sensor = deviceIterator.next();
@@ -240,7 +238,7 @@ public class Worker extends Thread implements Inspector {
 
             if (overload.equals(3)) {
                 Worker.FAILED_DEVICES.remove(deviceId);
-                Logger.getInstance().log("Device '" + device.getName() + "'@'" + placeName + "' need replacement...", true);
+                Logger.getInstance().log("Device '" + device.getName() + "ID: " + device.getId() + "'@'" + placeName + "' need replacement...", true);
 
                 return false;
             }

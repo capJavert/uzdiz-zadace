@@ -41,7 +41,15 @@ public class Sensor extends Device {
     @Override
     public Device prototype() {
         Device sensor = new Sensor(this.getName(), this.getType(), this.getUnitType(), this.getMin(), this.getMax(), this.getComment());
-
+        sensor.setId();
+        
         return sensor;
+    }
+
+    @Override
+    public void setId() {
+        if (this.id == null) {
+            this.id = Generator.getInstance().getUniqueIdentifier(DeviceEnum.SENSOR.toString());
+        }
     }
 }

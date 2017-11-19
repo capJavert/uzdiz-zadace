@@ -43,6 +43,7 @@ public class Main {
 
             Logger.getInstance().setBufferSize(config.getLoggerBufferSize());
             Logger.getInstance().setFilePath(config.getOutFilePath());
+            Logger.getInstance().clearFile();
 
             Generator generator = Generator.getInstance();
             generator.setSeed(config.getSeed());
@@ -86,7 +87,7 @@ public class Main {
         builder.setPlacesFilePath(matcher.group(3))
                 .setSensorsFilePath(matcher.group(4))
                 .setActuatorsFielPath(matcher.group(5))
-                .setAlgoritham(matcher.group(7));
+                .setAlgoritham("-alg "+matcher.group(7));
 
         if (matcher.group(8) != null) {
             builder.setInterval(matcher.group(8));
@@ -95,21 +96,21 @@ public class Main {
         }
 
         if (matcher.group(9) != null) {
-            builder.setInterval(matcher.group(9));
+            builder.setExecutionLimit(matcher.group(9));
         } else {
-            builder.setInterval("-bcd " + String.valueOf(Generator.getInstance().fromInterval(1, 23)));
+            builder.setExecutionLimit("-bcd " + String.valueOf(Generator.getInstance().fromInterval(1, 23)));
         }
 
         if (matcher.group(10) != null) {
-            builder.setInterval(matcher.group(10));
+            builder.setOutFilePath(matcher.group(10));
         } else {
-            builder.setInterval("-i antbaric" + String.valueOf(new SimpleDateFormat("_yyyyMMdd_HHmmss").format(new Date()) + ".txt"));
+            builder.setOutFilePath("-i antbaric" + String.valueOf(new SimpleDateFormat("_yyyyMMdd_HHmmss").format(new Date()) + ".txt"));
         }
 
         if (matcher.group(11) != null) {
-            builder.setInterval(matcher.group(11));
+            builder.setLoggerBufferSize(matcher.group(11));
         } else {
-            builder.setInterval("-brl " + String.valueOf(Generator.getInstance().fromInterval(100, 999)));
+            builder.setLoggerBufferSize("-brl " + String.valueOf(Generator.getInstance().fromInterval(100, 999)));
         }
 
         return builder.build();

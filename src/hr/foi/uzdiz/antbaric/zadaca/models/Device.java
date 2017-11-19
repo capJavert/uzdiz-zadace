@@ -13,6 +13,7 @@ import hr.foi.uzdiz.antbaric.zadaca.components.Generator;
  */
 public abstract class Device {
 
+    protected Integer id;
     private final String name;
     private final Integer type;
     private final Integer unitType;
@@ -22,18 +23,23 @@ public abstract class Device {
     private Double value;
 
     public Device(String name, Integer cateogry, Integer Type, Double min, Double max, String comment) {
+        this.id = null;
         this.name = name;
         this.type = cateogry;
         this.unitType = Type;
         this.min = min;
         this.max = max;
         this.comment = comment;
-        
-        if(this.type == 3) {
+
+        if (this.type == 3) {
             this.value = new Double(0);
         } else {
             this.value = this.min;
         }
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getName() {
@@ -63,11 +69,11 @@ public abstract class Device {
     public Double getValue() {
         return value;
     }
-    
+
     public void setValue(Double value) {
-        if(value > this.max) {
+        if (value > this.max) {
             this.value = this.max;
-        } else if(value < this.min) {
+        } else if (value < this.min) {
             this.value = this.min;
         } else {
             this.value = value;
@@ -79,7 +85,9 @@ public abstract class Device {
     }
 
     public abstract Device prototype();
-    
+
     public abstract void activate();
+    
+    public abstract void setId();
 
 }

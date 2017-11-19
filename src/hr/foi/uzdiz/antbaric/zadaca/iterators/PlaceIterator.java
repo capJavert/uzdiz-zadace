@@ -5,11 +5,12 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca.iterators;
 
-import hr.foi.uzdiz.antbaric.zadaca.components.Generator;
 import hr.foi.uzdiz.antbaric.zadaca.models.AlgorithmEnum;
 import hr.foi.uzdiz.antbaric.zadaca.models.Place;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  *
@@ -34,18 +35,27 @@ public class PlaceIterator implements UContainer<Place> {
     }
 
     @Override
-    public void add(Place item) {
-        this.places[this.places.length] = item;
+    public void add(List<Place> places) {
+        this.places = new Place[places.size()];
+        Integer i = 0;
+
+        for (Place place : places) {
+            this.places[i++] = place;
+        }
     }
 
     private class SequentialIterator implements UIterator<UEntry> {
 
         private Integer identifier = 0;
         private Integer index = 0;
-        private Integer next;
+        private Integer next = null;
 
         @Override
         public Boolean hasNext() {
+            if (places == null) {
+                return false;
+            }
+
             return this.index < places.length;
         }
 
@@ -55,17 +65,18 @@ public class PlaceIterator implements UContainer<Place> {
                 return null;
             }
 
-            this.next = null;
+            Integer min = 1001;
+            Integer nextIndex = 0;
 
             for (int i = 0; i < places.length; i++) {
-                if (this.next != null && (places[i].getId() < this.identifier || places[this.next].getId() < places[i].getId())) {
-                    continue;
+                if (places[i].getId() < min && places[i].getId() > this.identifier) {
+                    min = places[i].getId();
+                    nextIndex = i;
                 }
-
-                this.next = i;
             }
 
             this.index++;
+            this.next = nextIndex;
             this.identifier = places[this.next].getId();
 
             return new UEntry<>(places[this.next].getName(), places[this.next]);
@@ -82,35 +93,20 @@ public class PlaceIterator implements UContainer<Place> {
 
         private Integer index = 0;
         private final List<Integer> identifiers;
+        private Integer next = 0;
 
         RandomIterator() {
-            this.identifiers = Generator.getInstance().getUsedIdentifiers();
+            this.identifiers = IntStream.rangeClosed(0, places.length - 1).boxed().collect(Collectors.toList());
             Collections.shuffle(this.identifiers);
+            System.out.println(this.identifiers);
         }
 
         @Override
         public Boolean hasNext() {
-            return this.index < places.length;
-        }
+            if (places == null) {
+                return false;
+            }
 
-        @Override
-        public UEntry next() {
-            return new UEntry<>(places[this.identifiers.get(this.index++)].getName(), places[this.identifiers.get(this.index++)]);
-        }
-
-        @Override
-        public void set(UEntry item) {
-            places[this.index] = (Place) item.getValue();
-        }
-
-    }
-
-    private class IndexIterator implements UIterator<UEntry> {
-
-        private Integer index = 0;
-
-        @Override
-        public Boolean hasNext() {
             return this.index < places.length;
         }
 
@@ -120,12 +116,46 @@ public class PlaceIterator implements UContainer<Place> {
                 return null;
             }
 
-            return new UEntry<>(places[this.index++].getName(), places[this.index++]);
+            this.next = this.index++;
+
+            return new UEntry<>(places[this.identifiers.get(this.next)].getName(), places[this.identifiers.get(this.next)]);
         }
 
         @Override
         public void set(UEntry item) {
-            places[this.index] = (Place) item.getValue();
+            places[this.identifiers.get(this.next)] = (Place) item.getValue();
+        }
+
+    }
+
+    private class IndexIterator implements UIterator<UEntry> {
+
+        private Integer index = 0;
+        private Integer next = 0;
+
+        @Override
+        public Boolean hasNext() {
+            if (places == null) {
+                return false;
+            }
+
+            return this.index < places.length;
+        }
+
+        @Override
+        public UEntry next() {
+            if (!this.hasNext()) {
+                return null;
+            }
+
+            this.next = this.index++;
+
+            return new UEntry<>(places[this.next].getName(), places[this.next]);
+        }
+
+        @Override
+        public void set(UEntry item) {
+            places[this.next] = (Place) item.getValue();
         }
 
     }

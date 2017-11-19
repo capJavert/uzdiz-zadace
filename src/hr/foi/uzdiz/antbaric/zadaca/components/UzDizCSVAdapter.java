@@ -5,21 +5,17 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca.components;
 
-import hr.foi.uzdiz.antbaric.zadaca.iterators.PlaceIterator;
 import hr.foi.uzdiz.antbaric.zadaca.models.Device;
 import hr.foi.uzdiz.antbaric.zadaca.models.Place;
 import hr.foi.uzdiz.antbaric.zadaca.models.DeviceEnum;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -67,8 +63,8 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
     }
 
     @Override
-    public PlaceIterator getPlaces() {
-        PlaceIterator places = new PlaceIterator();
+    public List<Place> getPlaces() {
+        List<Place> places = new ArrayList<>();
 
         List<List<String>> collection = this.readCsv(this.placesFile);
         for (List<String> values : collection) {
@@ -78,7 +74,7 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
                         || Integer.parseInt(values.get(1)) < 0 
                         || Integer.parseInt(values.get(1)) > 1) {
                     
-                    throw new Exception();
+                    Logger.getInstance().log("Kurac", true);
                 }
                 
                 if (values.get(2) == null) {
@@ -97,7 +93,8 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
                 );
 
                 places.add(place);
-            } catch (Exception ex) {
+            } catch (NumberFormatException ex) {
+                Logger.getInstance().log(ex.getMessage(), true);
                 Logger.getInstance().log("Line is not valid. Skipping Place...", true);
             }
         }

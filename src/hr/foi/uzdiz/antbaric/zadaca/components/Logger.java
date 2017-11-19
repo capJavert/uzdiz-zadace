@@ -9,6 +9,9 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import static java.lang.Thread.sleep;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -78,21 +81,26 @@ public class Logger {
 
     public void writeToFile() {
         try {
-            try (BufferedWriter outputWriter = new BufferedWriter(new FileWriter(INSTANCE.filePath))) {
-                for (String line : Logger.LOG) {
-                    outputWriter.write(line);
-                    outputWriter.newLine();
-                }
-                outputWriter.flush();
-            }
+            Files.write(Paths.get(INSTANCE.filePath), Logger.LOG, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } catch (IOException ex) {
-            this.log("Error: Output file path '" + INSTANCE.filePath + "' not valid", true);
+            System.out.println("Error: Output file path '" + INSTANCE.filePath + "' not valid");
         }
-        
+
         INSTANCE.emptyBuffer();
     }
 
     private void emptyBuffer() {
         Logger.LOG = new ArrayList<>();
+    }
+
+    public void clearFile() {
+        try {
+            try (BufferedWriter outputWriter = new BufferedWriter(new FileWriter(filePath))) {
+                outputWriter.write("");
+                outputWriter.flush();
+            }
+        } catch (IOException ex) {
+            System.out.println("Error: Output file path '" + filePath + "' not valid");
+        }
     }
 }
