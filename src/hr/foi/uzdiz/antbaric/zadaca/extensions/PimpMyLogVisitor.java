@@ -8,6 +8,7 @@ package hr.foi.uzdiz.antbaric.zadaca.extensions;
 import hr.foi.uzdiz.antbaric.zadaca.models.LError;
 import hr.foi.uzdiz.antbaric.zadaca.models.LInfo;
 import hr.foi.uzdiz.antbaric.zadaca.models.LMessage;
+import hr.foi.uzdiz.antbaric.zadaca.models.LNotification;
 import hr.foi.uzdiz.antbaric.zadaca.models.LWarning;
 import org.fusesource.jansi.Ansi;
 import static org.fusesource.jansi.Ansi.ansi;
@@ -31,12 +32,17 @@ public class PimpMyLogVisitor implements LogElementVisitor {
 
     @Override
     public void visit(LMessage message) {
-        AnsiConsole.out.println(ansi().fg(Ansi.Color.GREEN).a(message.toString()).reset());
+        AnsiConsole.out.println(ansi().fg(Ansi.Color.DEFAULT).a(message.toString()).reset());
     }
 
     @Override
     public void visit(LInfo info) {
-        AnsiConsole.out.println(ansi().fg(Ansi.Color.BLUE).a(info.toString()).reset());
+        AnsiConsole.out.println(ansi().fg(Ansi.Color.MAGENTA).a(info.toString()).reset());
+    }
+
+    @Override
+    public void visit(LNotification notification) {
+        AnsiConsole.out.println(ansi().fg(Ansi.Color.GREEN).a(notification.toString()).reset());
     }
 
 }

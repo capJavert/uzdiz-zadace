@@ -17,6 +17,7 @@ import hr.foi.uzdiz.antbaric.zadaca.models.AlgorithmEnum;
 import hr.foi.uzdiz.antbaric.zadaca.models.Configuration;
 import hr.foi.uzdiz.antbaric.zadaca.models.Device;
 import hr.foi.uzdiz.antbaric.zadaca.models.LError;
+import hr.foi.uzdiz.antbaric.zadaca.models.LInfo;
 import hr.foi.uzdiz.antbaric.zadaca.models.LMessage;
 import hr.foi.uzdiz.antbaric.zadaca.models.LWarning;
 import hr.foi.uzdiz.antbaric.zadaca.models.Place;
@@ -143,7 +144,7 @@ public class Worker extends Thread implements Inspector {
             }
         }
 
-        Logger.getInstance().log(new LMessage("Writing log to output file..."), true);
+        Logger.getInstance().log(new LInfo("Writing log to output file..."), true);
         Logger.getInstance().writeToFile();
     }
 
