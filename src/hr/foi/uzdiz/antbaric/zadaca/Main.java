@@ -15,6 +15,7 @@ import hr.foi.uzdiz.antbaric.zadaca.models.Configuration;
 import hr.foi.uzdiz.antbaric.zadaca.models.LError;
 import hr.foi.uzdiz.antbaric.zadaca.models.LInfo;
 import hr.foi.uzdiz.antbaric.zadaca.models.LMessage;
+import hr.foi.uzdiz.antbaric.zadaca.models.LWarning;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -88,7 +89,9 @@ public class Main {
         if (matcher.group(2) != null) {
             builder.setSeed(matcher.group(2));
         } else {
-            builder.setSeed("-g " + String.valueOf(System.currentTimeMillis()));
+            Integer argValue = Generator.getInstance().fromInterval(100, 65535);
+            Logger.getInstance().log(new LWarning("-g argument not set, Setting: " + argValue), Boolean.TRUE);
+            builder.setSeed("-g " + String.valueOf(argValue));
         }
 
         builder.setPlacesFilePath(matcher.group(3))
@@ -99,25 +102,32 @@ public class Main {
         if (matcher.group(8) != null) {
             builder.setInterval(matcher.group(8));
         } else {
-            builder.setInterval("-tcd " + String.valueOf(Generator.getInstance().fromInterval(1, 17)));
+            Integer argValue = Generator.getInstance().fromInterval(1, 17);
+            Logger.getInstance().log(new LWarning("-tcd argument not set, Setting: " + argValue), Boolean.TRUE);
+            builder.setInterval("-tcd " + String.valueOf(argValue));
         }
 
         if (matcher.group(9) != null) {
             builder.setExecutionLimit(matcher.group(9));
         } else {
-            builder.setExecutionLimit("-bcd " + String.valueOf(Generator.getInstance().fromInterval(1, 23)));
+            Integer argValue = Generator.getInstance().fromInterval(1, 23);
+            Logger.getInstance().log(new LWarning("-bcd argument not set, Setting: " + argValue), Boolean.TRUE);
+            builder.setExecutionLimit("-bcd " + String.valueOf(argValue));
         }
 
         if (matcher.group(10) != null) {
             builder.setOutFilePath(matcher.group(10));
         } else {
+            Logger.getInstance().log(new LWarning("-i argument not set"), Boolean.TRUE);
             builder.setOutFilePath("-i antbaric" + String.valueOf(new SimpleDateFormat("_yyyyMMdd_HHmmss").format(new Date()) + ".txt"));
         }
 
         if (matcher.group(11) != null) {
             builder.setLoggerBufferSize(matcher.group(11));
         } else {
-            builder.setLoggerBufferSize("-brl " + String.valueOf(Generator.getInstance().fromInterval(100, 999)));
+            Integer argValue = Generator.getInstance().fromInterval(100, 999);
+            Logger.getInstance().log(new LWarning("-brl argument not set, Setting: " + argValue), Boolean.TRUE);
+            builder.setLoggerBufferSize("-brl " + String.valueOf(argValue));
         }
 
         return builder.build();
