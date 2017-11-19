@@ -65,6 +65,10 @@ public class Configuration {
         return interval;
     }
 
+    public Long getPreciseInterval() {
+        return interval.longValue() * 1000000;
+    }
+
     public void setInterval(Integer interval) {
         this.interval = interval;
     }

@@ -84,7 +84,7 @@ public class Worker extends Thread implements Inspector {
         this.initSystem();
 
         for (Integer i = 0; i < Worker.CONFIG.getExecutionLimit(); i++) {
-            Long startTimestamp = System.currentTimeMillis() / 1000;
+            Long startTimestamp = System.currentTimeMillis();
 
             Logger.getInstance().log(new LMessage("Working, interval #" + (i + 1)), true);
 
@@ -139,7 +139,8 @@ public class Worker extends Thread implements Inspector {
                 iterator.set(entry);
 
                 if (this.isLimitExceeded(startTimestamp)) {
-                    // break; TODO enable before prod 
+                    Logger.getInstance().log(new LWarning("Thread interval exceeded! Stopping execution"), true);
+                    break;
                 }
             }
         }
@@ -281,7 +282,7 @@ public class Worker extends Thread implements Inspector {
     }
 
     private Boolean isLimitExceeded(Long startTimestamp) {
-        return System.currentTimeMillis() - startTimestamp > Worker.CONFIG.getInterval() * 1000;
+        return System.currentTimeMillis() - startTimestamp > Worker.CONFIG.getPreciseInterval();
     }
 
 }
