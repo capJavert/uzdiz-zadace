@@ -5,11 +5,10 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca;
 
-import hr.foi.uzdiz.antbaric.zadaca.components.CSVAdapter;
-import hr.foi.uzdiz.antbaric.zadaca.components.Generator;
+import hr.foi.uzdiz.antbaric.zadaca.helpers.Generator;
 import hr.foi.uzdiz.antbaric.zadaca.components.Inspector;
-import hr.foi.uzdiz.antbaric.zadaca.components.Logger;
-import hr.foi.uzdiz.antbaric.zadaca.components.UzDizCSVAdapter;
+import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
+import hr.foi.uzdiz.antbaric.zadaca.components.CSVParser;
 import hr.foi.uzdiz.antbaric.zadaca.iterators.PlaceIterator;
 import hr.foi.uzdiz.antbaric.zadaca.iterators.UEntry;
 import hr.foi.uzdiz.antbaric.zadaca.iterators.UIterator;
@@ -67,7 +66,7 @@ public class Worker extends Thread implements Inspector {
 
     @Override
     public void run() {
-        CSVAdapter adapter = new UzDizCSVAdapter(Worker.CONFIG.getPlacesFilePath(), Worker.CONFIG.getActuatorsFielPath(), Worker.CONFIG.getSensorsFilePath());
+        CSVParser adapter = new CSVParser(Worker.CONFIG.getPlacesFilePath(), Worker.CONFIG.getActuatorsFielPath(), Worker.CONFIG.getSensorsFilePath());
         Logger.getInstance().log("Reading CSV files...", true);
         Worker.PLACES = new PlaceIterator();
         Worker.PLACES.add(adapter.getPlaces());

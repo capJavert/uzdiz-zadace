@@ -5,7 +5,7 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca.models;
 
-import hr.foi.uzdiz.antbaric.zadaca.components.Generator;
+import hr.foi.uzdiz.antbaric.zadaca.helpers.Generator;
 import java.util.ArrayList;
 import java.util.List;
 

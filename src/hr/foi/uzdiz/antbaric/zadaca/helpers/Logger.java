@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hr.foi.uzdiz.antbaric.zadaca.components;
+package hr.foi.uzdiz.antbaric.zadaca.helpers;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

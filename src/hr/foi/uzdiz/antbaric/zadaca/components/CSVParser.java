@@ -5,6 +5,8 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca.components;
 
+import hr.foi.uzdiz.antbaric.zadaca.helpers.CSVHelper;
+import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
 import hr.foi.uzdiz.antbaric.zadaca.models.Device;
 import hr.foi.uzdiz.antbaric.zadaca.models.Place;
 import hr.foi.uzdiz.antbaric.zadaca.models.DeviceEnum;
@@ -21,7 +23,7 @@ import java.util.List;
  *
  * @author javert
  */
-public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
+public class CSVParser extends CSVHelper {
 
     private final File placesFile;
     private final File actuatorsFile;
@@ -56,13 +58,12 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
         return collection;
     }
 
-    public UzDizCSVAdapter(String placesFilePath, String actuatorsFilePath, String sensorsFilePath) {
+    public CSVParser(String placesFilePath, String actuatorsFilePath, String sensorsFilePath) {
         this.placesFile = new File(placesFilePath);
         this.actuatorsFile = new File(actuatorsFilePath);
         this.sensorsFile = new File(sensorsFilePath);
     }
 
-    @Override
     public List<Place> getPlaces() {
         List<Place> places = new ArrayList<>();
 
@@ -102,7 +103,6 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
         return places;
     }
 
-    @Override
     public List<Device> getSensors() {
         List<Device> sensors = new ArrayList<>();
         DeviceFactory factory = DeviceFactory.getFactory(DeviceEnum.SENSOR);
@@ -119,7 +119,6 @@ public class UzDizCSVAdapter extends CSVHelper implements CSVAdapter {
         return sensors;
     }
 
-    @Override
     public List<Device> getActuators() {
         List<Device> actuators = new ArrayList<>();
         DeviceFactory factory = DeviceFactory.getFactory(DeviceEnum.ACTUATOR);

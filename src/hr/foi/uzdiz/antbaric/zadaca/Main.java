@@ -7,9 +7,9 @@ package hr.foi.uzdiz.antbaric.zadaca;
 
 import hr.foi.uzdiz.antbaric.zadaca.components.CliConfigurationBuilder;
 import hr.foi.uzdiz.antbaric.zadaca.components.ConfigurationBuilder;
-import hr.foi.uzdiz.antbaric.zadaca.components.Generator;
-import hr.foi.uzdiz.antbaric.zadaca.components.Logger;
-import hr.foi.uzdiz.antbaric.zadaca.components.SyntaxValidator;
+import hr.foi.uzdiz.antbaric.zadaca.helpers.Generator;
+import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
+import hr.foi.uzdiz.antbaric.zadaca.helpers.SyntaxValidator;
 import hr.foi.uzdiz.antbaric.zadaca.models.AlgorithmEnum;
 import hr.foi.uzdiz.antbaric.zadaca.models.Configuration;
 import java.text.SimpleDateFormat;
