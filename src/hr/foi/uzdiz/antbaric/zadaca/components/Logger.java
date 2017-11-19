@@ -58,6 +58,7 @@ public class Logger {
 
         if (INSTANCE.isBufferFull()) {
             INSTANCE.writeToFile();
+            this.log("Buffer full, writing log to output file...", true);
         }
 
         LOG.add(log);
