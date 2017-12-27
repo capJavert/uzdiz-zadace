@@ -29,6 +29,10 @@ public class ANSIHelper {
         ANSIHelper.print(ESC + "2J");
     }
 
+    public static void write(String s) {
+        ANSIHelper.print(s);
+    }
+    
     public static void write(String s, int x, int y) {
         ANSIHelper.move(x, y);
         ANSIHelper.print(s);

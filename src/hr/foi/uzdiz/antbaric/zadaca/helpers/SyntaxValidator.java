@@ -36,11 +36,11 @@ public class SyntaxValidator {
     private static List<Matcher> validate(Object match) {
         List<Matcher> matchers = new ArrayList<>();
         
-        for(String rule : rules()) {
+        for(String rule : SyntaxValidator.rules()) {
             Pattern pattern = Pattern.compile(rule);
             Matcher m = pattern.matcher(match.toString());
 
-            if(m.matches()) {
+            if(m.find()) {
                 matchers.add(m);
             }
         }

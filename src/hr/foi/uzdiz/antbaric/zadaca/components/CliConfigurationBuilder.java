@@ -12,8 +12,6 @@ import hr.foi.uzdiz.antbaric.zadaca.models.LWarning;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class CliConfigurationBuilder implements ConfigurationBuilder {
 
@@ -48,19 +46,23 @@ public class CliConfigurationBuilder implements ConfigurationBuilder {
         }
         
         if (this.configuration.getRows() == null) {
-            this.setSeed("-br " + String.valueOf(24));
+            Logger.getInstance().log(new LWarning("-br argument not set, Setting: 24"), Boolean.TRUE);
+            this.setRows("-br " + String.valueOf(24));
         }
         
         if (this.configuration.getCols() == null) {
-            this.setSeed("-bs " + String.valueOf(80));
+            Logger.getInstance().log(new LWarning("-bs argument not set, Setting: 80"), Boolean.TRUE);
+            this.setCols("-bs " + String.valueOf(80));
         }
         
         if (this.configuration.getRowsForCommands() == null) {
-            this.setSeed("-brk " + String.valueOf(2));
+            Logger.getInstance().log(new LWarning("-brk argument not set, Setting: 2"), Boolean.TRUE);
+            this.setRowsForCommands("-brk " + String.valueOf(2));
         }
         
         if (this.configuration.getDevicePerishability() == null) {
-            this.setSeed("-pi " + String.valueOf(50));
+            Logger.getInstance().log(new LWarning("-pi argument not set, Setting: 50"), Boolean.TRUE);
+            this.setDevicePerishability("-pi " + String.valueOf(50));
         }
 
         if (this.configuration.getInterval() == null) {
@@ -100,10 +102,19 @@ public class CliConfigurationBuilder implements ConfigurationBuilder {
     }
 
     @Override
-    public ConfigurationBuilder setActuatorsFielPath(String actuatorsFielPath) {
+    public ConfigurationBuilder setActuatorsFilePath(String actuatorsFielPath) {
         actuatorsFielPath = CliConfigurationBuilder.toValue(actuatorsFielPath);
 
         this.configuration.setActuatorsFielPath(absolutePath(actuatorsFielPath));
+
+        return this;
+    }
+
+    @Override
+    public ConfigurationBuilder setScheduleFilePath(String scheduleFilePath) {
+        scheduleFilePath = CliConfigurationBuilder.toValue(scheduleFilePath);
+
+        this.configuration.setScheduleFilePath(absolutePath(scheduleFilePath));
 
         return this;
     }
@@ -144,7 +155,7 @@ public class CliConfigurationBuilder implements ConfigurationBuilder {
     public ConfigurationBuilder setCols(String cols) {
         cols = CliConfigurationBuilder.toValue(cols);
 
-        this.configuration.setRows(Integer.parseInt(cols));
+        this.configuration.setCols(Integer.parseInt(cols));
 
         return this;
     }
@@ -153,7 +164,7 @@ public class CliConfigurationBuilder implements ConfigurationBuilder {
     public ConfigurationBuilder setRowsForCommands(String rowsForCommands) {
         rowsForCommands = CliConfigurationBuilder.toValue(rowsForCommands);
 
-        this.configuration.setRows(Integer.parseInt(rowsForCommands));
+        this.configuration.setRowsForCommands(Integer.parseInt(rowsForCommands));
 
         return this;
     }
@@ -162,7 +173,7 @@ public class CliConfigurationBuilder implements ConfigurationBuilder {
     public ConfigurationBuilder setDevicePerishability(String devicePerishability) {
         devicePerishability = CliConfigurationBuilder.toValue(devicePerishability);
 
-        this.configuration.setRows(Integer.parseInt(devicePerishability));
+        this.configuration.setDevicePerishability(Integer.parseInt(devicePerishability));
 
         return this;
     }

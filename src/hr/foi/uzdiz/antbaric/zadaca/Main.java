@@ -10,7 +10,6 @@ import hr.foi.uzdiz.antbaric.zadaca.components.ConfigurationBuilder;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Generator;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.SyntaxValidator;
-import hr.foi.uzdiz.antbaric.zadaca.models.AlgorithmEnum;
 import hr.foi.uzdiz.antbaric.zadaca.models.Configuration;
 import hr.foi.uzdiz.antbaric.zadaca.models.LError;
 import hr.foi.uzdiz.antbaric.zadaca.models.LInfo;
@@ -28,7 +27,7 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Logger.getInstance().setUsePrintDelay(false); //uncomment for CLI debugging
+        Logger.getInstance().setUsePrintDelay(false); // set to true for CLI debugging
 
         if (Main.needHelp(args)) {
             Main.help();
@@ -48,19 +47,18 @@ public class Main {
                 generator.setSeed(config.getSeed());
                 generator.setDevicePerishability(config.getDevicePerishability());
 
-                AlgorithmEnum algorithm = null;
-
                 Worker.setConfig(config);
+                Router.setConfig(config);
+                
+                Router.getInstance().goTo("");
 
-                final Worker worker = Worker.getInstance(algorithm);
-                worker.start();
-            } catch (NullPointerException ex) {
-                Logger.getInstance().log(new LError("Error: Invalid arguments"), true);
+                //final Worker worker = Worker.getInstance(algorithm);
+                //worker.start();
             } catch (IllegalArgumentException ex) {
                 Logger.getInstance().log(new LError(ex.getMessage()), true);
             }
         } else {
-            Logger.getInstance().log(new LError("Error: Please check your arguments"), true);
+            Logger.getInstance().log(new LError("Error: Please check your arguments!"), true);
         }
     }
 
@@ -83,7 +81,9 @@ public class Main {
             } else if (matcher.group().contains("-s")) {
                 builder.setSensorsFilePath(matcher.group());
             } else if (matcher.group().contains("-a")) {
-                builder.setActuatorsFielPath(matcher.group());
+                builder.setActuatorsFilePath(matcher.group());
+            } else if (matcher.group().contains("-r")) {
+                builder.setScheduleFilePath(matcher.group());
             } else if (matcher.group().contains("-tcd")) {
                 builder.setInterval(matcher.group());
             }
@@ -100,26 +100,26 @@ public class Main {
         return args.length == 1 && args[0].equals("--help");
     }
 
-    private static final String HELP = "-br broj redaka na ekranu (24-40). Ako nije upisana opcija, uzima se 24.\n" +
-        "\n" +
-        "-bs broj stupaca na ekranu (80-160). Ako nije upisana opcija, uzima se 80.\n" +
-        "\n" +
-        "-brk broj redaka na ekranu za unos komandi (2-5). Ako nije upisana opcija, uzima se 2.\n" +
-        "\n" +
-        "-pi prosječni % ispravnosti uređaja (0-100). Ako nije upisana opcija, uzima se 50.\n" +
-        "\n" +
-        "-g sjeme za generator slučajnog broja (u intervalu 100 - 65535). Ako nije upisana opcija, uzima se broj milisekundi u trenutnom vremenu na bazi njegovog broja sekundi i broja milisekundi.\n" +
-        "\n" +
-        "-m naziv datoteke mjesta\n" +
-        "\n" +
-        "-s naziv datoteke senzora\n" +
-        "\n" +
-        "-a naziv datoteke aktuatora\n" +
-        "\n" +
-        "-r naziv datoteke rasporeda\n" +
-        "\n" +
-        "-tcd trajanje ciklusa dretve u sek. Ako nije upisana opcija, uzima se slučajni broj u intervalu 1 - 17.\n" +
-        "\n" +
-        "--help pomoć za korištenje opcija u programu.";
+    private static final String HELP = "-br broj redaka na ekranu (24-40). Ako nije upisana opcija, uzima se 24.\n"
+            + "\n"
+            + "-bs broj stupaca na ekranu (80-160). Ako nije upisana opcija, uzima se 80.\n"
+            + "\n"
+            + "-brk broj redaka na ekranu za unos komandi (2-5). Ako nije upisana opcija, uzima se 2.\n"
+            + "\n"
+            + "-pi prosječni % ispravnosti uređaja (0-100). Ako nije upisana opcija, uzima se 50.\n"
+            + "\n"
+            + "-g sjeme za generator slučajnog broja (u intervalu 100 - 65535). Ako nije upisana opcija, uzima se broj milisekundi u trenutnom vremenu na bazi njegovog broja sekundi i broja milisekundi.\n"
+            + "\n"
+            + "-m naziv datoteke mjesta\n"
+            + "\n"
+            + "-s naziv datoteke senzora\n"
+            + "\n"
+            + "-a naziv datoteke aktuatora\n"
+            + "\n"
+            + "-r naziv datoteke rasporeda\n"
+            + "\n"
+            + "-tcd trajanje ciklusa dretve u sek. Ako nije upisana opcija, uzima se slučajni broj u intervalu 1 - 17.\n"
+            + "\n"
+            + "--help pomoć za korištenje opcija u programu.";
 
 }

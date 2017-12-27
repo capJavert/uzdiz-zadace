@@ -20,7 +20,9 @@ public interface ConfigurationBuilder {
     
     ConfigurationBuilder setSensorsFilePath(String sensorsFilePath);
     
-    ConfigurationBuilder setActuatorsFielPath(String actuatorsFielPath);
+    ConfigurationBuilder setActuatorsFilePath(String actuatorsFielPath);
+    
+    ConfigurationBuilder setScheduleFilePath(String actuatorsFielPath);
     
     ConfigurationBuilder setInterval(String interval);
     
