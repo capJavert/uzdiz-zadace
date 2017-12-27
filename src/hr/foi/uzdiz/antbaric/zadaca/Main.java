@@ -50,6 +50,7 @@ public class Main {
 
                 Generator generator = Generator.getInstance();
                 generator.setSeed(config.getSeed());
+                generator.setDevicePerishability(config.getDevicePerishability());
 
                 AlgorithmEnum algorithm = null;
 

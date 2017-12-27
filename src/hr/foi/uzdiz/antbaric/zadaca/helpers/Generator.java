@@ -24,6 +24,8 @@ public class Generator extends Random {
     private static final List<Integer> USED_IDENTIFIERS_PLACES = new ArrayList<>();
     private static final List<Integer> USED_IDENTIFIERS_SENSORS = new ArrayList<>();
     private static final List<Integer> USED_IDENTIFIERS_ACTUATORS = new ArrayList<>();
+    
+    private Integer devicePerishability = 50;
 
     static {
         INSTANCE = new Generator();
@@ -48,7 +50,7 @@ public class Generator extends Random {
     }
 
     public Integer getStatus() {
-        return this.nextInt(10) + 1 > 1 ? 1 : 0;
+        return this.nextInt(100) + 1 < this.devicePerishability ? 1 : 0;
     }
 
     public Double getDouble() {
@@ -113,4 +115,7 @@ public class Generator extends Random {
         return this.nextInt(list.size());
     }
 
+    public void setDevicePerishability(Integer devicePerishability) {
+        this.devicePerishability = devicePerishability;
+    }
 }
