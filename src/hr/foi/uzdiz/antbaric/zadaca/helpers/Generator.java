@@ -7,7 +7,6 @@ package hr.foi.uzdiz.antbaric.zadaca.helpers;
 
 import hr.foi.uzdiz.antbaric.zadaca.models.Device;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -21,9 +20,9 @@ public class Generator extends Random {
     private static final DecimalFormat DECIMAL_FORMATER_ROUND = new DecimalFormat("#0");
     private static final DecimalFormat DECIMAL_FORMATER_1 = new DecimalFormat("#0.0");
     private static final DecimalFormat DECIMAL_FORMATER_5 = new DecimalFormat("#0.00000");
-    private static final List<Integer> USED_IDENTIFIERS_PLACES = new ArrayList<>();
-    private static final List<Integer> USED_IDENTIFIERS_SENSORS = new ArrayList<>();
-    private static final List<Integer> USED_IDENTIFIERS_ACTUATORS = new ArrayList<>();
+    private static final Integer USED_IDENTIFIERS_PLACES = 0;
+    private static final Integer USED_IDENTIFIERS_SENSORS = 0;
+    private static final Integer USED_IDENTIFIERS_ACTUATORS = 0;
     
     private Integer devicePerishability = 50;
 
@@ -38,7 +37,7 @@ public class Generator extends Random {
         return INSTANCE;
     }
 
-    private List<Integer> getUsedIdentifiers(String type) {
+    private Integer getUsedIdentifiers(String type) {
         switch (type) {
             case "SENSOR":
                 return USED_IDENTIFIERS_SENSORS;
@@ -58,19 +57,7 @@ public class Generator extends Random {
     }
 
     public Integer getUniqueIdentifier(String type) {
-        Integer identifier;
-
-        while (true) {
-            identifier = this.fromInterval(1, 1000);
-
-            if (!INSTANCE.getUsedIdentifiers(type).contains(identifier)) {
-                INSTANCE.getUsedIdentifiers(type).add(identifier);
-
-                break;
-            }
-        }
-
-        return identifier;
+        return this.getUsedIdentifiers(type)+1;
     }
 
     public int fromInterval(int min, int max) {
