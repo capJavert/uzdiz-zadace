@@ -83,7 +83,7 @@ public class Worker extends Thread implements Inspector {
         this.configSystem();
         this.initSystem();
 
-        for (Integer i = 0; i < Worker.CONFIG.getExecutionLimit(); i++) {
+        for (Integer i = 0; i < 100; i++) { // TODO connect with N command
             Long startTimestamp = System.currentTimeMillis();
 
             Logger.getInstance().log(new LMessage("Working, interval #" + (i + 1)), true);

@@ -15,26 +15,42 @@ public class SyntaxValidator {
      */
     private static List<String> rules() {
         return Stream.of(
-            "^($^)|(-g \\d{3,5})? ?(-m [^\\s]{1,}) (-s [^\\s]{1,}) (-a [^\\s]{1,}) (-alg hr\\.foi\\.uzdiz\\.antbaric\\.zadaca\\.iterators\\.(Sequential|Random|Index)) ?(-tcd \\d{1,})? ?(-bcd \\d{1,})? ?(-i [^\\s]{1,})? ?(-brl \\d{1,})?$"
+                "-br (2[4-9]|3[0-9]|40)",
+                "-bs ([8-9][0-9]|1[0-5][0-9]|160)",
+                "-brk ([2-5])",
+                "-pi (100|[1-9][0-9]|\\d)",
+                "-g \\d{3,5}",
+                "-m [^\\s]{1,}",
+                "-s [^\\s]{1,}",
+                "-a [^\\s]{1,}",
+                "-r [^\\s]{1,}",
+                "-tcd \\d{1,}",
+                "-i [^\\s]{1,}"
         ).collect(Collectors.toList());
     }
 
     /**
      *
      * @param match String to match
-     * @return Matcher
+     * @return List<Matcher>
      */
-    public static Matcher validate(Object match) {
+    private static List<Matcher> validate(Object match) {
+        List<Matcher> matchers = new ArrayList<>();
+        
         for(String rule : rules()) {
             Pattern pattern = Pattern.compile(rule);
             Matcher m = pattern.matcher(match.toString());
 
             if(m.matches()) {
-                return m;
+                matchers.add(m);
             }
         }
 
-        return null;
+        if(matchers.size() > 0) {
+            return matchers;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -43,13 +59,13 @@ public class SyntaxValidator {
      * @param args Command
      * @return Returns true if valid
      */
-    public static Matcher validateArguments(String[] args) {
+    public static List<Matcher> validateArguments(String[] args) {
         StringBuilder sb = new StringBuilder();
         for (String arg : args) {
             sb.append(arg).append(" ");
         }
         String p = sb.toString().trim();
 
-        return validate(p);
+        return SyntaxValidator.validate(p);
     }
 }

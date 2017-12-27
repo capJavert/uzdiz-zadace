@@ -12,7 +12,7 @@ import hr.foi.uzdiz.antbaric.zadaca.models.Configuration;
  * @author javert
  */
 public interface ConfigurationBuilder {
-    Configuration build();
+    Configuration build() throws IllegalArgumentException;
 
     ConfigurationBuilder setSeed(String seed);
     
@@ -22,14 +22,18 @@ public interface ConfigurationBuilder {
     
     ConfigurationBuilder setActuatorsFielPath(String actuatorsFielPath);
     
-    ConfigurationBuilder setAlgoritham(String algoritham);
-    
     ConfigurationBuilder setInterval(String interval);
-
-    ConfigurationBuilder setExecutionLimit(String executionLimit);
 
     ConfigurationBuilder setOutFilePath(String outFilePath);
     
-    ConfigurationBuilder setLoggerBufferSize(String loggerBufferSize);
+    ConfigurationBuilder setRows(String rows);
+    
+    ConfigurationBuilder setCols(String cols);
+    
+    ConfigurationBuilder setRowsForCommands(String rowsForCommands);
+    
+    ConfigurationBuilder setDevicePerishability(String devicePerishability);
+
+    Boolean isValid();
 
 }

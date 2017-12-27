@@ -15,11 +15,14 @@ public class Configuration {
     private String placesFilePath;
     private String sensorsFilePath;
     private String actuatorsFielPath;
-    private String algoritham;
+    private String scheduleFilePath;
     private Integer interval;
-    private Integer executionLimit;
     private String outFilePath;
     private Integer loggerBufferSize;
+    private Integer rows;
+    private Integer cols;
+    private Integer rowsForCommands;
+    private Integer devicePerishability;
 
     public Long getSeed() {
         return seed;
@@ -53,12 +56,12 @@ public class Configuration {
         this.actuatorsFielPath = actuatorsFielPath;
     }
 
-    public String getAlgoritham() {
-        return algoritham;
+    public String getScheduleFilePath() {
+        return scheduleFilePath;
     }
 
-    public void setAlgoritham(String algoritham) {
-        this.algoritham = algoritham;
+    public void setScheduleFilePath(String scheduleFilePath) {
+        this.scheduleFilePath = scheduleFilePath;
     }
 
     public Integer getInterval() {
@@ -71,14 +74,6 @@ public class Configuration {
 
     public void setInterval(Integer interval) {
         this.interval = interval;
-    }
-
-    public Integer getExecutionLimit() {
-        return executionLimit;
-    }
-
-    public void setExecutionLimit(Integer executionLimit) {
-        this.executionLimit = executionLimit;
     }
 
     public String getOutFilePath() {
@@ -97,4 +92,37 @@ public class Configuration {
         this.loggerBufferSize = loggerBufferSize;
     }
 
+    public Integer getRows() {
+        return rows;
+    }
+
+    public void setRows(Integer rows) {
+        this.rows = rows;
+    }
+
+    public Integer getCols() {
+        return cols;
+    }
+
+    public void setCols(Integer cols) {
+        this.cols = cols;
+    }
+
+    public Integer getRowsForCommands() {
+        return rowsForCommands;
+    }
+
+    public void setRowsForCommands(Integer rowsForCommands) {
+        this.rowsForCommands = rowsForCommands;
+    }
+
+    public Integer getDevicePerishability() {
+        return devicePerishability;
+    }
+
+    public void setDevicePerishability(Integer devicePerishability) {
+        this.devicePerishability = devicePerishability;
+    }
+
+    
 }

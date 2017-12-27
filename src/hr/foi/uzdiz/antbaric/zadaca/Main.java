@@ -15,9 +15,7 @@ import hr.foi.uzdiz.antbaric.zadaca.models.Configuration;
 import hr.foi.uzdiz.antbaric.zadaca.models.LError;
 import hr.foi.uzdiz.antbaric.zadaca.models.LInfo;
 import hr.foi.uzdiz.antbaric.zadaca.models.LMessage;
-import hr.foi.uzdiz.antbaric.zadaca.models.LWarning;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 
 /**
@@ -38,7 +36,7 @@ public class Main {
             return;
         }
 
-        Matcher matcher = SyntaxValidator.validateArguments(args);
+        List<Matcher> matcher = SyntaxValidator.validateArguments(args);
 
         if (matcher != null) {
             Logger.getInstance().log(new LMessage("Reading arguments.."), true);
@@ -55,79 +53,45 @@ public class Main {
 
                 AlgorithmEnum algorithm = null;
 
-                switch (config.getAlgoritham()) {
-                    case "Sequential":
-                        algorithm = AlgorithmEnum.SEQUENTIAL;
-                        break;
-                    case "Random":
-                        algorithm = AlgorithmEnum.RANDOM;
-                        break;
-                    case "Index":
-                        algorithm = AlgorithmEnum.INDEX;
-                        break;
-                }
-
-                Logger.getInstance().log(new LMessage("Loaded inspector algorithm '" + config.getAlgoritham() + "'"), true);
-
                 Worker.setConfig(config);
-
-                Logger.getInstance().log(new LMessage("Loaded thread configuration: Execution limit: " + config.getExecutionLimit() + "x, Interval: " + (config.getInterval() / 1000) + " sec"), true);
 
                 final Worker worker = Worker.getInstance(algorithm);
                 worker.start();
             } catch (NullPointerException ex) {
                 Logger.getInstance().log(new LError("Error: Invalid arguments"), true);
+            } catch (IllegalArgumentException ex) {
+                Logger.getInstance().log(new LError(ex.getMessage()), true);
             }
         } else {
             Logger.getInstance().log(new LError("Error: Please check your arguments"), true);
         }
     }
 
-    private static Configuration buildConfig(Matcher matcher) {
+    private static Configuration buildConfig(List<Matcher> matchers) throws IllegalArgumentException {
         ConfigurationBuilder builder = new CliConfigurationBuilder();
 
-        if (matcher.group(2) != null) {
-            builder.setSeed(matcher.group(2));
-        } else {
-            Integer argValue = Generator.getInstance().fromInterval(100, 65535);
-            Logger.getInstance().log(new LWarning("-g argument not set, Setting: " + argValue), Boolean.TRUE);
-            builder.setSeed("-g " + String.valueOf(argValue));
-        }
-
-        builder.setPlacesFilePath(matcher.group(3))
-                .setSensorsFilePath(matcher.group(4))
-                .setActuatorsFielPath(matcher.group(5))
-                .setAlgoritham("-alg " + matcher.group(7));
-
-        if (matcher.group(8) != null) {
-            builder.setInterval(matcher.group(8));
-        } else {
-            Integer argValue = Generator.getInstance().fromInterval(1, 17);
-            Logger.getInstance().log(new LWarning("-tcd argument not set, Setting: " + argValue), Boolean.TRUE);
-            builder.setInterval("-tcd " + String.valueOf(argValue));
-        }
-
-        if (matcher.group(9) != null) {
-            builder.setExecutionLimit(matcher.group(9));
-        } else {
-            Integer argValue = Generator.getInstance().fromInterval(1, 23);
-            Logger.getInstance().log(new LWarning("-bcd argument not set, Setting: " + argValue), Boolean.TRUE);
-            builder.setExecutionLimit("-bcd " + String.valueOf(argValue));
-        }
-
-        if (matcher.group(10) != null) {
-            builder.setOutFilePath(matcher.group(10));
-        } else {
-            Logger.getInstance().log(new LWarning("-i argument not set"), Boolean.TRUE);
-            builder.setOutFilePath("-i antbaric" + String.valueOf(new SimpleDateFormat("_yyyyMMdd_HHmmss").format(new Date()) + ".txt"));
-        }
-
-        if (matcher.group(11) != null) {
-            builder.setLoggerBufferSize(matcher.group(11));
-        } else {
-            Integer argValue = Generator.getInstance().fromInterval(100, 999);
-            Logger.getInstance().log(new LWarning("-brl argument not set, Setting: " + argValue), Boolean.TRUE);
-            builder.setLoggerBufferSize("-brl " + String.valueOf(argValue));
+        for (Matcher matcher : matchers) {
+            if (matcher.group().contains("-g")) {
+                builder.setSeed(matcher.group());
+            } else if (matcher.group().contains("-br")) {
+                builder.setRows(matcher.group());
+            } else if (matcher.group().contains("-bs")) {
+                builder.setCols(matcher.group());
+            } else if (matcher.group().contains("-brk")) {
+                builder.setRowsForCommands(matcher.group());
+            } else if (matcher.group().contains("-pi")) {
+                builder.setDevicePerishability(matcher.group());
+            } else if (matcher.group().contains("-m")) {
+                builder.setPlacesFilePath(matcher.group());
+            } else if (matcher.group().contains("-s")) {
+                builder.setSensorsFilePath(matcher.group());
+            } else if (matcher.group().contains("-a")) {
+                builder.setActuatorsFielPath(matcher.group());
+            } else if (matcher.group().contains("-tcd")) {
+                builder.setInterval(matcher.group());
+            } else if (matcher.group().contains("-i")) {
+                builder.setOutFilePath(matcher.group());
+            }
         }
 
         return builder.build();
@@ -141,24 +105,26 @@ public class Main {
         return args.length == 1 && args[0].equals("--help");
     }
 
-    private static final String HELP = "-g sjeme za generator slučajnog broja (u intervalu 100 - 65535). Ako nije upisana opcija, uzima se broj milisekundi u trenutnom vremenu na bazi njegovog broja sekundi i broja milisekundi.\n"
-            + "\n"
-            + "-m naziv datoteke mjesta\n"
-            + "\n"
-            + "-s naziv datoteke senzora\n"
-            + "\n"
-            + "-a naziv datoteke aktuatora\n"
-            + "\n"
-            + "-alg puni naziv klase algoritma provjere koja se dinamički učitava\n"
-            + "\n"
-            + "-tcd trajanje ciklusa dretve u sek. Ako nije upisana opcija, uzima se slučajni broj u intervalu 1 - 17.\n"
-            + "\n"
-            + "-bcd broj ciklusa dretve. Ako nije upisana opcija, uzima se slučajni broj u intervalu 1 - 23.\n"
-            + "\n"
-            + "-i naziv datoteke u koju se sprema izlaz programa. Ako nije upisana opcija, uzima se vlastito korisničko ime kojem se dodaje trenutni podaci vremena po formatu _ggggmmdd_hhmmss.txt npr. dkermek_20171105_203128.txt\n"
-            + "\n"
-            + "-brl broj linija u spremniku za upis u datoteku za izlaz. Ako nije upisana opcija, uzima se slučajni broj u intervalu 100 - 999.\n"
-            + "\n"
-            + "--help pomoć za korištenje opcija u programu.";
+    private static final String HELP = "-br broj redaka na ekranu (24-40). Ako nije upisana opcija, uzima se 24.\n" +
+        "\n" +
+        "-bs broj stupaca na ekranu (80-160). Ako nije upisana opcija, uzima se 80.\n" +
+        "\n" +
+        "-brk broj redaka na ekranu za unos komandi (2-5). Ako nije upisana opcija, uzima se 2.\n" +
+        "\n" +
+        "-pi prosječni % ispravnosti uređaja (0-100). Ako nije upisana opcija, uzima se 50.\n" +
+        "\n" +
+        "-g sjeme za generator slučajnog broja (u intervalu 100 - 65535). Ako nije upisana opcija, uzima se broj milisekundi u trenutnom vremenu na bazi njegovog broja sekundi i broja milisekundi.\n" +
+        "\n" +
+        "-m naziv datoteke mjesta\n" +
+        "\n" +
+        "-s naziv datoteke senzora\n" +
+        "\n" +
+        "-a naziv datoteke aktuatora\n" +
+        "\n" +
+        "-r naziv datoteke rasporeda\n" +
+        "\n" +
+        "-tcd trajanje ciklusa dretve u sek. Ako nije upisana opcija, uzima se slučajni broj u intervalu 1 - 17.\n" +
+        "\n" +
+        "--help pomoć za korištenje opcija u programu.";
 
 }
