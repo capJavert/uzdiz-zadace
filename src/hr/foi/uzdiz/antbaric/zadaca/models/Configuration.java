@@ -17,7 +17,6 @@ public class Configuration {
     private String actuatorsFielPath;
     private String scheduleFilePath;
     private Integer interval;
-    private String outFilePath;
     private Integer loggerBufferSize;
     private Integer rows;
     private Integer cols;
@@ -74,14 +73,6 @@ public class Configuration {
 
     public void setInterval(Integer interval) {
         this.interval = interval;
-    }
-
-    public String getOutFilePath() {
-        return outFilePath;
-    }
-
-    public void setOutFilePath(String outFilePath) {
-        this.outFilePath = outFilePath;
     }
 
     public Integer getLoggerBufferSize() {

@@ -69,11 +69,6 @@ public class CliConfigurationBuilder implements ConfigurationBuilder {
             this.setInterval("-tcd " + String.valueOf(argValue));
         }
 
-        if (this.configuration.getOutFilePath() == null) {
-            Logger.getInstance().log(new LWarning("-i argument not set"), Boolean.TRUE);
-            this.setOutFilePath("-i antbaric" + String.valueOf(new SimpleDateFormat("_yyyyMMdd_HHmmss").format(new Date()) + ".txt"));
-        }
-
         return this.configuration;
     }
 
@@ -118,15 +113,6 @@ public class CliConfigurationBuilder implements ConfigurationBuilder {
         interval = CliConfigurationBuilder.toValue(interval);
 
         this.configuration.setInterval(Integer.parseInt(interval) * 1000);
-
-        return this;
-    }
-
-    @Override
-    public ConfigurationBuilder setOutFilePath(String outFilePath) {
-        outFilePath = CliConfigurationBuilder.toValue(outFilePath);
-
-        this.configuration.setOutFilePath(absolutePath(outFilePath));
 
         return this;
     }

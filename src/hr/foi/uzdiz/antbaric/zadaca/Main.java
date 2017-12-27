@@ -44,10 +44,6 @@ public class Main {
             try {
                 Configuration config = Main.buildConfig(matcher);
 
-                Logger.getInstance().setBufferSize(config.getLoggerBufferSize());
-                Logger.getInstance().setFilePath(config.getOutFilePath());
-                Logger.getInstance().clearFile();
-
                 Generator generator = Generator.getInstance();
                 generator.setSeed(config.getSeed());
                 generator.setDevicePerishability(config.getDevicePerishability());
@@ -90,8 +86,6 @@ public class Main {
                 builder.setActuatorsFielPath(matcher.group());
             } else if (matcher.group().contains("-tcd")) {
                 builder.setInterval(matcher.group());
-            } else if (matcher.group().contains("-i")) {
-                builder.setOutFilePath(matcher.group());
             }
         }
 

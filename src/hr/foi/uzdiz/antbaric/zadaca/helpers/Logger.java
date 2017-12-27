@@ -89,13 +89,17 @@ public class Logger {
     }
 
     public void writeToFile() {
-        try {
-            Files.write(Paths.get(INSTANCE.filePath), Logger.LOG, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
-        } catch (IOException ex) {
-            AnsiConsole.out.println(ansi().fg(Ansi.Color.RED).a("Error: Output file path '" + INSTANCE.filePath + "' not valid"));
-        }
+        if (!this.filePath.equals("")) {
+            try {
+                Files.write(Paths.get(INSTANCE.filePath), Logger.LOG, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+            } catch (IOException ex) {
+                AnsiConsole.out.println(ansi().fg(Ansi.Color.RED).a("Error: Output file path '" + INSTANCE.filePath + "' not valid"));
+            }
 
-        INSTANCE.emptyBuffer();
+            INSTANCE.emptyBuffer();   
+        } else {
+            this.log(new LWarning("Can't write to file, output file path is not set"), USE_PRINT_DELAY);
+        }
     }
 
     private void emptyBuffer() {

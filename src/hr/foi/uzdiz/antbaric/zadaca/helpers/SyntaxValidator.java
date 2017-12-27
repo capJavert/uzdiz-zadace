@@ -24,8 +24,7 @@ public class SyntaxValidator {
                 "-s [^\\s]{1,}",
                 "-a [^\\s]{1,}",
                 "-r [^\\s]{1,}",
-                "-tcd \\d{1,}",
-                "-i [^\\s]{1,}"
+                "-tcd \\d{1,}"
         ).collect(Collectors.toList());
     }
 

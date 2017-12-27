@@ -23,8 +23,6 @@ public interface ConfigurationBuilder {
     ConfigurationBuilder setActuatorsFielPath(String actuatorsFielPath);
     
     ConfigurationBuilder setInterval(String interval);
-
-    ConfigurationBuilder setOutFilePath(String outFilePath);
     
     ConfigurationBuilder setRows(String rows);
     
