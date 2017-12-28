@@ -5,14 +5,13 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca.extensions;
 
+import hr.foi.uzdiz.antbaric.zadaca.helpers.ANSIHelper;
+import hr.foi.uzdiz.antbaric.zadaca.models.ANSIColor;
 import hr.foi.uzdiz.antbaric.zadaca.models.LError;
 import hr.foi.uzdiz.antbaric.zadaca.models.LInfo;
 import hr.foi.uzdiz.antbaric.zadaca.models.LMessage;
 import hr.foi.uzdiz.antbaric.zadaca.models.LNotification;
 import hr.foi.uzdiz.antbaric.zadaca.models.LWarning;
-import org.fusesource.jansi.Ansi;
-import static org.fusesource.jansi.Ansi.ansi;
-import org.fusesource.jansi.AnsiConsole;
 
 /**
  *
@@ -22,27 +21,39 @@ public class PimpMyLogVisitor implements LogElementVisitor {
 
     @Override
     public void visit(LError error) {
-        AnsiConsole.out.println(ansi().fg(Ansi.Color.RED).a(error.toString()).reset());
+        ANSIHelper.setFg(ANSIColor.RED);
+        ANSIHelper.write(error.toString());
+        this.reset();
     }
 
     @Override
     public void visit(LWarning warning) {
-        AnsiConsole.out.println(ansi().fg(Ansi.Color.YELLOW).a(warning.toString()).reset());
+        ANSIHelper.setFg(ANSIColor.YELLOW);
+        ANSIHelper.write(warning.toString());
+        ANSIHelper.setFg(ANSIColor.WHITE);
     }
 
     @Override
     public void visit(LMessage message) {
-        AnsiConsole.out.println(ansi().fg(Ansi.Color.DEFAULT).a(message.toString()).reset());
+        ANSIHelper.write(message.toString());
     }
 
     @Override
     public void visit(LInfo info) {
-        AnsiConsole.out.println(ansi().fg(Ansi.Color.MAGENTA).a(info.toString()).reset());
+        ANSIHelper.setFg(ANSIColor.MAGENTA);
+        ANSIHelper.write(info.toString());
+        this.reset();
     }
 
     @Override
     public void visit(LNotification notification) {
-        AnsiConsole.out.println(ansi().fg(Ansi.Color.GREEN).a(notification.toString()).reset());
+        ANSIHelper.setFg(ANSIColor.GREEN);
+        ANSIHelper.write(notification.toString());
+        this.reset();
+    }
+
+    private void reset() {
+        ANSIHelper.setFg(ANSIColor.WHITE);
     }
 
 }

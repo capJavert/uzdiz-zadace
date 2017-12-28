@@ -13,19 +13,20 @@ import hr.foi.uzdiz.antbaric.zadaca.views.IndexView;
  * @author javert
  */
 public class IndexController extends Controller<IndexView, Actuator> {
-
+    
     public IndexController(IndexView view, Actuator model) {
         super(view, model);
     }
     
     @Override
     public void init() {
-        this.view.print();
+        this.update();
     }
 
     @Override
     public void update() {
-        this.view.print();
+        this.view.printContent();
+        this.view.printCommands();
     }
     
 }

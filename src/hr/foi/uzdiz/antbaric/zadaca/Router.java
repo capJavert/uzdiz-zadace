@@ -39,7 +39,30 @@ public class Router {
     }
 
     public void goTo(String viewId) {
-        switch (viewId) {
+        String[] meta = viewId.split(" ");
+        
+        switch (meta[0]) {
+            case "SP":
+                break;
+            case "VP":
+                break;
+            case "VF":
+                break;
+            case "PI":
+                break;
+            case "M":
+                break;
+            case "S":
+                if (meta.length > 1) {
+                    // sensor x table
+                } else {
+                    // statistics
+                }
+                break;
+            case "A":
+                break;
+            case "C":
+                break;
             default:
                 viewId = "";
                 IndexView view = new IndexView();
@@ -47,6 +70,10 @@ public class Router {
                 controller.init();
         }
         
+        IndexView view = new IndexView();
+        IndexController controller = new IndexController(view, null);
+        controller.init();
+
         if (!viewId.equals("")) {
             this.current = viewId;
         }

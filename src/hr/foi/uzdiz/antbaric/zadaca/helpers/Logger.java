@@ -8,6 +8,7 @@ package hr.foi.uzdiz.antbaric.zadaca.helpers;
 import hr.foi.uzdiz.antbaric.zadaca.extensions.LogElement;
 import hr.foi.uzdiz.antbaric.zadaca.extensions.LogElementVisitor;
 import hr.foi.uzdiz.antbaric.zadaca.extensions.PimpMyLogVisitor;
+import hr.foi.uzdiz.antbaric.zadaca.models.LError;
 import hr.foi.uzdiz.antbaric.zadaca.models.LWarning;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -17,11 +18,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
-import org.fusesource.jansi.Ansi;
-import static org.fusesource.jansi.Ansi.ansi;
-import org.fusesource.jansi.AnsiConsole;
 
 /**
  *
@@ -30,8 +29,10 @@ import org.fusesource.jansi.AnsiConsole;
 public class Logger {
 
     private static volatile Logger INSTANCE;
-    private static List<String> LOG = new ArrayList<>();
+    private static List<LogElement> LOG = new ArrayList<>();
+    private static final List<String> COMMANDS = new ArrayList<>(); 
     private static Boolean USE_PRINT_DELAY = true;
+    private static final Boolean PRINT_TO_CONSOLE = false;
     private static Integer BUFFER_SIZE = 0;
     private String filePath = "";
     private final LogElementVisitor pimpMyLogVisitor = new PimpMyLogVisitor();
@@ -59,6 +60,25 @@ public class Logger {
         INSTANCE.filePath = filePath;
     }
 
+    public static List<LogElement> getLOG(Integer limit) {
+        if (limit > LOG.size()) {
+            return LOG;
+        } else {
+            return LOG.subList(LOG.size()-limit, LOG.size());
+        }
+    }
+
+    public static List<String> getCOMMANDS(Integer limit) {
+        if (limit > COMMANDS.size()) {
+            List<String> inset = new ArrayList<>(Collections.nCopies(limit-COMMANDS.size(), ""));
+            inset.addAll(COMMANDS);
+            
+            return inset;
+        } else {
+            return COMMANDS.subList(COMMANDS.size()-limit, COMMANDS.size());
+        }
+    }
+
     public void log(LogElement log, Boolean printToConsole) {
         if (log == null) {
             return;
@@ -69,9 +89,9 @@ public class Logger {
             this.log(new LWarning("Buffer full, writing log to output file..."), true);
         }
 
-        LOG.add(log.toString());
+        LOG.add(log);
 
-        if (printToConsole) {
+        if (Logger.PRINT_TO_CONSOLE) {
             log.accept(this.pimpMyLogVisitor);
 
             if (Logger.USE_PRINT_DELAY) {
@@ -83,22 +103,36 @@ public class Logger {
             }
         }
     }
+    
+    public void logCommand(String command) {
+        if (command == null) {
+            return;
+        }
+
+        COMMANDS.add(command);
+    }
 
     public Boolean isBufferFull() {
         return Logger.LOG.size() >= Logger.BUFFER_SIZE && Logger.BUFFER_SIZE != 0;
     }
 
     public void writeToFile() {
+        List<String> stringLog = new ArrayList<>();
+        
+        for (LogElement log : Logger.LOG) {
+            stringLog.add(log.toString());
+        }
+        
         if (!this.filePath.equals("")) {
             try {
-                Files.write(Paths.get(INSTANCE.filePath), Logger.LOG, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+                Files.write(Paths.get(INSTANCE.filePath), stringLog, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
             } catch (IOException ex) {
-                AnsiConsole.out.println(ansi().fg(Ansi.Color.RED).a("Error: Output file path '" + INSTANCE.filePath + "' not valid"));
+                new LError("Error: Output file path '" + INSTANCE.filePath + "' not valid").accept(this.pimpMyLogVisitor);
             }
 
             INSTANCE.emptyBuffer();   
         } else {
-            this.log(new LWarning("Can't write to file, output file path is not set"), USE_PRINT_DELAY);
+            this.log(new LWarning("Can't write to file, output file path is not set"), true);
         }
     }
 
@@ -113,7 +147,7 @@ public class Logger {
                 outputWriter.flush();
             }
         } catch (IOException ex) {
-            AnsiConsole.out.println(ansi().fg(Ansi.Color.RED).a("Error: Output file path '" + INSTANCE.filePath + "' not valid"));
+            new LError("Error: Output file path '" + INSTANCE.filePath + "' not valid").accept(this.pimpMyLogVisitor);
         }
     }
 }

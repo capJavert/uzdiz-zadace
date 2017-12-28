@@ -15,6 +15,7 @@ import hr.foi.uzdiz.antbaric.zadaca.models.LError;
 import hr.foi.uzdiz.antbaric.zadaca.models.LInfo;
 import hr.foi.uzdiz.antbaric.zadaca.models.LMessage;
 import java.util.List;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 
 /**
@@ -50,7 +51,13 @@ public class Main {
                 Worker.setConfig(config);
                 Router.setConfig(config);
                 
-                Router.getInstance().goTo("");
+                String command = "";
+                
+                while(!command.equals("I")) {
+                    Logger.getInstance().logCommand(command);
+                    Router.getInstance().goTo(command);
+                    command = new Scanner(System.in).nextLine().replace("-", "");
+                } 
 
                 //final Worker worker = Worker.getInstance(algorithm);
                 //worker.start();
