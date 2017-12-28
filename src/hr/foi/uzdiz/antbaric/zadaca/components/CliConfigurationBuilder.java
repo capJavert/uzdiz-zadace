@@ -41,33 +41,33 @@ public class CliConfigurationBuilder implements ConfigurationBuilder {
 
         if (this.configuration.getSeed() == null) {
             Integer argValue = Generator.getInstance().fromInterval(100, 65535);
-            Logger.getInstance().log(new LWarning("-g argument not set, Setting: " + argValue), Boolean.TRUE);
+            Logger.getInstance().log(new LWarning("-g argument not set, Setting: " + argValue), Boolean.FALSE);
             this.setSeed("-g " + String.valueOf(argValue));
         }
         
         if (this.configuration.getRows() == null) {
-            Logger.getInstance().log(new LWarning("-br argument not set, Setting: 24"), Boolean.TRUE);
+            Logger.getInstance().log(new LWarning("-br argument not set, Setting: 24"), Boolean.FALSE);
             this.setRows("-br " + String.valueOf(24));
         }
         
         if (this.configuration.getCols() == null) {
-            Logger.getInstance().log(new LWarning("-bs argument not set, Setting: 80"), Boolean.TRUE);
+            Logger.getInstance().log(new LWarning("-bs argument not set, Setting: 80"), Boolean.FALSE);
             this.setCols("-bs " + String.valueOf(80));
         }
         
         if (this.configuration.getRowsForCommands() == null) {
-            Logger.getInstance().log(new LWarning("-brk argument not set, Setting: 2"), Boolean.TRUE);
+            Logger.getInstance().log(new LWarning("-brk argument not set, Setting: 2"), Boolean.FALSE);
             this.setRowsForCommands("-brk " + String.valueOf(2));
         }
         
         if (this.configuration.getDevicePerishability() == null) {
-            Logger.getInstance().log(new LWarning("-pi argument not set, Setting: 50"), Boolean.TRUE);
+            Logger.getInstance().log(new LWarning("-pi argument not set, Setting: 50"), Boolean.FALSE);
             this.setDevicePerishability("-pi " + String.valueOf(50));
         }
 
         if (this.configuration.getInterval() == null) {
             Integer argValue = Generator.getInstance().fromInterval(1, 17);
-            Logger.getInstance().log(new LWarning("-tcd argument not set, Setting: " + argValue), Boolean.TRUE);
+            Logger.getInstance().log(new LWarning("-tcd argument not set, Setting: " + argValue), Boolean.FALSE);
             this.setInterval("-tcd " + String.valueOf(argValue));
         }
 

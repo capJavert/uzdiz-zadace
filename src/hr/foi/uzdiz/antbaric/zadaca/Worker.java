@@ -9,6 +9,7 @@ import hr.foi.uzdiz.antbaric.zadaca.helpers.Generator;
 import hr.foi.uzdiz.antbaric.zadaca.components.Inspector;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
 import hr.foi.uzdiz.antbaric.zadaca.components.CSVParser;
+import hr.foi.uzdiz.antbaric.zadaca.controllers.WorkerController;
 import hr.foi.uzdiz.antbaric.zadaca.iterators.PlaceIterator;
 import hr.foi.uzdiz.antbaric.zadaca.iterators.UEntry;
 import hr.foi.uzdiz.antbaric.zadaca.iterators.UIterator;
@@ -32,15 +33,16 @@ import java.util.Objects;
  *
  * @author javert
  */
-public class Worker extends Thread implements Inspector {
+public class Worker implements Inspector {
 
     private static volatile Worker INSTANCE;
     private static Configuration CONFIG = null;
-    private static AlgorithmEnum ALGORITHM;
     private static PlaceIterator PLACES;
     private static List<Device> SENSORS;
     private static List<Device> ACTUATORS;
     private static HashMap<String, Integer> FAILED_DEVICES;
+
+    private Integer n;
 
     static {
         INSTANCE = new Worker();
@@ -49,8 +51,8 @@ public class Worker extends Thread implements Inspector {
     private Worker() {
     }
 
-    public static Worker getInstance(AlgorithmEnum algorithm) {
-        Worker.ALGORITHM = algorithm;
+    public static Worker getInstance(Integer n) {
+        INSTANCE.n = n;
 
         return INSTANCE;
     }
@@ -63,32 +65,13 @@ public class Worker extends Thread implements Inspector {
         Worker.CONFIG = config;
     }
 
-    @Override
-    public void interrupt() {
-        super.interrupt();
-    }
-
-    @Override
     public void run() {
-        CSVParser adapter = new CSVParser(Worker.CONFIG.getPlacesFilePath(), Worker.CONFIG.getActuatorsFielPath(), Worker.CONFIG.getSensorsFilePath());
-        Logger.getInstance().log(new LMessage("Reading CSV files..."), true);
-        Worker.PLACES = new PlaceIterator();
-        Worker.PLACES.add(adapter.getPlaces());
-        Worker.SENSORS = adapter.getSensors();
-        Worker.ACTUATORS = adapter.getActuators();
-        Worker.FAILED_DEVICES = new HashMap<>();
-
-        Logger.getInstance().log(new LMessage("Worker Thread started"), true);
-
-        this.configSystem();
-        this.initSystem();
-
-        for (Integer i = 0; i < 100; i++) { // TODO connect with N command
+        for (Integer i = 0; i < this.n; i++) {
             Long startTimestamp = System.currentTimeMillis();
 
             Logger.getInstance().log(new LMessage("Working, interval #" + (i + 1)), true);
 
-            for (final UIterator<UEntry<String, Place>> iterator = Worker.PLACES.getIterator(Worker.ALGORITHM); iterator.hasNext();) {
+            for (final UIterator<UEntry<String, Place>> iterator = Worker.PLACES.getIterator(AlgorithmEnum.INDEX); iterator.hasNext();) {
                 final UEntry<String, Place> entry = iterator.next();
                 Place place = entry.getValue();
                 List<Device> sensors = this.getSensorsByCategory(place.getCategory());
@@ -149,12 +132,22 @@ public class Worker extends Thread implements Inspector {
         Logger.getInstance().writeToFile();
     }
 
-    @Override
-    public synchronized void start() {
-        super.start();
+    public void setUp() {
+        CSVParser adapter = new CSVParser(Worker.CONFIG.getPlacesFilePath(), Worker.CONFIG.getActuatorsFielPath(), Worker.CONFIG.getSensorsFilePath());
+        Logger.getInstance().log(new LMessage("Reading CSV files..."), true);
+        Worker.PLACES = new PlaceIterator();
+        Worker.PLACES.add(adapter.getPlaces());
+        Worker.SENSORS = adapter.getSensors();
+        Worker.ACTUATORS = adapter.getActuators();
+        Worker.FAILED_DEVICES = new HashMap<>();
+
+        Logger.getInstance().log(new LMessage("Worker Thread started"), true);
+
+        this.configSystem();
+        this.initSystem();
     }
 
-    private void configSystem() {
+    public void configSystem() {
         for (final UIterator<UEntry<String, Place>> iterator = Worker.PLACES.getIterator(AlgorithmEnum.INDEX); iterator.hasNext();) {
             final UEntry<String, Place> entry = iterator.next();
             Place place = entry.getValue();
@@ -180,8 +173,8 @@ public class Worker extends Thread implements Inspector {
         }
     }
 
-    private void initSystem() {
-        for (final UIterator<UEntry<String, Place>> iterator = Worker.PLACES.getIterator(AlgorithmEnum.SEQUENTIAL); iterator.hasNext();) {
+    public void initSystem() {
+        for (final UIterator<UEntry<String, Place>> iterator = Worker.PLACES.getIterator(AlgorithmEnum.INDEX); iterator.hasNext();) {
             final UEntry<String, Place> entry = iterator.next();
             Place place = entry.getValue();
             List<Device> sensors = this.getSensorsByCategory(place.getCategory());
@@ -222,7 +215,7 @@ public class Worker extends Thread implements Inspector {
         Logger.getInstance().log(new LMessage("  Assigning Sensors to Actuator '" + actuator.getNameAndId() + "'"), true);
 
         if (sensors.size() > 0) {
-            for (int i = 0; i < Generator.getInstance().fromInterval(1, sensors.size()+1); i++) {
+            for (int i = 0; i < Generator.getInstance().fromInterval(1, sensors.size() + 1); i++) {
                 while (true) {
                     Sensor sensor = (Sensor) sensors.get(Generator.getInstance().selectFrom(sensors));
 
@@ -234,12 +227,12 @@ public class Worker extends Thread implements Inspector {
                 }
             }
         } else {
-             Logger.getInstance().log(new LMessage("  Actuator '" + actuator.getNameAndId() + "' has no assigned sensors"), true);
+            Logger.getInstance().log(new LMessage("  Actuator '" + actuator.getNameAndId() + "' has no assigned sensors"), true);
         }
     }
 
     private List<Device> getSensorsByCategory(Integer category) {
-        List<Device> sensors = new ArrayList();
+        List<Device> sensors = new ArrayList<>();
 
         for (Device sensor : Worker.SENSORS) {
             if (Objects.equals(sensor.getType(), category) || Objects.equals(sensor.getType(), 2)) {
@@ -251,7 +244,7 @@ public class Worker extends Thread implements Inspector {
     }
 
     private List<Device> getActuatorsByCategory(Integer category) {
-        List<Device> actuators = new ArrayList();
+        List<Device> actuators = new ArrayList<>();
 
         for (Device actuator : Worker.ACTUATORS) {
             if (Objects.equals(actuator.getType(), category) || Objects.equals(actuator.getType(), 2)) {

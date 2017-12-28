@@ -21,7 +21,7 @@ public class PlaceIterator implements UContainer<Place> {
     protected Place places[];
 
     @Override
-    public UIterator getIterator(AlgorithmEnum type) {
+    public UIterator<UEntry<String, Place>> getIterator(AlgorithmEnum type) {
         switch (type) {
             case SEQUENTIAL:
                 return new SequentialIterator();
@@ -30,7 +30,7 @@ public class PlaceIterator implements UContainer<Place> {
             case INDEX:
                 return new IndexIterator();
             default:
-                return new SequentialIterator();
+                return new IndexIterator();
         }
     }
 
@@ -44,7 +44,7 @@ public class PlaceIterator implements UContainer<Place> {
         }
     }
 
-    private class SequentialIterator implements UIterator<UEntry> {
+    private class SequentialIterator implements UIterator<UEntry<String, Place>> {
 
         private Integer identifier = 0;
         private Integer index = 0;
@@ -60,7 +60,7 @@ public class PlaceIterator implements UContainer<Place> {
         }
 
         @Override
-        public UEntry next() {
+        public UEntry<String, Place> next() {
             if (!this.hasNext()) {
                 return null;
             }
@@ -89,7 +89,7 @@ public class PlaceIterator implements UContainer<Place> {
 
     }
 
-    private class RandomIterator implements UIterator<UEntry> {
+    private class RandomIterator implements UIterator<UEntry<String, Place>> {
 
         private Integer index = 0;
         private final List<Integer> identifiers;
@@ -111,7 +111,7 @@ public class PlaceIterator implements UContainer<Place> {
         }
 
         @Override
-        public UEntry next() {
+        public UEntry<String, Place> next() {
             if (!this.hasNext()) {
                 return null;
             }
@@ -128,7 +128,7 @@ public class PlaceIterator implements UContainer<Place> {
 
     }
 
-    private class IndexIterator implements UIterator<UEntry> {
+    private class IndexIterator implements UIterator<UEntry<String, Place>> {
 
         private Integer index = 0;
         private Integer next = 0;
@@ -143,7 +143,7 @@ public class PlaceIterator implements UContainer<Place> {
         }
 
         @Override
-        public UEntry next() {
+        public UEntry<String, Place> next() {
             if (!this.hasNext()) {
                 return null;
             }

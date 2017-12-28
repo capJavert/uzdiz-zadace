@@ -6,25 +6,28 @@
 package hr.foi.uzdiz.antbaric.zadaca.controllers;
 
 import hr.foi.uzdiz.antbaric.zadaca.Router;
+import hr.foi.uzdiz.antbaric.zadaca.Worker;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.ANSIHelper;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
-import hr.foi.uzdiz.antbaric.zadaca.models.Actuator;
-import hr.foi.uzdiz.antbaric.zadaca.views.IndexView;
+import hr.foi.uzdiz.antbaric.zadaca.views.WorkerView;
 import java.util.Scanner;
 
 /**
  *
  * @author javert
  */
-public class IndexController extends Controller<IndexView, Actuator> {
+public class WorkerController extends Controller<WorkerView, Integer> {
 
-    public IndexController(IndexView view, Actuator model) {
+    public WorkerController(WorkerView view, Integer model) {
         super(view, model);
     }
 
     @Override
     public void init() {
         Logger.getInstance().setController(this);
+        
+        final Worker worker = Worker.getInstance(this.model);
+        worker.run();
     }
 
     @Override

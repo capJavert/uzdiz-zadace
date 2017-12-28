@@ -28,8 +28,8 @@ public class Place {
         this.category = category;
         this.sensorsNum = sensorsNum;
         this.actuatorsNum = actuatorsNum;
-        this.actuators = new ArrayList();
-        this.sensors = new ArrayList();
+        this.actuators = new ArrayList<>();
+        this.sensors = new ArrayList<>();
     }
 
     public Integer getId() {

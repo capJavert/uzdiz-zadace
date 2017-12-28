@@ -5,6 +5,8 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca.helpers;
 
+import hr.foi.uzdiz.antbaric.zadaca.Router;
+import hr.foi.uzdiz.antbaric.zadaca.controllers.Controller;
 import hr.foi.uzdiz.antbaric.zadaca.extensions.LogElement;
 import hr.foi.uzdiz.antbaric.zadaca.extensions.LogElementVisitor;
 import hr.foi.uzdiz.antbaric.zadaca.extensions.PimpMyLogVisitor;
@@ -20,6 +22,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 import java.util.logging.Level;
 
 /**
@@ -30,12 +33,14 @@ public class Logger {
 
     private static volatile Logger INSTANCE;
     private static List<LogElement> LOG = new ArrayList<>();
-    private static final List<String> COMMANDS = new ArrayList<>(); 
+    private static List<String> COMMANDS = new ArrayList<>();
     private static Boolean USE_PRINT_DELAY = true;
     private static final Boolean PRINT_TO_CONSOLE = false;
     private static Integer BUFFER_SIZE = 0;
     private String filePath = "";
     private final LogElementVisitor pimpMyLogVisitor = new PimpMyLogVisitor();
+
+    private Controller controller;
 
     static {
         INSTANCE = new Logger();
@@ -46,6 +51,10 @@ public class Logger {
 
     public static Logger getInstance() {
         return INSTANCE;
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 
     public void setUsePrintDelay(Boolean usePrintDelay) {
@@ -61,38 +70,32 @@ public class Logger {
     }
 
     public static List<LogElement> getLOG(Integer limit) {
-        if (limit > LOG.size()) {
+        if (limit > LOG.size() || limit == 0) {
             return LOG;
         } else {
-            return LOG.subList(LOG.size()-limit, LOG.size());
+            return LOG.subList(LOG.size() - limit, LOG.size());
         }
     }
 
     public static List<String> getCOMMANDS(Integer limit) {
         if (limit > COMMANDS.size()) {
-            List<String> inset = new ArrayList<>(Collections.nCopies(limit-COMMANDS.size(), ""));
+            List<String> inset = new ArrayList<>(Collections.nCopies(limit - COMMANDS.size(), ""));
             inset.addAll(COMMANDS);
-            
+
             return inset;
         } else {
-            return COMMANDS.subList(COMMANDS.size()-limit, COMMANDS.size());
+            return COMMANDS.subList(COMMANDS.size() - limit, COMMANDS.size());
         }
     }
 
-    public void log(LogElement log, Boolean printToConsole) {
+    public void log(LogElement log, Boolean uiPrint) {
         if (log == null) {
             return;
         }
 
-        if (INSTANCE.isBufferFull()) {
-            INSTANCE.writeToFile();
-            this.log(new LWarning("Buffer full, writing log to output file..."), true);
-        }
-
-        LOG.add(log);
-
-        if (Logger.PRINT_TO_CONSOLE) {
+        if (!uiPrint) {
             log.accept(this.pimpMyLogVisitor);
+            System.out.println();
 
             if (Logger.USE_PRINT_DELAY) {
                 try {
@@ -101,9 +104,17 @@ public class Logger {
                     java.util.logging.Logger.getLogger(Logger.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+        } else {
+            if (INSTANCE.isBufferFull()) {
+                controller.prompt();
+                LOG.add(log);
+            } else {
+                LOG.add(log);
+                controller.update();
+            }
         }
     }
-    
+
     public void logCommand(String command) {
         if (command == null) {
             return;
@@ -118,11 +129,11 @@ public class Logger {
 
     public void writeToFile() {
         List<String> stringLog = new ArrayList<>();
-        
+
         for (LogElement log : Logger.LOG) {
             stringLog.add(log.toString());
         }
-        
+
         if (!this.filePath.equals("")) {
             try {
                 Files.write(Paths.get(INSTANCE.filePath), stringLog, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
@@ -130,14 +141,15 @@ public class Logger {
                 new LError("Error: Output file path '" + INSTANCE.filePath + "' not valid").accept(this.pimpMyLogVisitor);
             }
 
-            INSTANCE.emptyBuffer();   
+            INSTANCE.emptyBuffer();
         } else {
             this.log(new LWarning("Can't write to file, output file path is not set"), true);
         }
     }
 
-    private void emptyBuffer() {
+    public void emptyBuffer() {
         Logger.LOG = new ArrayList<>();
+        // Logger.COMMANDS = new ArrayList<>();
     }
 
     public void clearFile() {

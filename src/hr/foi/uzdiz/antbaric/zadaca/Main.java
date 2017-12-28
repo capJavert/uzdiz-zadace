@@ -39,33 +39,29 @@ public class Main {
         List<Matcher> matcher = SyntaxValidator.validateArguments(args);
 
         if (matcher != null) {
-            Logger.getInstance().log(new LMessage("Reading arguments.."), true);
+            Logger.getInstance().log(new LMessage("Reading arguments.."), false);
 
-            try {
-                Configuration config = Main.buildConfig(matcher);
+            Configuration config = Main.buildConfig(matcher);
 
-                Generator generator = Generator.getInstance();
-                generator.setSeed(config.getSeed());
-                generator.setDevicePerishability(config.getDevicePerishability());
+            Generator generator = Generator.getInstance();
+            generator.setSeed(config.getSeed());
+            generator.setDevicePerishability(config.getDevicePerishability());
+            Logger.getInstance().setBufferSize(config.getRows() - config.getRowsForCommands() - 2);
 
-                Worker.setConfig(config);
-                Router.setConfig(config);
-                
-                String command = "";
-                
-                while(!command.equals("I")) {
-                    Logger.getInstance().logCommand(command);
-                    Router.getInstance().goTo(command);
-                    command = new Scanner(System.in).nextLine();
-                } 
+            Router.setConfig(config);
+            Worker.setConfig(config);
+            Worker.getInstance(0).setUp();
 
-                //final Worker worker = Worker.getInstance(algorithm);
-                //worker.start();
-            } catch (IllegalArgumentException ex) {
-                Logger.getInstance().log(new LError(ex.getMessage()), true);
+            String command = "";
+
+            while (!command.equals("I")) {
+                Logger.getInstance().logCommand(command);
+                Router.getInstance().goTo(command);
+                command = new Scanner(System.in).nextLine();
             }
+
         } else {
-            Logger.getInstance().log(new LError("Error: Please check your arguments!"), true);
+            Logger.getInstance().log(new LError("Error: Please check your arguments!"), false);
         }
     }
 

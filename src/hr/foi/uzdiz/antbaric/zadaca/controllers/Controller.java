@@ -5,19 +5,22 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca.controllers;
 
+import hr.foi.uzdiz.antbaric.zadaca.views.View;
+
 /**
  *
  * @author javert
  */
-public abstract class Controller<T, E> {
+public abstract class Controller<T extends View, E> {
+
     protected T view;
     protected E model;
-    
+
     public Controller(T view, E model) {
         this.view = view;
         this.model = model;
     }
-    
+
     public T getView() {
         return view;
     }
@@ -33,8 +36,10 @@ public abstract class Controller<T, E> {
     public void setModel(E model) {
         this.model = model;
     }
-    
+
     abstract void init();
 
-    abstract void update();
+    public abstract void update();
+    
+    public abstract void prompt();
 }

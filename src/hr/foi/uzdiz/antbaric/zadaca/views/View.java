@@ -8,20 +8,41 @@ package hr.foi.uzdiz.antbaric.zadaca.views;
 import hr.foi.uzdiz.antbaric.zadaca.Router;
 import hr.foi.uzdiz.antbaric.zadaca.extensions.PimpMyLogVisitor;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.ANSIHelper;
+import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
 
 /**
  *
  * @author javert
  */
 public abstract class View {
-    private final PimpMyLogVisitor visitor = new PimpMyLogVisitor();
+    protected final PimpMyLogVisitor visitor = new PimpMyLogVisitor();
     
     public void printContent() {  
         ANSIHelper.cls();
-        ANSIHelper.move(0, 0);
     }
     
-    abstract void printCommands();
+    public void printCommands() {
+        Integer y = this.getRowsDiff();
+        ANSIHelper.move(0, y);
+        ANSIHelper.cleol();
+        
+        for (String command : Logger.getCOMMANDS(Router.getConfig().getRowsForCommands())) {
+            ANSIHelper.write(command, 0, y++);
+        }
+        
+        ANSIHelper.move(0, y);
+    }
+
+    public void printCommandsWithPrompt() {
+        Integer x = 0;
+        Integer y = this.getRowsDiff();
+        
+        for (String command : Logger.getCOMMANDS(Router.getConfig().getRowsForCommands())) {
+            ANSIHelper.write(command, x, y++);
+        }
+        
+        ANSIHelper.write("Press n/N to continue...", x, y);
+    }
     
     protected Integer getRowsDiff() {
         return Router.getConfig().getRows()-Router.getConfig().getRowsForCommands();

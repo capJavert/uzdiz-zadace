@@ -26,6 +26,10 @@ public class ANSIHelper {
     public static void cls() {
         ANSIHelper.print(ESC + "2J");
     }
+    
+    public static void cleol() {
+        ANSIHelper.print(ESC + "2K");
+    }
 
     public static void write(String s) {
         ANSIHelper.print(s);
@@ -64,12 +68,12 @@ public class ANSIHelper {
     public static void setBg(ANSIColor color) {
         ANSIHelper.print(ESC + color.getCode());
     }
-
-    public static void hidePointer() {
-        ANSIHelper.println(ESC + "?25h");
+    
+    public static void moveUp() {
+        ANSIHelper.println(ESC + "1A");
     }
-
-    public static void showPointer() {
-        ANSIHelper.println(ESC + "?25l");
+    
+    public static void moveDown() {
+        ANSIHelper.println(ESC + "1B");
     }
 }
