@@ -15,13 +15,13 @@ import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
  *
  * @author javert
  */
-public class IndexView {
+public class IndexView extends View {
     private final PimpMyLogVisitor visitor = new PimpMyLogVisitor();
     
-    public void printContent() {  
-        ANSIHelper.cls();
-        ANSIHelper.move(0, 0);
-        
+    @Override
+    public void printContent() {
+        super.printContent();
+
         Integer x = 0;
         Integer y = 0;
         
@@ -33,6 +33,7 @@ public class IndexView {
         this.printSeparator();
     }
     
+    @Override
     public void printCommands() {
         Integer x = 0;
         Integer y = this.getRowsDiff();
@@ -43,15 +44,5 @@ public class IndexView {
         
         ANSIHelper.write("_", x, y);
         ANSIHelper.move(x+1, y);
-    }
-    
-    private Integer getRowsDiff() {
-        return Router.getConfig().getRows()-Router.getConfig().getRowsForCommands();
-    }
-    
-    private void printSeparator() {
-        for (int i=0,j=this.getRowsDiff()-1;i<Router.getConfig().getCols();i++) {
-            ANSIHelper.write("-", i, j);
-        }
     }
 }
