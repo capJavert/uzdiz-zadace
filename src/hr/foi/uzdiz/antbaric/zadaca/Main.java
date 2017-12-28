@@ -41,25 +41,28 @@ public class Main {
         if (matcher != null) {
             Logger.getInstance().log(new LMessage("Reading arguments.."), false);
 
-            Configuration config = Main.buildConfig(matcher);
+            try {
+                Configuration config = Main.buildConfig(matcher);
 
-            Generator generator = Generator.getInstance();
-            generator.setSeed(config.getSeed());
-            generator.setDevicePerishability(config.getDevicePerishability());
-            Logger.getInstance().setBufferSize(config.getRows() - config.getRowsForCommands() - 2);
+                Generator generator = Generator.getInstance();
+                generator.setSeed(config.getSeed());
+                generator.setDevicePerishability(config.getDevicePerishability());
+                Logger.getInstance().setBufferSize(config.getRows() - config.getRowsForCommands() - 2);
 
-            Router.setConfig(config);
-            Worker.setConfig(config);
-            Worker.getInstance(0).setUp();
+                Router.setConfig(config);
+                Worker.setConfig(config);
+                Worker.getInstance(0).setUp();
 
-            String command = "";
+                String command = "";
 
-            while (!command.equals("I")) {
-                Logger.getInstance().logCommand(command);
-                Router.getInstance().goTo(command);
-                command = new Scanner(System.in).nextLine();
+                while (!command.equals("I")) {
+                    Logger.getInstance().logCommand(command);
+                    Router.getInstance().goTo(command);
+                    command = new Scanner(System.in).nextLine();
+                }
+            } catch (IllegalArgumentException ex) {
+                Logger.getInstance().log(new LError(ex.getMessage()), false);
             }
-
         } else {
             Logger.getInstance().log(new LError("Error: Please check your arguments!"), false);
         }
@@ -96,7 +99,7 @@ public class Main {
     }
 
     private static void help() {
-        Logger.getInstance().log(new LInfo(Main.HELP), true);
+        Logger.getInstance().log(new LInfo(Main.HELP), false);
     }
 
     private static Boolean needHelp(String[] args) {
