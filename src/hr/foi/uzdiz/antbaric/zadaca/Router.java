@@ -9,6 +9,7 @@ import hr.foi.uzdiz.antbaric.zadaca.controllers.IndexController;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
 import hr.foi.uzdiz.antbaric.zadaca.models.Configuration;
 import hr.foi.uzdiz.antbaric.zadaca.models.LError;
+import hr.foi.uzdiz.antbaric.zadaca.models.LInfo;
 import hr.foi.uzdiz.antbaric.zadaca.models.LNotification;
 import hr.foi.uzdiz.antbaric.zadaca.views.IndexView;
 
@@ -70,7 +71,7 @@ public class Router {
                 if (meta.length > 1) {
                     // sensor x table
                 } else {
-                    // statistics
+                    Logger.getInstance().log(new LInfo("You won't find anything here, carry on..."), Boolean.TRUE);
                 }
                 break;
             case "A":
