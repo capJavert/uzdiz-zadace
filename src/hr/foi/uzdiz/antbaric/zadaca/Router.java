@@ -6,7 +6,10 @@
 package hr.foi.uzdiz.antbaric.zadaca;
 
 import hr.foi.uzdiz.antbaric.zadaca.controllers.IndexController;
+import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
 import hr.foi.uzdiz.antbaric.zadaca.models.Configuration;
+import hr.foi.uzdiz.antbaric.zadaca.models.LError;
+import hr.foi.uzdiz.antbaric.zadaca.models.LNotification;
 import hr.foi.uzdiz.antbaric.zadaca.views.IndexView;
 
 /**
@@ -49,6 +52,17 @@ public class Router {
             case "VF":
                 break;
             case "PI":
+                try {
+                    if (Integer.parseInt(meta[1]) > 100 || Integer.parseInt(meta[1]) < 0) {
+                        throw new NumberFormatException();
+                    }
+                    
+                    Router.CONFIG.setDevicePerishability(Integer.parseInt(meta[1])); 
+                    Logger.getInstance().log(new LNotification("PI % is set to " + meta[1]), Boolean.TRUE);
+                } catch(NumberFormatException | ArrayIndexOutOfBoundsException ex) {
+                    Logger.getInstance().log(new LError("PI % must be a number (0-100)"), Boolean.TRUE);
+                }
+                
                 break;
             case "M":
                 break;

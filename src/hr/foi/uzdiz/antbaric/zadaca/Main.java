@@ -56,7 +56,7 @@ public class Main {
                 while(!command.equals("I")) {
                     Logger.getInstance().logCommand(command);
                     Router.getInstance().goTo(command);
-                    command = new Scanner(System.in).nextLine().replace("-", "");
+                    command = new Scanner(System.in).nextLine();
                 } 
 
                 //final Worker worker = Worker.getInstance(algorithm);
