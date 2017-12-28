@@ -20,9 +20,9 @@ public class Generator extends Random {
     private static final DecimalFormat DECIMAL_FORMATER_ROUND = new DecimalFormat("#0");
     private static final DecimalFormat DECIMAL_FORMATER_1 = new DecimalFormat("#0.0");
     private static final DecimalFormat DECIMAL_FORMATER_5 = new DecimalFormat("#0.00000");
-    private static final Integer USED_IDENTIFIERS_PLACES = 0;
-    private static final Integer USED_IDENTIFIERS_SENSORS = 0;
-    private static final Integer USED_IDENTIFIERS_ACTUATORS = 0;
+    private static Integer USED_IDENTIFIERS_PLACES = 0;
+    private static Integer USED_IDENTIFIERS_SENSORS = 0;
+    private static Integer USED_IDENTIFIERS_ACTUATORS = 0;
     
     private Integer devicePerishability = 50;
 
@@ -40,11 +40,11 @@ public class Generator extends Random {
     private Integer getUsedIdentifiers(String type) {
         switch (type) {
             case "SENSOR":
-                return USED_IDENTIFIERS_SENSORS;
+                return ++USED_IDENTIFIERS_SENSORS;
             case "ACTUATOR":
-                return USED_IDENTIFIERS_ACTUATORS;
+                return ++USED_IDENTIFIERS_ACTUATORS;
             default:
-                return USED_IDENTIFIERS_PLACES;
+                return ++USED_IDENTIFIERS_PLACES;
         }
     }
 
@@ -57,7 +57,7 @@ public class Generator extends Random {
     }
 
     public Integer getUniqueIdentifier(String type) {
-        return this.getUsedIdentifiers(type)+1;
+        return this.getUsedIdentifiers(type);
     }
 
     public int fromInterval(int min, int max) {
