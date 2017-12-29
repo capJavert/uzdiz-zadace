@@ -16,41 +16,41 @@ import hr.foi.uzdiz.antbaric.zadaca.models.ANSIColor;
  * @author javert
  */
 public abstract class View {
+
     protected final PimpMyLogVisitor visitor = new PimpMyLogVisitor();
-    
-    public void printContent() {  
+
+    public void printContent() {
         ANSIHelper.cls();
     }
-    
+
     public void printCommands() {
         Integer y = this.getRowsDiff();
         ANSIHelper.move(0, y);
         ANSIHelper.cleol();
-        
+
         for (String command : Logger.getCOMMANDS(Router.getConfig().getRowsForCommands())) {
             ANSIHelper.write(command, 0, y++);
         }
-        
+
         ANSIHelper.move(0, y);
     }
 
     public void printCommandsWithPrompt() {
-        Integer x = 0;
         Integer y = this.getRowsDiff();
-        
+
         for (String command : Logger.getCOMMANDS(Router.getConfig().getRowsForCommands())) {
-            ANSIHelper.write(command, x, y++);
+            ANSIHelper.write(command, 0, y++);
         }
-        
-        ANSIHelper.write("Press n/N to continue...", x, y);
+
+        ANSIHelper.write("Press n/N to continue...", 0, y);
     }
-    
+
     protected Integer getRowsDiff() {
-        return Router.getConfig().getRows()-Router.getConfig().getRowsForCommands();
+        return Router.getConfig().getRows() - Router.getConfig().getRowsForCommands();
     }
-    
+
     protected void printSeparator() {
-        for (int i=0,j=this.getRowsDiff()-1;i<Router.getConfig().getCols();i++) {
+        for (int i = 0, j = this.getRowsDiff() - 1; i < Router.getConfig().getCols(); i++) {
             ANSIHelper.setBg(ANSIColor.WHITE);
             ANSIHelper.write(" ", i, j);
             ANSIHelper.setBg(ANSIColor.BLACK);

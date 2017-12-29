@@ -43,13 +43,13 @@ public class SensorController extends Controller<SensorView, Integer> {
                     break;
                 }
             }
-        }
 
-        for (Device device : Worker.SENSORS_TRASH) {
-            if (Objects.equals(device.getId(), this.model)) {
-                this.view.prepareTable((Sensor) device);
-                exists = true;
-                break;
+            for (Device device : entry.getValue().SENSORS_TRASH) {
+                if (Objects.equals(device.getId(), this.model)) {
+                    this.view.prepareTable((Sensor) device);
+                    exists = true;
+                    break;
+                }
             }
         }
 

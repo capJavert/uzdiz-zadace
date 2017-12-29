@@ -49,21 +49,21 @@ public abstract class Controller<T extends View, E> {
         this.view.printContent();
         this.view.printCommands();
     }
-    
+
     public void prompt() {
         this.update();
         // TODO uncomment before prod
-        /*this.view.printContent();
+        this.view.printContent();
         this.view.printCommandsWithPrompt();
 
         String command;
-        
-        
+
         do {
             command = new Scanner(System.in).nextLine();
             ANSIHelper.move(25, Router.getConfig().getRows());
-        } while (!command.equals("n") && !command.equals("N"));*/
-        
+                    ANSIHelper.cleol();
+        } while (!command.equals("n") && !command.equals("N"));
+
         Logger.getInstance().emptyBuffer();
     }
 }

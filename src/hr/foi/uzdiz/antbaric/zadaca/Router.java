@@ -7,6 +7,7 @@ package hr.foi.uzdiz.antbaric.zadaca;
 
 import hr.foi.uzdiz.antbaric.zadaca.controllers.ActuatorController;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.IndexController;
+import hr.foi.uzdiz.antbaric.zadaca.controllers.PlaceController;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.SensorController;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.WorkerController;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
@@ -16,6 +17,7 @@ import hr.foi.uzdiz.antbaric.zadaca.models.LInfo;
 import hr.foi.uzdiz.antbaric.zadaca.models.LNotification;
 import hr.foi.uzdiz.antbaric.zadaca.views.ActuatorView;
 import hr.foi.uzdiz.antbaric.zadaca.views.IndexView;
+import hr.foi.uzdiz.antbaric.zadaca.views.PlaceView;
 import hr.foi.uzdiz.antbaric.zadaca.views.SensorView;
 import hr.foi.uzdiz.antbaric.zadaca.views.WorkerView;
 
@@ -86,6 +88,21 @@ public class Router {
                 }
                 break;
             case "M":
+                if (meta.length > 1) {
+                    try {
+                        PlaceView view = new PlaceView();
+                        PlaceController controller = new PlaceController(view, Integer.parseInt(meta[1]));
+                        controller.setSensorView(new SensorView());
+                        controller.setActuatorView(new ActuatorView());
+                        controller.init();
+                    } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
+                        Logger.getInstance().log(new LError("Actuator ID must be a number"), Boolean.TRUE);
+                    }
+
+                } else {
+                    viewId = "";
+                    Logger.getInstance().log(new LInfo("You won't find anything here, carry on..."), Boolean.TRUE);
+                }
                 break;
             case "S":
                 if (meta.length > 1) {

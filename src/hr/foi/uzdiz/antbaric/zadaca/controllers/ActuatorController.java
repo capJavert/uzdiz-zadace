@@ -63,24 +63,24 @@ public class ActuatorController extends Controller<ActuatorView, Integer> {
                     break;
                 }
             }
-        }
 
-        for (Device device : Worker.ACTUATORS_TRASH) {
-            if (Objects.equals(device.getId(), this.model)) {
-                this.view.prepareTable((Actuator) device);
+            for (Device device : entry.getValue().ACTUATORS_TRASH) {
+                if (Objects.equals(device.getId(), this.model)) {
+                    this.view.prepareTable((Actuator) device);
 
-                if (this.sensorView != null) {
-                    if (((Actuator) device).sensors.size() > 0) {
-                        Logger.getInstance().log(new LMessage("Sensors for " + device.getNameAndId() + ": "), true);
+                    if (this.sensorView != null) {
+                        if (((Actuator) device).sensors.size() > 0) {
+                            Logger.getInstance().log(new LMessage("Sensors for " + device.getNameAndId() + ": "), true);
+                        }
+
+                        for (Sensor sensor : ((Actuator) device).sensors) {
+                            this.sensorView.prepareTable(sensor);
+                        }
                     }
 
-                    for (Sensor sensor : ((Actuator) device).sensors) {
-                        this.sensorView.prepareTable(sensor);
-                    }
+                    exists = true;
+                    break;
                 }
-                
-                exists = true;
-                break;
             }
         }
 

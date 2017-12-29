@@ -28,7 +28,7 @@ public class ANSIHelper {
     }
     
     public static void cleol() {
-        ANSIHelper.print(ESC + "2K");
+        ANSIHelper.print(ESC + "K");
     }
 
     public static void write(String s) {

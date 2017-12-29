@@ -10,7 +10,7 @@ import hr.foi.uzdiz.antbaric.zadaca.extensions.LogElement;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.ANSIHelper;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
 import hr.foi.uzdiz.antbaric.zadaca.models.LMessage;
-import hr.foi.uzdiz.antbaric.zadaca.models.Actuator;
+import hr.foi.uzdiz.antbaric.zadaca.models.Place;
 import java.lang.reflect.Field;
 import java.util.Collections;
 
@@ -18,12 +18,12 @@ import java.util.Collections;
  *
  * @author javert
  */
-public class ActuatorView extends View {
-
-    private static final Integer NUMBER_OF_COLS = 8;
+public class PlaceView extends View {
+    
+    private static final Integer NUMBER_OF_COLS = 5;
     private static final Integer FIRST_COL_OFFSET = 3;
     private static final Integer COL_OFFSET = 5;
-
+    
     @Override
     public void printContent() {
         super.printContent();
@@ -38,25 +38,25 @@ public class ActuatorView extends View {
         this.printSeparator();
     }
 
-    public void prepareTable(Actuator actuator) {
+    public void prepareTable(Place place) {
         String header = "";
         String row = "";
 
-        for (Field field : Actuator.class.getFields()) {
+        for (Field field : Place.class.getFields()) {
             try {
                 String header_part;
                 String row_part;
 
                 if (!header.isEmpty()) {
-                    header_part = this.formatHeader(field.getName(), FIRST_COL_OFFSET) + " | ";
+                    header_part = this.formatHeader(field.getName(), COL_OFFSET) + " | ";
                 } else {
-                    header_part = "| " + this.formatHeader(field.getName(), COL_OFFSET) + " | ";
+                    header_part = "| " + this.formatHeader(field.getName(), FIRST_COL_OFFSET) + " | ";
                 }
 
                 if (!row.isEmpty()) {
-                    row_part = this.formatCell(field.get(actuator), FIRST_COL_OFFSET) + " | ";
+                    row_part = this.formatCell(field.get(place), COL_OFFSET) + " | ";
                 } else {
-                    row_part = "| " + this.formatCell(field.get(actuator), COL_OFFSET) + " | ";
+                    row_part = "| " + this.formatCell(field.get(place), FIRST_COL_OFFSET) + " | ";
                 }
 
                 header += header_part;
@@ -66,6 +66,7 @@ public class ActuatorView extends View {
             }
         }
 
+        Logger.getInstance().log(new LMessage("Place " + place.getNameAndId()), Boolean.TRUE);
         Logger.getInstance().log(new LMessage(String.join("", Collections.nCopies(header.length() - 1, "-"))), Boolean.TRUE);
         Logger.getInstance().log(new LMessage(header), Boolean.TRUE);
         Logger.getInstance().log(new LMessage(String.join("", Collections.nCopies(header.length() - 1, "-"))), Boolean.TRUE);

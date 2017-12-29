@@ -23,6 +23,9 @@ public class Place {
     private final List<Device> actuators;
     private final List<Device> sensors;
 
+    public final List<Device> SENSORS_TRASH = new ArrayList<>();
+    public final List<Device> ACTUATORS_TRASH = new ArrayList<>();
+
     public Place(String name, Integer category, Integer sensorsNum, Integer actuatorsNum) {
         this.name = name;
         this.category = category;
@@ -45,7 +48,7 @@ public class Place {
     public String getName() {
         return name;
     }
-    
+
     public String getNameAndId() {
         return this.name + " ID: " + this.id;
     }
@@ -72,13 +75,13 @@ public class Place {
 
     public void addSensor(Device sensor) {
         sensor.setId();
-        
+
         this.sensors.add(sensor);
     }
 
     public void addActuator(Device actuator) {
         actuator.setId();
-        
+
         this.actuators.add(actuator);
     }
 
