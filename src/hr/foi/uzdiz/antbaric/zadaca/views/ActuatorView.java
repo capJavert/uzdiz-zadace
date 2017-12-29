@@ -10,7 +10,7 @@ import hr.foi.uzdiz.antbaric.zadaca.extensions.LogElement;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.ANSIHelper;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
 import hr.foi.uzdiz.antbaric.zadaca.models.LMessage;
-import hr.foi.uzdiz.antbaric.zadaca.models.Sensor;
+import hr.foi.uzdiz.antbaric.zadaca.models.Actuator;
 import java.lang.reflect.Field;
 import java.util.Collections;
 
@@ -18,7 +18,7 @@ import java.util.Collections;
  *
  * @author javert
  */
-public class SensorView extends View {
+public class ActuatorView extends View {
 
     @Override
     public void printContent() {
@@ -34,11 +34,11 @@ public class SensorView extends View {
         this.printSeparator();
     }
 
-    public void prepareTable(Sensor sensor) {
+    public void prepareTable(Actuator actuator) {
         String header = "";
         String row = "";
 
-        for (Field field : Sensor.class.getFields()) {
+        for (Field field : Actuator.class.getFields()) {
             try {
                 String header_part;
                 String row_part;
@@ -50,9 +50,9 @@ public class SensorView extends View {
                 }
 
                 if (!row.isEmpty()) {
-                    row_part = this.formatCell(field.get(sensor), 3) + " | ";
+                    row_part = this.formatCell(field.get(actuator), 3) + " | ";
                 } else {
-                    row_part = "| " + this.formatCell(field.get(sensor), 5) + " | ";
+                    row_part = "| " + this.formatCell(field.get(actuator), 5) + " | ";
                 }
 
                 header += header_part;
@@ -62,7 +62,7 @@ public class SensorView extends View {
             }
         }
 
-        Logger.getInstance().log(new LMessage("Sensor " + sensor.getNameAndId()), Boolean.TRUE);
+        Logger.getInstance().log(new LMessage("Actuator " + actuator.getNameAndId()), Boolean.TRUE);
         Logger.getInstance().log(new LMessage(String.join("", Collections.nCopies(header.length() - 1, "-"))), Boolean.TRUE);
         Logger.getInstance().log(new LMessage(header), Boolean.TRUE);
         Logger.getInstance().log(new LMessage(String.join("", Collections.nCopies(header.length() - 1, "-"))), Boolean.TRUE);

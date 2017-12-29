@@ -51,13 +51,15 @@ public abstract class Controller<T extends View, E> {
     }
     
     public void prompt() {
-        this.view.printContent();
+        this.update();
+        // TODO uncomment before prod
+        /*this.view.printContent();
         this.view.printCommandsWithPrompt();
 
         String command;
         
-        // TODO uncomment before prod
-        /*do {
+        
+        do {
             command = new Scanner(System.in).nextLine();
             ANSIHelper.move(25, Router.getConfig().getRows());
         } while (!command.equals("n") && !command.equals("N"));*/

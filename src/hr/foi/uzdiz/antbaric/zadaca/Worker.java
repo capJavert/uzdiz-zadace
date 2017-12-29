@@ -9,7 +9,6 @@ import hr.foi.uzdiz.antbaric.zadaca.helpers.Generator;
 import hr.foi.uzdiz.antbaric.zadaca.components.Inspector;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
 import hr.foi.uzdiz.antbaric.zadaca.components.CSVParser;
-import hr.foi.uzdiz.antbaric.zadaca.controllers.WorkerController;
 import hr.foi.uzdiz.antbaric.zadaca.iterators.PlaceIterator;
 import hr.foi.uzdiz.antbaric.zadaca.iterators.UEntry;
 import hr.foi.uzdiz.antbaric.zadaca.iterators.UIterator;

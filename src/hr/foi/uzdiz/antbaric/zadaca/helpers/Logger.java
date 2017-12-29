@@ -5,7 +5,6 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca.helpers;
 
-import hr.foi.uzdiz.antbaric.zadaca.Router;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.Controller;
 import hr.foi.uzdiz.antbaric.zadaca.extensions.LogElement;
 import hr.foi.uzdiz.antbaric.zadaca.extensions.LogElementVisitor;
@@ -22,7 +21,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 import java.util.logging.Level;
 
 /**
