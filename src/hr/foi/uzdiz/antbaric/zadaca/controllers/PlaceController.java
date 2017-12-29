@@ -49,7 +49,7 @@ public class PlaceController extends Controller<PlaceView, Integer> {
 
         Boolean exists = false;
 
-        for (final UIterator<UEntry<String, Place>> iterator = Worker.PLACES.getIterator(AlgorithmEnum.INDEX); iterator.hasNext();) {
+        for (final UIterator<UEntry<String, Place>> iterator = Worker.getInstance().PLACES.getIterator(AlgorithmEnum.INDEX); iterator.hasNext();) {
             final UEntry<String, Place> entry = iterator.next();
 
             if (Objects.equals(entry.getValue().getId(), this.model)) {

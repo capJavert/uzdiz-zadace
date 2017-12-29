@@ -6,12 +6,13 @@
 package hr.foi.uzdiz.antbaric.zadaca.models;
 
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Generator;
+import java.io.Serializable;
 
 /**
  *
  * @author javert
  */
-public abstract class Device {
+public abstract class Device implements Serializable {
 
     public Integer id;
     public final String name;

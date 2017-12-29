@@ -50,8 +50,8 @@ public class Main {
                 Logger.getInstance().setBufferSize(config.getRows() - config.getRowsForCommands() - 2);
 
                 Router.setConfig(config);
-                Worker.setConfig(config);
-                Worker.getInstance(0).setUp();
+                Worker.getInstance().setConfig(config);
+                Worker.getInstance().setUp();
 
                 String command = "";
 

@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
  */
 public class PlaceIterator implements UContainer<Place> {
 
-    protected Place places[];
+    public Place places[];
 
     @Override
     public UIterator<UEntry<String, Place>> getIterator(AlgorithmEnum type) {

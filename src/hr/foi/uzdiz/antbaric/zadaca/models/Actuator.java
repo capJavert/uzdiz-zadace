@@ -7,6 +7,7 @@ package hr.foi.uzdiz.antbaric.zadaca.models;
 
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Generator;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  *
  * @author javert
  */
-public class Actuator extends Device {
+public class Actuator extends Device implements Serializable {
 
     public final List<Sensor> sensors = new ArrayList<>();
     

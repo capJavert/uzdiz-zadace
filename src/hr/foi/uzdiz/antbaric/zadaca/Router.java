@@ -5,6 +5,7 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca;
 
+import hr.foi.uzdiz.antbaric.zadaca.components.StateManager;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.ActuatorController;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.IndexController;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.PlaceController;
@@ -25,7 +26,7 @@ import hr.foi.uzdiz.antbaric.zadaca.views.WorkerView;
  *
  * @author javert
  */
-public class Router {
+public class Router extends StateManager {
 
     private static volatile Router INSTANCE;
     private static Configuration CONFIG = null;
@@ -64,14 +65,22 @@ public class Router {
 
         switch (meta[0]) {
             case "SP":
+                viewId = "";
+                this.addState(Worker.getInstance().save());
+                Logger.getInstance().log(new LNotification("State saved successfully"), Boolean.TRUE);
                 break;
             case "VP":
+                viewId = "";
+                if (this.hasSave()) {
+                    Worker.getInstance().restore(this.getState());
+                    Logger.getInstance().log(new LNotification("State restored successfully"), Boolean.TRUE);
+                } else {
+                    Logger.getInstance().log(new LError("There is no saved state to restore!"), Boolean.TRUE);
+                }              
                 break;
             case "VF":
                 viewId = "";
-                for (int i = 0; i < 1000; i++) {
-                    Logger.getInstance().log(new LError("Output test #" + String.valueOf(i)), Boolean.TRUE);
-                }
+                // TODO implement
                 break;
             case "PI":
                 viewId = "";

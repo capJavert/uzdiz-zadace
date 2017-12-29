@@ -6,6 +6,7 @@
 package hr.foi.uzdiz.antbaric.zadaca.models;
 
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Generator;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  *
  * @author javert
  */
-public class Place {
+public class Place implements Serializable {
 
     public Integer id = null;
     public final String name;

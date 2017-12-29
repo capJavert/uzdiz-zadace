@@ -6,9 +6,9 @@
 package hr.foi.uzdiz.antbaric.zadaca;
 
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Generator;
-import hr.foi.uzdiz.antbaric.zadaca.components.Inspector;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
 import hr.foi.uzdiz.antbaric.zadaca.components.CSVParser;
+import hr.foi.uzdiz.antbaric.zadaca.extensions.Stateful;
 import hr.foi.uzdiz.antbaric.zadaca.iterators.PlaceIterator;
 import hr.foi.uzdiz.antbaric.zadaca.iterators.UEntry;
 import hr.foi.uzdiz.antbaric.zadaca.iterators.UIterator;
@@ -22,6 +22,11 @@ import hr.foi.uzdiz.antbaric.zadaca.models.LMessage;
 import hr.foi.uzdiz.antbaric.zadaca.models.LWarning;
 import hr.foi.uzdiz.antbaric.zadaca.models.Place;
 import hr.foi.uzdiz.antbaric.zadaca.models.Sensor;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,16 +37,14 @@ import java.util.Objects;
  *
  * @author javert
  */
-public class Worker implements Inspector {
+public class Worker extends Stateful {
 
     private static volatile Worker INSTANCE;
-    private static Configuration CONFIG = null;
-    public static PlaceIterator PLACES;
-    public static List<Device> SENSORS;
-    public static List<Device> ACTUATORS;
-    private static HashMap<String, Integer> FAILED_DEVICES;
-
-    private Integer n;
+    private Configuration CONFIG = null;
+    public PlaceIterator PLACES;
+    public List<Device> SENSORS;
+    public List<Device> ACTUATORS;
+    private HashMap<String, Integer> FAILED_DEVICES;
 
     static {
         INSTANCE = new Worker();
@@ -50,27 +53,25 @@ public class Worker implements Inspector {
     private Worker() {
     }
 
-    public static Worker getInstance(Integer n) {
-        INSTANCE.n = n;
-
+    public static Worker getInstance() {
         return INSTANCE;
     }
 
-    public static Configuration getConfig() {
+    public Configuration getConfig() {
         return CONFIG;
     }
 
-    public static void setConfig(Configuration config) {
-        Worker.CONFIG = config;
+    public void setConfig(Configuration config) {
+        CONFIG = config;
     }
 
-    public void run() {
-        for (Integer i = 0; i < this.n; i++) {
+    public void run(Integer n) {
+        for (Integer i = 0; i < n; i++) {
             Long startTimestamp = System.currentTimeMillis();
 
             Logger.getInstance().log(new LMessage("Working, interval #" + (i + 1)), true);
 
-            for (final UIterator<UEntry<String, Place>> iterator = Worker.PLACES.getIterator(AlgorithmEnum.INDEX); iterator.hasNext();) {
+            for (final UIterator<UEntry<String, Place>> iterator = PLACES.getIterator(AlgorithmEnum.INDEX); iterator.hasNext();) {
                 final UEntry<String, Place> entry = iterator.next();
                 Place place = entry.getValue();
                 List<Device> sensors = this.getSensorsByCategory(place.getCategory());
@@ -114,7 +115,7 @@ public class Worker implements Inspector {
                     } else {
                         Logger.getInstance().log(new LMessage("No change to sensors Actuator '" + actuator.getName() + "'"), true);
                         actuator.activate();
-                        Worker.FAILED_DEVICES.put(place.getName() + "." + actuator.getName(), 0);
+                        FAILED_DEVICES.put(place.getName() + "." + actuator.getName(), 0);
                     }
 
                 }
@@ -134,13 +135,13 @@ public class Worker implements Inspector {
     }
 
     public void setUp() {
-        CSVParser adapter = new CSVParser(Worker.CONFIG.getPlacesFilePath(), Worker.CONFIG.getActuatorsFielPath(), Worker.CONFIG.getSensorsFilePath());
+        CSVParser adapter = new CSVParser(CONFIG.getPlacesFilePath(), CONFIG.getActuatorsFielPath(), CONFIG.getSensorsFilePath());
         Logger.getInstance().log(new LMessage("Reading CSV files..."), true);
-        Worker.PLACES = new PlaceIterator();
-        Worker.PLACES.add(adapter.getPlaces());
-        Worker.SENSORS = adapter.getSensors();
-        Worker.ACTUATORS = adapter.getActuators();
-        Worker.FAILED_DEVICES = new HashMap<>();
+        PLACES = new PlaceIterator();
+        PLACES.add(adapter.getPlaces());
+        SENSORS = adapter.getSensors();
+        ACTUATORS = adapter.getActuators();
+        FAILED_DEVICES = new HashMap<>();
 
         Logger.getInstance().log(new LMessage("Worker Thread started"), true);
 
@@ -149,7 +150,7 @@ public class Worker implements Inspector {
     }
 
     public void configSystem() {
-        for (final UIterator<UEntry<String, Place>> iterator = Worker.PLACES.getIterator(AlgorithmEnum.INDEX); iterator.hasNext();) {
+        for (final UIterator<UEntry<String, Place>> iterator = PLACES.getIterator(AlgorithmEnum.INDEX); iterator.hasNext();) {
             final UEntry<String, Place> entry = iterator.next();
             Place place = entry.getValue();
             place.setId();
@@ -157,13 +158,13 @@ public class Worker implements Inspector {
             List<Device> actuators = this.getActuatorsByCategory(place.getCategory());
             Logger.getInstance().log(new LMessage("Placing devices at '" + place.getName() + "'"), true);
 
-            if (!Worker.SENSORS.isEmpty()) {
+            if (!SENSORS.isEmpty()) {
                 for (Integer i = 0; i < place.getSensorsNum(); i++) {
                     place.addSensor(sensors.get(Generator.getInstance().selectFrom(sensors)).prototype());
                 }
             }
 
-            if (!Worker.ACTUATORS.isEmpty()) {
+            if (!ACTUATORS.isEmpty()) {
                 for (Integer i = 0; i < place.getActuatorsNum(); i++) {
                     place.addActuator(actuators.get(Generator.getInstance().selectFrom(actuators)).prototype());
                 }
@@ -175,7 +176,7 @@ public class Worker implements Inspector {
     }
 
     public void initSystem() {
-        for (final UIterator<UEntry<String, Place>> iterator = Worker.PLACES.getIterator(AlgorithmEnum.INDEX); iterator.hasNext();) {
+        for (final UIterator<UEntry<String, Place>> iterator = PLACES.getIterator(AlgorithmEnum.INDEX); iterator.hasNext();) {
             final UEntry<String, Place> entry = iterator.next();
             Place place = entry.getValue();
             List<Device> sensors = this.getSensorsByCategory(place.getCategory());
@@ -189,7 +190,7 @@ public class Worker implements Inspector {
                     deviceIterator.remove();
                     Logger.getInstance().log(new LError("  Init FAILED '" + sensor.getNameAndId() + "'"), true);
                 } else {
-                    Worker.FAILED_DEVICES.put(place.getName() + "." + sensor.getName(), 0);
+                    FAILED_DEVICES.put(place.getName() + "." + sensor.getName(), 0);
                     Logger.getInstance().log(new LMessage("  Init OK '" + sensor.getNameAndId() + "'"), true);
                 }
             }
@@ -202,7 +203,7 @@ public class Worker implements Inspector {
                     deviceIterator.remove();
                     Logger.getInstance().log(new LError("  Init FAILED '" + actuator.getNameAndId() + "'"), true);
                 } else {
-                    Worker.FAILED_DEVICES.put(place.getName() + "." + actuator.getName(), 0);
+                    FAILED_DEVICES.put(place.getName() + "." + actuator.getName(), 0);
                     Logger.getInstance().log(new LMessage("  Init OK '" + actuator.getNameAndId() + "'"), true);
 
                     this.configActuator((Actuator) actuator, place.getSensors());
@@ -237,7 +238,7 @@ public class Worker implements Inspector {
     private List<Device> getSensorsByCategory(Integer category) {
         List<Device> sensors = new ArrayList<>();
 
-        for (Device sensor : Worker.SENSORS) {
+        for (Device sensor : SENSORS) {
             if (Objects.equals(sensor.getType(), category) || Objects.equals(sensor.getType(), 2)) {
                 sensors.add(sensor);
             }
@@ -249,7 +250,7 @@ public class Worker implements Inspector {
     private List<Device> getActuatorsByCategory(Integer category) {
         List<Device> actuators = new ArrayList<>();
 
-        for (Device actuator : Worker.ACTUATORS) {
+        for (Device actuator : ACTUATORS) {
             if (Objects.equals(actuator.getType(), category) || Objects.equals(actuator.getType(), 2)) {
                 actuators.add(actuator);
             }
@@ -260,13 +261,13 @@ public class Worker implements Inspector {
 
     private Boolean activateDevice(String placeName, Device device) {
         String deviceId = placeName + "." + device.getName();
-        Integer overload = Worker.FAILED_DEVICES.get(deviceId);
+        Integer overload = FAILED_DEVICES.get(deviceId);
 
         if (device.getStatus() == 0) {
             overload = overload == null ? 1 : overload + 1;
 
             if (overload.equals(3)) {
-                Worker.FAILED_DEVICES.remove(deviceId);
+                FAILED_DEVICES.remove(deviceId);
                 Logger.getInstance().log(new LWarning("Device '" + device.getName() + "ID: " + device.getId() + "'@'" + placeName + "' need replacement..."), true);
 
                 return false;
@@ -276,13 +277,60 @@ public class Worker implements Inspector {
             device.activate();
         }
 
-        Worker.FAILED_DEVICES.put(deviceId, overload);
+        FAILED_DEVICES.put(deviceId, overload);
 
         return true;
     }
 
     private Boolean isLimitExceeded(Long startTimestamp) {
-        return System.currentTimeMillis() - startTimestamp > Worker.CONFIG.getPreciseInterval();
+        return System.currentTimeMillis() - startTimestamp > CONFIG.getPreciseInterval();
     }
 
+    @Override
+    public Object save() {
+        return new State((Place[]) Worker.copy(this.PLACES.places));
+    }
+
+    @Override
+    public void restore(Object o) {
+        if (o instanceof State) {
+            State s = (State) o;
+            INSTANCE.PLACES.places = ((State) o).state;
+        }
+    }
+
+    private static class State {
+
+        private final Place state[];
+
+        public State(Place[] state) {
+            this.state = state;
+        }
+
+        public Place[] getSavedState() {
+            return state;
+        }
+    }
+
+    public static Object copy(Object orig) {
+        Object obj = null;
+        try {
+            // Write the object out to a byte array
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            try (ObjectOutputStream out = new ObjectOutputStream(bos)) {
+                out.writeObject(orig);
+                out.flush();
+            }
+
+            // Make an input stream from the byte array and read
+            // a copy of the object back in.
+            ObjectInputStream in = new ObjectInputStream(
+                    new ByteArrayInputStream(bos.toByteArray()));
+            obj = in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            Logger.getInstance().log(new LError(e.getMessage()), Boolean.TRUE);
+        }
+
+        return obj;
+    }
 }

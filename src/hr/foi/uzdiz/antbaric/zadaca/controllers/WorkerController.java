@@ -22,7 +22,7 @@ public class WorkerController extends Controller<WorkerView, Integer> {
     public void init() {
         super.init();
 
-        final Worker worker = Worker.getInstance(this.model);
-        worker.run();
+        final Worker worker = Worker.getInstance();
+        worker.run(this.model);
     }
 }

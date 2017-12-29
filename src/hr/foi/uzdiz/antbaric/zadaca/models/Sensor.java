@@ -7,12 +7,13 @@ package hr.foi.uzdiz.antbaric.zadaca.models;
 
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Generator;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
+import java.io.Serializable;
 
 /**
  *
  * @author javert
  */
-public class Sensor extends Device {
+public class Sensor extends Device implements Serializable {
 
     private Boolean changed = false;
 
