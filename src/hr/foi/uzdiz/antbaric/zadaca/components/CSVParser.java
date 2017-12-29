@@ -91,8 +91,21 @@ public class CSVParser extends CSVHelper {
                         Integer.parseInt(values.get(2)),
                         Integer.parseInt(values.get(3))
                 );
-
-                places.add(place);
+                
+                Boolean duplicate = false;
+                
+                for (Place p : places) {
+                    if (p.getName().equals(place.getName())) {
+                        duplicate = true;
+                        break;
+                    }
+                }
+                
+                if (duplicate) {
+                    Logger.getInstance().log(new LError("Duplicate '" + place.getName() + "'! Skipping Place..."), true);
+                } else {
+                    places.add(place);
+                }
             } catch (NumberFormatException ex) {
                 Logger.getInstance().log(new LError("Line is not valid. Skipping Place..."), true);
             }
