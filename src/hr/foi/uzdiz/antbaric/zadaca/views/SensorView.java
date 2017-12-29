@@ -20,6 +20,10 @@ import java.util.Collections;
  */
 public class SensorView extends View {
 
+    private static final Integer NUMBER_OF_COLS = 8;
+    private static final Integer FIRST_COL_OFFSET = 3;
+    private static final Integer COL_OFFSET = 5;
+
     @Override
     public void printContent() {
         super.printContent();
@@ -44,15 +48,15 @@ public class SensorView extends View {
                 String row_part;
 
                 if (!header.isEmpty()) {
-                    header_part = this.formatHeader(field.getName(), 3) + " | ";
+                    header_part = this.formatHeader(field.getName(), FIRST_COL_OFFSET) + " | ";
                 } else {
-                    header_part = "| " + this.formatHeader(field.getName(), 5) + " | ";
+                    header_part = "| " + this.formatHeader(field.getName(), COL_OFFSET) + " | ";
                 }
 
                 if (!row.isEmpty()) {
-                    row_part = this.formatCell(field.get(sensor), 3) + " | ";
+                    row_part = this.formatCell(field.get(sensor), FIRST_COL_OFFSET) + " | ";
                 } else {
-                    row_part = "| " + this.formatCell(field.get(sensor), 5) + " | ";
+                    row_part = "| " + this.formatCell(field.get(sensor), COL_OFFSET) + " | ";
                 }
 
                 header += header_part;
@@ -62,7 +66,6 @@ public class SensorView extends View {
             }
         }
 
-        Logger.getInstance().log(new LMessage("Sensor " + sensor.getNameAndId()), Boolean.TRUE);
         Logger.getInstance().log(new LMessage(String.join("", Collections.nCopies(header.length() - 1, "-"))), Boolean.TRUE);
         Logger.getInstance().log(new LMessage(header), Boolean.TRUE);
         Logger.getInstance().log(new LMessage(String.join("", Collections.nCopies(header.length() - 1, "-"))), Boolean.TRUE);
@@ -76,15 +79,15 @@ public class SensorView extends View {
         if (Router.getConfig() == null) {
             stringValue = value.toString();
         } else {
-            if (value.toString().length() < Router.getConfig().getCols() / 8 - offset) {
+            if (value.toString().length() < Router.getConfig().getCols() / NUMBER_OF_COLS - offset) {
                 stringValue = value.toString().substring(0, value.toString().length());
             } else {
-                stringValue = value.toString().substring(0, Router.getConfig().getCols() / 8 - offset);
+                stringValue = value.toString().substring(0, Router.getConfig().getCols() / NUMBER_OF_COLS - offset);
             }
 
         }
 
-        String padding = String.join("", Collections.nCopies(Router.getConfig().getCols() / 8 - offset - stringValue.length(), " "));
+        String padding = String.join("", Collections.nCopies(Router.getConfig().getCols() / NUMBER_OF_COLS - offset - stringValue.length(), " "));
 
         try {
             Float.parseFloat(value.toString());
@@ -96,7 +99,7 @@ public class SensorView extends View {
     }
 
     private String formatHeader(Object value, Integer offset) {
-        String padding = String.join("", Collections.nCopies(Router.getConfig().getCols() / 8 - String.valueOf(value).length() - offset, " "));
+        String padding = String.join("", Collections.nCopies(Router.getConfig().getCols() / NUMBER_OF_COLS - String.valueOf(value).length() - offset, " "));
 
         return value.toString() + padding;
     }

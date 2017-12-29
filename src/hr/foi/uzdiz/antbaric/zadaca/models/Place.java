@@ -15,11 +15,11 @@ import java.util.List;
  */
 public class Place {
 
-    private Integer id = null;
-    private final String name;
-    private final Integer category;
-    private final Integer actuatorsNum;
-    private final Integer sensorsNum;
+    public Integer id = null;
+    public final String name;
+    public final Integer category;
+    public final Integer actuatorsNum;
+    public final Integer sensorsNum;
     private final List<Device> actuators;
     private final List<Device> sensors;
 
@@ -44,6 +44,10 @@ public class Place {
 
     public String getName() {
         return name;
+    }
+    
+    public String getNameAndId() {
+        return this.name + " ID: " + this.id;
     }
 
     public Integer getCategory() {
