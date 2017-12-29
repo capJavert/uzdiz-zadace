@@ -5,12 +5,8 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca.controllers;
 
-import hr.foi.uzdiz.antbaric.zadaca.Router;
-import hr.foi.uzdiz.antbaric.zadaca.helpers.ANSIHelper;
-import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
 import hr.foi.uzdiz.antbaric.zadaca.models.Actuator;
 import hr.foi.uzdiz.antbaric.zadaca.views.IndexView;
-import java.util.Scanner;
 
 /**
  *
@@ -24,28 +20,6 @@ public class IndexController extends Controller<IndexView, Actuator> {
 
     @Override
     public void init() {
-        Logger.getInstance().setController(this);
+        super.init();
     }
-
-    @Override
-    public void update() {
-        this.view.printContent();
-        this.view.printCommands();
-    }
-
-    @Override
-    public void prompt() {
-        this.view.printContent();
-        this.view.printCommandsWithPrompt();
-
-        String command;
-        
-        do {
-            command = new Scanner(System.in).nextLine();
-            ANSIHelper.move(25, Router.getConfig().getRows());
-        } while (!command.equals("n") && !command.equals("N"));
-        
-        Logger.getInstance().emptyBuffer();
-    }
-
 }

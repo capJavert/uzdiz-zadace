@@ -14,7 +14,7 @@ import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
  */
 public class Sensor extends Device {
 
-    private Boolean changed = false;
+    public Boolean changed = false;
 
     public Sensor(String name, Integer category, Integer unitType, Double min, Double max, String comment) {
         super(name, category, unitType, min, max, comment);

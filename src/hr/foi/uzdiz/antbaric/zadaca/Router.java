@@ -6,6 +6,7 @@
 package hr.foi.uzdiz.antbaric.zadaca;
 
 import hr.foi.uzdiz.antbaric.zadaca.controllers.IndexController;
+import hr.foi.uzdiz.antbaric.zadaca.controllers.SensorController;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.WorkerController;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
 import hr.foi.uzdiz.antbaric.zadaca.models.Configuration;
@@ -13,6 +14,7 @@ import hr.foi.uzdiz.antbaric.zadaca.models.LError;
 import hr.foi.uzdiz.antbaric.zadaca.models.LInfo;
 import hr.foi.uzdiz.antbaric.zadaca.models.LNotification;
 import hr.foi.uzdiz.antbaric.zadaca.views.IndexView;
+import hr.foi.uzdiz.antbaric.zadaca.views.SensorView;
 import hr.foi.uzdiz.antbaric.zadaca.views.WorkerView;
 
 /**
@@ -46,7 +48,7 @@ public class Router {
 
     public static void setConfig(Configuration config) {
         Router.CONFIG = config;
-        
+
         IndexView view = new IndexView();
         IndexController controller = new IndexController(view, null);
         controller.init();
@@ -63,8 +65,8 @@ public class Router {
                 break;
             case "VF":
                 viewId = "";
-                for (int i=0;i<1000;i++) {
-                    Logger.getInstance().log(new LError("Output test #"+String.valueOf(i)), Boolean.TRUE);
+                for (int i = 0; i < 1000; i++) {
+                    Logger.getInstance().log(new LError("Output test #" + String.valueOf(i)), Boolean.TRUE);
                 }
                 break;
             case "PI":
@@ -85,7 +87,14 @@ public class Router {
                 break;
             case "S":
                 if (meta.length > 1) {
-                    // sensor x table
+                    try {
+                        SensorView view = new SensorView();
+                        SensorController controller = new SensorController(view, Integer.parseInt(meta[1]));
+                        controller.init();
+                    } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
+                        Logger.getInstance().log(new LError("Sensor ID must be a number"), Boolean.TRUE);
+                    }
+
                 } else {
                     viewId = "";
                     Logger.getInstance().log(new LInfo("You won't find anything here, carry on..."), Boolean.TRUE);

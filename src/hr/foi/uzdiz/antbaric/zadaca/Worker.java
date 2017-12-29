@@ -37,9 +37,11 @@ public class Worker implements Inspector {
 
     private static volatile Worker INSTANCE;
     private static Configuration CONFIG = null;
-    private static PlaceIterator PLACES;
-    private static List<Device> SENSORS;
-    private static List<Device> ACTUATORS;
+    public static PlaceIterator PLACES;
+    public static List<Device> SENSORS;
+    public static List<Device> ACTUATORS;
+    public static final List<Device> SENSORS_TRASH = new ArrayList<>();
+    public static final List<Device> ACTUATORS_TRASH = new ArrayList<>();
     private static HashMap<String, Integer> FAILED_DEVICES;
 
     private Integer n;
@@ -81,6 +83,7 @@ public class Worker implements Inspector {
                     Sensor sensor = (Sensor) deviceIterator.next();
 
                     if (!this.activateDevice(place.getName(), sensor)) {
+                        Worker.SENSORS_TRASH.add(sensor);
                         deviceIterator.remove();
                         Logger.getInstance().log(new LWarning("Replacing Sensor '" + sensor.getName() + "'"), true);
                         sensor = (Sensor) sensor.prototype();
@@ -99,6 +102,7 @@ public class Worker implements Inspector {
 
                     if (actuator.isSensorChanged()) {
                         if (!this.activateDevice(place.getName(), actuator)) {
+                            Worker.ACTUATORS_TRASH.add(actuator);
                             deviceIterator.remove();
                             Logger.getInstance().log(new LMessage("Replacing Actuator '" + actuator.getName() + "'"), true);
                             actuator = (Actuator) actuator.prototype();
@@ -184,6 +188,7 @@ public class Worker implements Inspector {
                 final Device sensor = deviceIterator.next();
 
                 if (sensor.getStatus() == 0) {
+                    Worker.SENSORS_TRASH.add(sensor);
                     deviceIterator.remove();
                     Logger.getInstance().log(new LError("  Init FAILED '" + sensor.getNameAndId() + "'"), true);
                 } else {
@@ -196,6 +201,7 @@ public class Worker implements Inspector {
                 final Device actuator = deviceIterator.next();
 
                 if (actuator.getStatus() == 0) {
+                    Worker.ACTUATORS_TRASH.add(actuator);
                     deviceIterator.remove();
                     Logger.getInstance().log(new LError("  Init FAILED '" + actuator.getNameAndId() + "'"), true);
                 } else {

@@ -9,6 +9,7 @@ import hr.foi.uzdiz.antbaric.zadaca.Router;
 import hr.foi.uzdiz.antbaric.zadaca.extensions.PimpMyLogVisitor;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.ANSIHelper;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
+import hr.foi.uzdiz.antbaric.zadaca.models.ANSIColor;
 
 /**
  *
@@ -50,7 +51,9 @@ public abstract class View {
     
     protected void printSeparator() {
         for (int i=0,j=this.getRowsDiff()-1;i<Router.getConfig().getCols();i++) {
-            ANSIHelper.write("-", i, j);
+            ANSIHelper.setBg(ANSIColor.WHITE);
+            ANSIHelper.write(" ", i, j);
+            ANSIHelper.setBg(ANSIColor.BLACK);
         }
     }
 }

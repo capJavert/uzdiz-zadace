@@ -62,11 +62,11 @@ public class ANSIHelper {
     }
 
     public static void setFg(ANSIColor color) {
-        ANSIHelper.print(ESC + color.getCode());
+        ANSIHelper.print(ESC + color.getFgCode());
     }
 
     public static void setBg(ANSIColor color) {
-        ANSIHelper.print(ESC + color.getCode());
+        ANSIHelper.print(ESC + color.getBgCode());
     }
     
     public static void moveUp() {

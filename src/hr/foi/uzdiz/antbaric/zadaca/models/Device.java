@@ -13,14 +13,14 @@ import hr.foi.uzdiz.antbaric.zadaca.helpers.Generator;
  */
 public abstract class Device {
 
-    protected Integer id;
-    private final String name;
-    private final Integer type;
-    private final Integer unitType;
-    private final Double min;
-    private final Double max;
-    private final String comment;
-    private Double value;
+    public Integer id;
+    public final String name;
+    public final Integer type;
+    public final Integer unitType;
+    public final Double min;
+    public final Double max;
+    public final String comment;
+    public Double value;
 
     public Device(String name, Integer cateogry, Integer Type, Double min, Double max, String comment) {
         this.id = null;
