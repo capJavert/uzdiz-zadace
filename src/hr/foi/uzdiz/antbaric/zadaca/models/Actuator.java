@@ -18,9 +18,13 @@ import java.util.List;
 public class Actuator extends Device implements Serializable {
 
     public final List<Sensor> sensors = new ArrayList<>();
-    
+
     public Actuator(String name, Integer category, Integer unitType, Double min, Double max, String comment) {
         super(name, category, unitType, min, max, comment);
+    }
+
+    public Actuator(Integer id, String name, Integer category, Integer unitType, Double min, Double max, String comment) {
+        super(id, name, category, unitType, min, max, comment);
     }
 
     @Override
@@ -75,7 +79,7 @@ public class Actuator extends Device implements Serializable {
             case 2:
                 Logger.getInstance().log(new LMessage("Actuator '" + this.getName() + "'"), true);
                 Logger.getInstance().log(new LNotification("    MIN: " + generator.parseDecimal5(this.getMin()) + this.getComment() + ", MAX: " + generator.parseDecimal5(this.getMax()) + this.getComment()), true);
-                
+
                 number = generator.fromIntervalPrecision5(this.getMin(), this.getMax());
                 Logger.getInstance().log(new LNotification("    Value: " + generator.parseDecimal5(this.getValue()) + this.getComment() + ", Movement " + generator.parseDecimal5(number) + this.getComment() + ":"), true);
                 direction = 1;
@@ -115,14 +119,14 @@ public class Actuator extends Device implements Serializable {
             this.id = Generator.getInstance().getUniqueIdentifier(DeviceEnum.ACTUATOR.toString());
         }
     }
-    
+
     public Boolean isSensorChanged() {
-        for(Sensor sensor : this.sensors) {
-            if(sensor.isChanged()) {
+        for (Sensor sensor : this.sensors) {
+            if (sensor.isChanged()) {
                 return true;
             }
         }
-        
+
         return false;
     }
 

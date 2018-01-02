@@ -21,6 +21,10 @@ public class Sensor extends Device implements Serializable {
         super(name, category, unitType, min, max, comment);
     }
 
+    public Sensor(Integer id, String name, Integer category, Integer unitType, Double min, Double max, String comment) {
+        super(id, name, category, unitType, min, max, comment);
+    }
+
     @Override
     public void activate() {
         this.changed = true;

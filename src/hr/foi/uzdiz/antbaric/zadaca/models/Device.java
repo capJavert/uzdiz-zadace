@@ -39,6 +39,22 @@ public abstract class Device implements Serializable {
         }
     }
 
+    public Device(Integer id, String name, Integer cateogry, Integer Type, Double min, Double max, String comment) {
+        this.id = id;
+        this.name = name;
+        this.type = cateogry;
+        this.unitType = Type;
+        this.min = min;
+        this.max = max;
+        this.comment = comment;
+
+        if (this.type == 3) {
+            this.value = new Double(0);
+        } else {
+            this.value = this.min;
+        }
+    }
+
     public Integer getId() {
         return id;
     }
@@ -88,11 +104,11 @@ public abstract class Device implements Serializable {
     public String getNameAndId() {
         return this.name + " ID: " + this.id;
     }
-    
+
     public abstract Device prototype();
 
     public abstract void activate();
-    
+
     public abstract void setId();
 
 }

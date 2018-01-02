@@ -36,6 +36,16 @@ public class Place implements Serializable {
         this.sensors = new ArrayList<>();
     }
 
+    public Place(Integer id, String name, Integer category, Integer sensorsNum, Integer actuatorsNum) {
+        this.id = id;
+        this.name = name;
+        this.category = category;
+        this.sensorsNum = sensorsNum;
+        this.actuatorsNum = actuatorsNum;
+        this.actuators = new ArrayList<>();
+        this.sensors = new ArrayList<>();
+    }
+
     public Integer getId() {
         return id;
     }
