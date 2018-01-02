@@ -159,4 +159,8 @@ public class CSVParser extends CSVHelper {
 
         return actuators;
     }
+    
+    public void assignDevices() {
+        // TODO implement
+    }
 }

@@ -46,7 +46,7 @@ public class ActuatorController extends Controller<ActuatorView, Integer> {
             final UEntry<String, Place> entry = iterator.next();
 
             for (Device device : entry.getValue().getActuators()) {
-                if (Objects.equals(device.getId(), this.model)) {
+                if (Objects.equals(device.getModelId(), this.model)) {
                     this.view.prepareTable((Actuator) device);
 
                     if (this.sensorView != null) {
@@ -65,7 +65,7 @@ public class ActuatorController extends Controller<ActuatorView, Integer> {
             }
 
             for (Device device : entry.getValue().ACTUATORS_TRASH) {
-                if (Objects.equals(device.getId(), this.model)) {
+                if (Objects.equals(device.getModelId(), this.model)) {
                     this.view.prepareTable((Actuator) device);
 
                     if (this.sensorView != null) {

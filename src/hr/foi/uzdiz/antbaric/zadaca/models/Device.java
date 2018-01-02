@@ -15,6 +15,7 @@ import java.io.Serializable;
 public abstract class Device implements Serializable {
 
     public Integer id;
+    private final Integer modelId;
     public final String name;
     public final Integer type;
     public final Integer unitType;
@@ -23,8 +24,8 @@ public abstract class Device implements Serializable {
     public final String comment;
     public Double value;
 
-    public Device(String name, Integer cateogry, Integer Type, Double min, Double max, String comment) {
-        this.id = null;
+    public Device(Integer modelId, String name, Integer cateogry, Integer Type, Double min, Double max, String comment) {
+        this.modelId = id;
         this.name = name;
         this.type = cateogry;
         this.unitType = Type;
@@ -39,8 +40,9 @@ public abstract class Device implements Serializable {
         }
     }
 
-    public Device(Integer id, String name, Integer cateogry, Integer Type, Double min, Double max, String comment) {
+    public Device(Integer id, Integer modelId, String name, Integer cateogry, Integer Type, Double min, Double max, String comment) {
         this.id = id;
+        this.modelId = id;
         this.name = name;
         this.type = cateogry;
         this.unitType = Type;
@@ -55,8 +57,8 @@ public abstract class Device implements Serializable {
         }
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getModelId() {
+        return modelId;
     }
 
     public String getName() {
@@ -102,7 +104,7 @@ public abstract class Device implements Serializable {
     }
 
     public String getNameAndId() {
-        return this.name + " ID: " + this.id;
+        return this.name + " ID: " + this.modelId;
     }
 
     public abstract Device prototype();

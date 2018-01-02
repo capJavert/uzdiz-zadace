@@ -17,12 +17,12 @@ public class Sensor extends Device implements Serializable {
 
     private Boolean changed = false;
 
-    public Sensor(String name, Integer category, Integer unitType, Double min, Double max, String comment) {
-        super(name, category, unitType, min, max, comment);
+    public Sensor(Integer modelId, String name, Integer category, Integer unitType, Double min, Double max, String comment) {
+        super(modelId, name, category, unitType, min, max, comment);
     }
 
-    public Sensor(Integer id, String name, Integer category, Integer unitType, Double min, Double max, String comment) {
-        super(id, name, category, unitType, min, max, comment);
+    public Sensor(Integer id, Integer modelId, String name, Integer category, Integer unitType, Double min, Double max, String comment) {
+        super(id, modelId, name, category, unitType, min, max, comment);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class Sensor extends Device implements Serializable {
 
     @Override
     public Device prototype() {
-        Device sensor = new Sensor(this.getName(), this.getType(), this.getUnitType(), this.getMin(), this.getMax(), this.getComment());
+        Device sensor = new Sensor(this.getModelId(), this.getName(), this.getType(), this.getUnitType(), this.getMin(), this.getMax(), this.getComment());
         sensor.setId();
 
         return sensor;

@@ -268,7 +268,7 @@ public class Worker extends Stateful {
 
             if (overload.equals(3)) {
                 FAILED_DEVICES.remove(deviceId);
-                Logger.getInstance().log(new LWarning("Device '" + device.getName() + "ID: " + device.getId() + "'@'" + placeName + "' need replacement..."), true);
+                Logger.getInstance().log(new LWarning("Device '" + device.getName() + "ID: " + device.getModelId() + "'@'" + placeName + "' need replacement..."), true);
 
                 return false;
             }

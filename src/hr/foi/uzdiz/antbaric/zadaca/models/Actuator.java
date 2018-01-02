@@ -19,12 +19,12 @@ public class Actuator extends Device implements Serializable {
 
     public final List<Sensor> sensors = new ArrayList<>();
 
-    public Actuator(String name, Integer category, Integer unitType, Double min, Double max, String comment) {
-        super(name, category, unitType, min, max, comment);
+    public Actuator(Integer modelId, String name, Integer category, Integer unitType, Double min, Double max, String comment) {
+        super(modelId, name, category, unitType, min, max, comment);
     }
 
-    public Actuator(Integer id, String name, Integer category, Integer unitType, Double min, Double max, String comment) {
-        super(id, name, category, unitType, min, max, comment);
+    public Actuator(Integer id, Integer modelId, String name, Integer category, Integer unitType, Double min, Double max, String comment) {
+        super(id, modelId, name, category, unitType, min, max, comment);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class Actuator extends Device implements Serializable {
 
     @Override
     public Device prototype() {
-        Device actuator = new Actuator(this.getName(), this.getType(), this.getUnitType(), this.getMin(), this.getMax(), this.getComment());
+        Device actuator = new Actuator(this.getModelId(), this.getName(), this.getType(), this.getUnitType(), this.getMin(), this.getMax(), this.getComment());
         actuator.setId();
 
         return actuator;

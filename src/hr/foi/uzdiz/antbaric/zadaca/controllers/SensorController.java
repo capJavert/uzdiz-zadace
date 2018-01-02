@@ -37,7 +37,7 @@ public class SensorController extends Controller<SensorView, Integer> {
             final UEntry<String, Place> entry = iterator.next();
 
             for (Device device : entry.getValue().getSensors()) {
-                if (Objects.equals(device.getId(), this.model)) {
+                if (Objects.equals(device.getModelId(), this.model)) {
                     this.view.prepareTable((Sensor) device);
                     exists = true;
                     break;
@@ -45,7 +45,7 @@ public class SensorController extends Controller<SensorView, Integer> {
             }
 
             for (Device device : entry.getValue().SENSORS_TRASH) {
-                if (Objects.equals(device.getId(), this.model)) {
+                if (Objects.equals(device.getModelId(), this.model)) {
                     this.view.prepareTable((Sensor) device);
                     exists = true;
                     break;
