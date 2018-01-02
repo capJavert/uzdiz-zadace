@@ -11,7 +11,10 @@ import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
 import hr.foi.uzdiz.antbaric.zadaca.models.Device;
 import hr.foi.uzdiz.antbaric.zadaca.models.Place;
 import hr.foi.uzdiz.antbaric.zadaca.models.DeviceEnum;
+import hr.foi.uzdiz.antbaric.zadaca.models.DeviceMap;
 import hr.foi.uzdiz.antbaric.zadaca.models.LError;
+import hr.foi.uzdiz.antbaric.zadaca.models.MapEnum;
+import hr.foi.uzdiz.antbaric.zadaca.models.PlaceDeviceMap;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,6 +33,7 @@ public class CSVParser extends CSVHelper {
     private final File placesFile;
     private final File actuatorsFile;
     private final File sensorsFile;
+    private final File scheduleFilePath;
 
     private List<List<String>> readCsv(File file) {
         List<List<String>> collection = new ArrayList<>();
@@ -60,10 +64,11 @@ public class CSVParser extends CSVHelper {
         return collection;
     }
 
-    public CSVParser(String placesFilePath, String actuatorsFilePath, String sensorsFilePath) {
+    public CSVParser(String placesFilePath, String actuatorsFilePath, String sensorsFilePath, String scheduleFilePath) {
         this.placesFile = new File(placesFilePath);
         this.actuatorsFile = new File(actuatorsFilePath);
         this.sensorsFile = new File(sensorsFilePath);
+        this.scheduleFilePath = new File(scheduleFilePath);
     }
 
     public List<Place> getPlaces() {
@@ -159,8 +164,57 @@ public class CSVParser extends CSVHelper {
 
         return actuators;
     }
-    
-    public void assignDevices() {
-        // TODO implement
+
+    public List<DeviceMap> getDeviceMap() {
+        List<DeviceMap> map = new ArrayList<>();
+
+        List<List<String>> collection = this.readCsv(this.scheduleFilePath);
+
+        for (List<String> values : collection) {
+            try {
+                switch (Integer.parseInt(values.get(0))) {
+                    case 0:
+                        switch (Integer.parseInt(values.get(2))) {
+                            case 0:
+                                map.add(new PlaceDeviceMap(
+                                        MapEnum.PLACE_SENSOR,
+                                        Integer.parseInt(values.get(1)),
+                                        Integer.parseInt(values.get(3)),
+                                        Integer.parseInt(values.get(4))
+                                ));
+                                break;
+                            case 1:
+                                map.add(new PlaceDeviceMap(
+                                        MapEnum.PLACE_ACTUATOR,
+                                        Integer.parseInt(values.get(1)),
+                                        Integer.parseInt(values.get(3)),
+                                        Integer.parseInt(values.get(4))
+                                ));
+                                break;
+                            default:
+                                throw new Exception("Device type must be 0 or 1. Skipping...");
+                        }
+                        break;
+                    case 1:
+                        for (String i : values.get(2).split(",")) {
+                            map.add(new DeviceMap(
+                                    MapEnum.ACTUATOR_SENSOR,
+                                    Integer.parseInt(values.get(1)),
+                                    Integer.parseInt(i)
+                            ));
+                        }
+                        break;
+                    default:
+                        throw new Exception("Line type must be 0 or 1. Skipping...");
+                }
+            } catch (NumberFormatException ex) {
+                Logger.getInstance().log(new LError("Line is not valid. Skipping..."), true);
+            } catch (Exception ex) {
+                Logger.getInstance().log(new LError(ex.getMessage()), true);
+            }
+        }
+        
+        return map;
     }
+
 }
