@@ -58,7 +58,7 @@ public abstract class Controller<T extends View, E> {
         do {
             command = new Scanner(System.in).nextLine();
             ANSIHelper.move(25, Router.getConfig().getRows());
-                    ANSIHelper.cleol();
+            ANSIHelper.cleol();
         } while (!command.equals("n") && !command.equals("N"));*/
 
         Logger.getInstance().emptyBuffer();

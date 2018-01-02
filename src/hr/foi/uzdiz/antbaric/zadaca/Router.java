@@ -7,6 +7,7 @@ package hr.foi.uzdiz.antbaric.zadaca;
 
 import hr.foi.uzdiz.antbaric.zadaca.components.StateManager;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.ActuatorController;
+import hr.foi.uzdiz.antbaric.zadaca.controllers.GameController;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.IndexController;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.PlaceController;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.SensorController;
@@ -18,6 +19,7 @@ import hr.foi.uzdiz.antbaric.zadaca.models.LInfo;
 import hr.foi.uzdiz.antbaric.zadaca.models.LNotification;
 import hr.foi.uzdiz.antbaric.zadaca.views.ActuatorView;
 import hr.foi.uzdiz.antbaric.zadaca.views.IndexView;
+import hr.foi.uzdiz.antbaric.zadaca.views.MazeView;
 import hr.foi.uzdiz.antbaric.zadaca.views.PlaceView;
 import hr.foi.uzdiz.antbaric.zadaca.views.SensorView;
 import hr.foi.uzdiz.antbaric.zadaca.views.WorkerView;
@@ -76,11 +78,12 @@ public class Router extends StateManager {
                     Logger.getInstance().log(new LNotification("State restored successfully"), Boolean.TRUE);
                 } else {
                     Logger.getInstance().log(new LError("There is no saved state to restore!"), Boolean.TRUE);
-                }              
+                }
                 break;
             case "VF":
-                viewId = "";
-                // TODO implement
+                MazeView mazeView = new MazeView();
+                GameController gameController = new GameController(mazeView, 0);
+                gameController.init();
                 break;
             case "PI":
                 viewId = "";
