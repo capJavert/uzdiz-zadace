@@ -160,6 +160,13 @@ public class Router extends StateManager {
                     Logger.getInstance().log(new LError("C n must be a number (1-100)"), Boolean.TRUE);
                 }
                 break;
+            case "H":
+                viewId = "";
+                
+                for (String line : this.help.split("\\r?\\n")) {
+                    Logger.getInstance().log(new LInfo(line), Boolean.TRUE);
+                }
+                break;
             default:
                 viewId = "";
         }
@@ -169,4 +176,26 @@ public class Router extends StateManager {
             this.indexController.update();
         }
     }
+    
+    private final String help = "M x - ispis podataka mjesta x\n" +
+        "\n" +
+        "S x - ispis podataka senzora x\n" +
+        "\n" +
+        "A x - ispis podataka aktuatora x\n" +
+        "\n" +
+        "S - ispis statistike\n" +
+        "\n" +
+        "SP - spremi podatke (mjesta, uređaja)\n" +
+        "\n" +
+        "VP - vrati spremljene podatke (mjesta, uređaja)\n" +
+        "\n" +
+        "C n - izvršavanje n ciklusa dretve (1-100)\n" +
+        "\n" +
+        "VF [argumenti] - izvršavanje vlastite funkcionalnosti, po potrebni mogući su argumenti\n" +
+        "\n" +
+        "PI n - prosječni % ispravnosti uređaja (0-100)\n" +
+        "\n" +
+        "H - pomoć, ispis dopuštenih komandi i njihov opis\n" +
+        "\n" +
+        "I - izlaz.";
 }

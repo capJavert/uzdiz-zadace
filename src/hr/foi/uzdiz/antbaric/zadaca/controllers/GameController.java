@@ -13,6 +13,7 @@ import hr.foi.uzdiz.antbaric.zadaca.maze.MovementLeft;
 import hr.foi.uzdiz.antbaric.zadaca.maze.MovementRight;
 import hr.foi.uzdiz.antbaric.zadaca.maze.MovementUp;
 import hr.foi.uzdiz.antbaric.zadaca.models.LError;
+import hr.foi.uzdiz.antbaric.zadaca.models.LInfo;
 import hr.foi.uzdiz.antbaric.zadaca.models.LNotification;
 import hr.foi.uzdiz.antbaric.zadaca.views.MazeView;
 import java.util.Scanner;
@@ -63,6 +64,17 @@ public class GameController extends Controller<MazeView, Integer> {
             command = new Scanner(System.in).nextLine();
             ANSIHelper.cleol();
 
+            if (command.toUpperCase().equals("H")) {
+                Logger.getInstance().emptyBuffer();
+                
+                for (String line : this.help.split("\\r?\\n")) {
+                    Logger.getInstance().log(new LInfo(line), Boolean.TRUE);
+                }
+                
+                this.prompt();
+                continue;
+            }
+
             if (command.toUpperCase().equals("Q")) {
                 Logger.getInstance().log(new LError("PUNY COWARD!!!"), Boolean.TRUE);
                 break;
@@ -107,4 +119,11 @@ public class GameController extends Controller<MazeView, Integer> {
             }
         } while (true);
     }
+
+    private final String help = "U/u - kretanje prema gore\n"
+            + "R/r - kretanje prema desno\n"
+            + "D/d - kretanje prema dolje\n"
+            + "L/l - kretanje prema lijevo\n"
+            + "H/h - pomoć\n"
+            + "Q/q - odustani";
 }
