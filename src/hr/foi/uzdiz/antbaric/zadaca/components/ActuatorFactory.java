@@ -17,27 +17,28 @@ public class ActuatorFactory extends DeviceFactory {
 
     @Override
     public Device createToF(List<String> values) throws Exception {
-        if (values.get(0).equals("")
-                || values.get(0) == null
-                || Integer.parseInt(values.get(1)) < 0
-                || Integer.parseInt(values.get(1)) > 2
+        if (values.get(1).equals("")
+                || values.get(1) == null
                 || Integer.parseInt(values.get(2)) < 0
-                || Integer.parseInt(values.get(2)) > 3) {
+                || Integer.parseInt(values.get(2)) > 2
+                || Integer.parseInt(values.get(3)) < 0
+                || Integer.parseInt(values.get(3)) > 3) {
 
             throw new Exception();
         }
 
-        if (values.get(5) == null) {
-            values.set(5, "");
+        if (values.get(6) == null) {
+            values.set(6, "");
         }
 
         return new Actuator(
-                values.get(0),
-                Integer.parseInt(values.get(1)),
+                Integer.parseInt(values.get(0)),
+                values.get(1),
                 Integer.parseInt(values.get(2)),
-                Double.parseDouble(values.get(3)),
+                Integer.parseInt(values.get(3)),
                 Double.parseDouble(values.get(4)),
-                values.get(5)
+                Double.parseDouble(values.get(5)),
+                values.get(6)
         );
     }
 

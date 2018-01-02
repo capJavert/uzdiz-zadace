@@ -20,9 +20,9 @@ public class Generator extends Random {
     private static final DecimalFormat DECIMAL_FORMATER_ROUND = new DecimalFormat("#0");
     private static final DecimalFormat DECIMAL_FORMATER_1 = new DecimalFormat("#0.0");
     private static final DecimalFormat DECIMAL_FORMATER_5 = new DecimalFormat("#0.00000");
-    private static Integer USED_IDENTIFIERS_PLACES = 0;
-    private static Integer USED_IDENTIFIERS_SENSORS = 0;
-    private static Integer USED_IDENTIFIERS_ACTUATORS = 0;
+    public static Integer USED_IDENTIFIERS_PLACES = 0;
+    public static Integer USED_IDENTIFIERS_SENSORS = 0;
+    public static Integer USED_IDENTIFIERS_ACTUATORS = 0;
     
     private Integer devicePerishability = 50;
 

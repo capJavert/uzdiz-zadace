@@ -6,6 +6,7 @@
 package hr.foi.uzdiz.antbaric.zadaca.components;
 
 import hr.foi.uzdiz.antbaric.zadaca.helpers.CSVHelper;
+import hr.foi.uzdiz.antbaric.zadaca.helpers.Generator;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
 import hr.foi.uzdiz.antbaric.zadaca.models.Device;
 import hr.foi.uzdiz.antbaric.zadaca.models.Place;
@@ -71,39 +72,44 @@ public class CSVParser extends CSVHelper {
         List<List<String>> collection = this.readCsv(this.placesFile);
         for (List<String> values : collection) {
             try {
-                if(values.get(0).equals("") 
-                        || values.get(0) == null
-                        || Integer.parseInt(values.get(1)) < 0 
-                        || Integer.parseInt(values.get(1)) > 1) {
-                }
-                
-                if (values.get(2) == null) {
-                    values.set(2, "0");
+                if (values.get(1).equals("")
+                        || values.get(1) == null
+                        || Integer.parseInt(values.get(2)) < 0
+                        || Integer.parseInt(values.get(2)) > 1) {
                 }
 
                 if (values.get(3) == null) {
                     values.set(3, "0");
                 }
-                
+
+                if (values.get(4) == null) {
+                    values.set(4, "0");
+                }
+
                 Place place = new Place(
-                        values.get(0),
-                        Integer.parseInt(values.get(1)),
+                        Integer.parseInt(values.get(0)),
+                        values.get(1),
                         Integer.parseInt(values.get(2)),
-                        Integer.parseInt(values.get(3))
+                        Integer.parseInt(values.get(3)),
+                        Integer.parseInt(values.get(4))
                 );
-                
+
                 Boolean duplicate = false;
-                
+
                 for (Place p : places) {
                     if (p.getName().equals(place.getName())) {
                         duplicate = true;
                         break;
                     }
                 }
-                
+
                 if (duplicate) {
                     Logger.getInstance().log(new LError("Duplicate '" + place.getName() + "'! Skipping Place..."), true);
                 } else {
+                    if (Generator.USED_IDENTIFIERS_PLACES < place.id) {
+                        Generator.USED_IDENTIFIERS_PLACES = place.id;
+                    }
+
                     places.add(place);
                 }
             } catch (NumberFormatException ex) {
@@ -125,6 +131,10 @@ public class CSVParser extends CSVHelper {
             } catch (Exception ex) {
                 Logger.getInstance().log(new LError("Line is not valid. Skipping Sensor..."), true);
             }
+
+            if (Generator.USED_IDENTIFIERS_SENSORS < Integer.parseInt(values.get(0))) {
+                Generator.USED_IDENTIFIERS_SENSORS = Integer.parseInt(values.get(0));
+            }
         }
 
         return sensors;
@@ -140,6 +150,10 @@ public class CSVParser extends CSVHelper {
                 actuators.add(factory.createToF(values));
             } catch (Exception ex) {
                 Logger.getInstance().log(new LError("Line is not valid. Skipping Actuator..."), true);
+            }
+
+            if (Generator.USED_IDENTIFIERS_ACTUATORS < Integer.parseInt(values.get(0))) {
+                Generator.USED_IDENTIFIERS_ACTUATORS = Integer.parseInt(values.get(0));
             }
         }
 
