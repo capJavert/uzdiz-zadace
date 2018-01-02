@@ -31,9 +31,6 @@ public class MazeView extends View {
     }
 
     public void prepareMaze(Integer[][] maze, Integer x, Integer y) {
-        Logger.getInstance().log(new LMessage(String.valueOf(maze.length)), Boolean.TRUE);
-        Logger.getInstance().log(new LMessage(String.valueOf(maze[0].length)), Boolean.TRUE);
-        
         for (int i = 0; i < maze.length; i++) {
             String line = "";
             
