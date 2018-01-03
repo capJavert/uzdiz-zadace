@@ -46,8 +46,8 @@ public class Place implements Serializable {
         this.sensors = new ArrayList<>();
     }
 
-    public Integer getId() {
-        return id;
+    public String getId() {
+        return String.valueOf(id);
     }
 
     public void setId() {
@@ -85,14 +85,10 @@ public class Place implements Serializable {
     }
 
     public void addSensor(Device sensor) {
-        sensor.setId();
-
         this.sensors.add(sensor);
     }
 
     public void addActuator(Device actuator) {
-        actuator.setId();
-
         this.actuators.add(actuator);
     }
 

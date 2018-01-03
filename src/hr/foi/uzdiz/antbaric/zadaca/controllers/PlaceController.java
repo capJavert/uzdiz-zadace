@@ -7,10 +7,7 @@ package hr.foi.uzdiz.antbaric.zadaca.controllers;
 
 import hr.foi.uzdiz.antbaric.zadaca.Worker;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
-import hr.foi.uzdiz.antbaric.zadaca.iterators.UEntry;
-import hr.foi.uzdiz.antbaric.zadaca.iterators.UIterator;
 import hr.foi.uzdiz.antbaric.zadaca.models.Actuator;
-import hr.foi.uzdiz.antbaric.zadaca.models.AlgorithmEnum;
 import hr.foi.uzdiz.antbaric.zadaca.models.Device;
 import hr.foi.uzdiz.antbaric.zadaca.models.LError;
 import hr.foi.uzdiz.antbaric.zadaca.models.LMessage;
@@ -19,6 +16,7 @@ import hr.foi.uzdiz.antbaric.zadaca.models.Sensor;
 import hr.foi.uzdiz.antbaric.zadaca.views.ActuatorView;
 import hr.foi.uzdiz.antbaric.zadaca.views.PlaceView;
 import hr.foi.uzdiz.antbaric.zadaca.views.SensorView;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -49,10 +47,8 @@ public class PlaceController extends Controller<PlaceView, Integer> {
 
         Boolean exists = false;
 
-        for (final UIterator<UEntry<String, Place>> iterator = Worker.getInstance().PLACES.getIterator(AlgorithmEnum.INDEX); iterator.hasNext();) {
-            final UEntry<String, Place> entry = iterator.next();
-
-            if (Objects.equals(entry.getValue().getId(), this.model)) {
+        for (Map.Entry<Integer, Place> entry : Worker.getInstance().PLACES.entrySet()) {
+            if (Objects.equals(entry.getValue().id, this.model)) {
                 this.view.prepareTable(entry.getValue());
 
                 if (this.actuatorView != null) {

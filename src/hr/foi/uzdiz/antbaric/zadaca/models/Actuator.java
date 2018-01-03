@@ -106,17 +106,19 @@ public class Actuator extends Device implements Serializable {
     }
 
     @Override
-    public Device prototype() {
+    public Device prototype(Integer id) {
         Device actuator = new Actuator(this.getModelId(), this.getName(), this.getType(), this.getUnitType(), this.getMin(), this.getMax(), this.getComment());
-        actuator.setId();
+        actuator.setId(id);
 
         return actuator;
     }
 
     @Override
-    public void setId() {
-        if (this.id == null) {
+    public void setId(Integer id) {
+        if (id == 0) {
             this.id = Generator.getInstance().getUniqueIdentifier(DeviceEnum.ACTUATOR.toString());
+        } else {
+            this.id = id;
         }
     }
 

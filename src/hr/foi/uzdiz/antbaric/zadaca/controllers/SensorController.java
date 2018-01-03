@@ -7,14 +7,12 @@ package hr.foi.uzdiz.antbaric.zadaca.controllers;
 
 import hr.foi.uzdiz.antbaric.zadaca.Worker;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
-import hr.foi.uzdiz.antbaric.zadaca.iterators.UEntry;
-import hr.foi.uzdiz.antbaric.zadaca.iterators.UIterator;
-import hr.foi.uzdiz.antbaric.zadaca.models.AlgorithmEnum;
 import hr.foi.uzdiz.antbaric.zadaca.models.Device;
 import hr.foi.uzdiz.antbaric.zadaca.models.LError;
 import hr.foi.uzdiz.antbaric.zadaca.models.Place;
 import hr.foi.uzdiz.antbaric.zadaca.models.Sensor;
 import hr.foi.uzdiz.antbaric.zadaca.views.SensorView;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -33,11 +31,9 @@ public class SensorController extends Controller<SensorView, Integer> {
 
         Boolean exists = false;
 
-        for (final UIterator<UEntry<String, Place>> iterator = Worker.getInstance().PLACES.getIterator(AlgorithmEnum.INDEX); iterator.hasNext();) {
-            final UEntry<String, Place> entry = iterator.next();
-
+        for (Map.Entry<Integer, Place> entry : Worker.getInstance().PLACES.entrySet()) {
             for (Device device : entry.getValue().getSensors()) {
-                if (Objects.equals(device.getModelId(), this.model)) {
+                if (Objects.equals(device.id, this.model)) {
                     this.view.prepareTable((Sensor) device);
                     exists = true;
                     break;
@@ -45,7 +41,7 @@ public class SensorController extends Controller<SensorView, Integer> {
             }
 
             for (Device device : entry.getValue().SENSORS_TRASH) {
-                if (Objects.equals(device.getModelId(), this.model)) {
+                if (Objects.equals(device.id, this.model)) {
                     this.view.prepareTable((Sensor) device);
                     exists = true;
                     break;
