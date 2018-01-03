@@ -113,6 +113,7 @@ public class GameController extends Controller<MazeView, Integer> {
             }
 
             if (x == 8 && y == 14) {
+                Logger.getInstance().emptyBuffer();
                 this.view.prepareMaze(maze, x, y);
                 Logger.getInstance().log(new LNotification("You WIN!"), Boolean.TRUE);
                 break;

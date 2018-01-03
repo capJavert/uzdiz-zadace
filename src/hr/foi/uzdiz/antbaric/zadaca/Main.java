@@ -60,7 +60,7 @@ public class Main {
                     command = new Scanner(System.in).nextLine();
                 }
             } catch (IllegalArgumentException ex) {
-                Logger.getInstance().log(new LError(ex.getMessage()), false);  
+                Logger.getInstance().log(new LError(ex.getMessage()), false);
             }
         } else {
             Logger.getInstance().log(new LError("Error: Please check your arguments!"), false);
@@ -73,12 +73,12 @@ public class Main {
         for (Matcher matcher : matchers) {
             if (matcher.group().contains("-g")) {
                 builder.setSeed(matcher.group());
-            } else if (matcher.group().contains("-br")) {
-                builder.setRows(matcher.group());
             } else if (matcher.group().contains("-bs")) {
                 builder.setCols(matcher.group());
             } else if (matcher.group().contains("-brk")) {
                 builder.setRowsForCommands(matcher.group());
+            } else if (matcher.group().contains("-br")) {
+                builder.setRows(matcher.group());
             } else if (matcher.group().contains("-pi")) {
                 builder.setDevicePerishability(matcher.group());
             } else if (matcher.group().contains("-m")) {

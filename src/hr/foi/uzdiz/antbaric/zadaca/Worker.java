@@ -14,6 +14,7 @@ import hr.foi.uzdiz.antbaric.zadaca.models.Device;
 import hr.foi.uzdiz.antbaric.zadaca.models.LError;
 import hr.foi.uzdiz.antbaric.zadaca.models.LInfo;
 import hr.foi.uzdiz.antbaric.zadaca.models.LMessage;
+import hr.foi.uzdiz.antbaric.zadaca.models.LNotification;
 import hr.foi.uzdiz.antbaric.zadaca.models.LWarning;
 import hr.foi.uzdiz.antbaric.zadaca.models.Place;
 import hr.foi.uzdiz.antbaric.zadaca.models.Sensor;
@@ -120,8 +121,8 @@ public class Worker extends Stateful {
             }
         }
 
-        Logger.getInstance().log(new LInfo("Writing log to output file..."), true);
-        Logger.getInstance().writeToFile();
+        Logger.getInstance().log(new LNotification("Worker Thread finished!"), true);
+        // Logger.getInstance().writeToFile();
     }
 
     public void setUp() {

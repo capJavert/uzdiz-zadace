@@ -77,6 +77,18 @@ public class Generator extends Random {
         return number.longValue();
     }
 
+    public int dajSlucajniBroj(int odBroja, int doBroja) {
+        int number = odBroja + (this.nextInt() * (doBroja - odBroja));
+
+        return number;
+    }
+
+    public float dajSlucajniBroj(float odBroja, float doBroja) {
+        float number = odBroja + (this.nextFloat() * (doBroja - odBroja));
+
+        return number;
+    }
+
     public Double fromIntervalPrecision1(Double min, Double max) {
         return min + (this.nextDouble() * (max - min));
     }

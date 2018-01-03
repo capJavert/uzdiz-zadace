@@ -52,8 +52,8 @@ public abstract class Controller<T extends View, E> {
 
     public void prompt() {
         this.update();
-        // TODO uncomment before prod
-        /*this.view.printContent();
+
+        this.view.printContent();
         this.view.printCommandsWithPrompt();
 
         String command;
@@ -62,7 +62,7 @@ public abstract class Controller<T extends View, E> {
             command = new Scanner(System.in).nextLine();
             ANSIHelper.move(25, Router.getConfig().getRows());
             ANSIHelper.cleol();
-        } while (!command.equals("n") && !command.equals("N"));*/
+        } while (!command.equals("n") && !command.equals("N"));
 
         Logger.getInstance().emptyBuffer();
     }
