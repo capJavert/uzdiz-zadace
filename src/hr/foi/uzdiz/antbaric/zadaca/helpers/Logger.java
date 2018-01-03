@@ -147,7 +147,6 @@ public class Logger {
 
     public void emptyBuffer() {
         Logger.LOG = new ArrayList<>();
-        // Logger.COMMANDS = new ArrayList<>();
     }
 
     public void clearFile() {

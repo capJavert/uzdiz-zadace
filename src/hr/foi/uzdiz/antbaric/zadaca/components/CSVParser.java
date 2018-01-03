@@ -266,7 +266,6 @@ public class CSVParser extends CSVHelper {
         }
 
         if (tempLines.size() != lines.size()) {
-            //Logger.getInstance().log(new LError(String.valueOf(tempLines.size())), true);
             this.mapDevices(tempLines, false);
         } else if (!logErrors) {
             this.mapDevices(lines, Boolean.TRUE);

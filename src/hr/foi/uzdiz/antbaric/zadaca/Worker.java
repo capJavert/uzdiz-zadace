@@ -68,7 +68,6 @@ public class Worker extends Stateful {
 
             for (Map.Entry<Integer, Place> entry : PLACES.entrySet()) {
                 Place place = entry.getValue();
-                //List<Device> sensors = this.getSensorsByCategory(place.getCategory());
                 Logger.getInstance().log(new LMessage("Checking Place '" + place.getId() + "'"), true);
 
                 for (final ListIterator<Device> deviceIterator = place.getSensors().listIterator(); deviceIterator.hasNext();) {
@@ -156,7 +155,7 @@ public class Worker extends Stateful {
     public void initSystem() {
         for (Map.Entry<Integer, Place> entry : PLACES.entrySet()) {
             Place place = entry.getValue();
-            //List<Device> sensors = this.getSensorsByCategory(place.getCategory());
+
             Logger.getInstance().log(new LMessage("Init devices at '" + place.getId() + " ID: " + place.getId() + "'"), true);
 
             for (final ListIterator<Device> deviceIterator = place.getSensors().listIterator(); deviceIterator.hasNext();) {
@@ -182,8 +181,6 @@ public class Worker extends Stateful {
                 } else {
                     FAILED_DEVICES.put(place.getId() + "." + actuator.getId(), 0);
                     Logger.getInstance().log(new LMessage("  Init OK '" + actuator.getId() + "'"), true);
-
-                    //this.configActuator((Actuator) actuator, place.getSensors());
                 }
             }
 
@@ -218,10 +215,10 @@ public class Worker extends Stateful {
         return System.currentTimeMillis() - startTimestamp > CONFIG.getPreciseInterval();
     }
 
-    @SuppressWarnings("unchecked")
+    
     @Override
     public Object save() {
-        return new State((HashMap<Integer, Place>) Worker.copy(this.PLACES));
+        return new State(Worker.copy(this.PLACES));
     }
 
     @Override
@@ -245,10 +242,10 @@ public class Worker extends Stateful {
         }
     }
 
-    public static Object copy(Object orig) {
-        Object obj = null;
+    @SuppressWarnings("unchecked")
+    public static HashMap<Integer, Place> copy(Object orig) {
+        HashMap<Integer, Place> obj = null;
         try {
-            // Write the object out to a byte array
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             try (ObjectOutputStream out = new ObjectOutputStream(bos)) {
                 out.writeObject(orig);
@@ -257,7 +254,7 @@ public class Worker extends Stateful {
 
             ObjectInputStream in = new ObjectInputStream(
                     new ByteArrayInputStream(bos.toByteArray()));
-            obj = in.readObject();
+            obj = (HashMap<Integer, Place>) in.readObject();
         } catch (IOException | ClassNotFoundException e) {
             Logger.getInstance().log(new LError(e.getMessage()), Boolean.TRUE);
         }
