@@ -61,6 +61,10 @@ public class Sensor extends Device implements Serializable {
             this.id = Generator.getInstance().getUniqueIdentifier(DeviceEnum.SENSOR.toString());
         } else {
             this.id = id;
+
+            if (Generator.USED_IDENTIFIERS_SENSORS < this.id) {
+                Generator.USED_IDENTIFIERS_SENSORS = this.id;
+            }
         }
     }
 

@@ -5,6 +5,7 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca.helpers;
 
+import hr.foi.uzdiz.antbaric.zadaca.Router;
 import hr.foi.uzdiz.antbaric.zadaca.models.Device;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -23,8 +24,6 @@ public class Generator extends Random {
     public static Integer USED_IDENTIFIERS_PLACES = 0;
     public static Integer USED_IDENTIFIERS_SENSORS = 0;
     public static Integer USED_IDENTIFIERS_ACTUATORS = 0;
-    
-    private Integer devicePerishability = 50;
 
     static {
         INSTANCE = new Generator();
@@ -49,7 +48,7 @@ public class Generator extends Random {
     }
 
     public Integer getStatus() {
-        return this.nextInt(100) + 1 < this.devicePerishability ? 1 : 0;
+        return this.nextInt(100) + 1 > Router.getConfig().getDevicePerishability() ? 1 : 0;
     }
 
     public Double getDouble() {
@@ -100,9 +99,5 @@ public class Generator extends Random {
 
     public Integer selectFrom(List<Device> list) {
         return this.nextInt(list.size());
-    }
-
-    public void setDevicePerishability(Integer devicePerishability) {
-        this.devicePerishability = devicePerishability;
     }
 }

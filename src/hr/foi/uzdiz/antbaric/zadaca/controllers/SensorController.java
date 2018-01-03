@@ -32,9 +32,9 @@ public class SensorController extends Controller<SensorView, Integer> {
         Boolean exists = false;
 
         for (Map.Entry<Integer, Place> entry : Worker.getInstance().PLACES.entrySet()) {
-            for (Device device : entry.getValue().getSensors()) {
-                if (Objects.equals(device.id, this.model)) {
-                    this.view.prepareTable((Sensor) device);
+            for (Map.Entry<Integer, Device> device : entry.getValue().getSensors().entrySet()) {
+                if (Objects.equals(device.getValue().id, this.model)) {
+                    this.view.prepareTable((Sensor) device.getValue());
                     exists = true;
                     break;
                 }

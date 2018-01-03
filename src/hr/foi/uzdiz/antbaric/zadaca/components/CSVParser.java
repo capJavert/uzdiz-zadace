@@ -25,11 +25,10 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.logging.Level;
 
 /**
  *
@@ -68,7 +67,7 @@ public class CSVParser extends CSVHelper {
             try {
                 fileInputStream.close();
             } catch (Exception ex) {
-                Logger.getInstance().log(new LError(ex.getMessage()), true);
+                //
             }
         }
 
@@ -82,8 +81,8 @@ public class CSVParser extends CSVHelper {
         this.scheduleFilePath = new File(scheduleFilePath);
     }
 
-    public HashMap<Integer, Place> getPlaces() {
-        HashMap<Integer, Place> places = new HashMap<>();
+    public ConcurrentHashMap<Integer, Place> getPlaces() {
+        ConcurrentHashMap<Integer, Place> places = new ConcurrentHashMap<>();
 
         List<List<String>> collection = this.readCsv(this.placesFile, 1);
         for (List<String> values : collection) {
@@ -127,8 +126,8 @@ public class CSVParser extends CSVHelper {
         return places;
     }
 
-    public HashMap<Integer, Device> getSensors() {
-        HashMap<Integer, Device> sensors = new HashMap<>();
+    public ConcurrentHashMap<Integer, Device> getSensors() {
+        ConcurrentHashMap<Integer, Device> sensors = new ConcurrentHashMap<>();
         DeviceFactory factory = DeviceFactory.getFactory(DeviceEnum.SENSOR);
 
         List<List<String>> collection = this.readCsv(this.sensorsFile, 1);
@@ -139,17 +138,13 @@ public class CSVParser extends CSVHelper {
             } catch (Exception ex) {
                 Logger.getInstance().log(new LError("Line is not valid. Skipping Sensor..."), true);
             }
-
-            if (Generator.USED_IDENTIFIERS_SENSORS < Integer.parseInt(values.get(0))) {
-                Generator.USED_IDENTIFIERS_SENSORS = Integer.parseInt(values.get(0));
-            }
         }
 
         return sensors;
     }
 
-    public HashMap<Integer, Device> getActuators() {
-        HashMap<Integer, Device> actuators = new HashMap<>();
+    public ConcurrentHashMap<Integer, Device> getActuators() {
+        ConcurrentHashMap<Integer, Device> actuators = new ConcurrentHashMap<>();
         DeviceFactory factory = DeviceFactory.getFactory(DeviceEnum.ACTUATOR);
 
         List<List<String>> collection = this.readCsv(this.actuatorsFile, 1);
@@ -159,10 +154,6 @@ public class CSVParser extends CSVHelper {
                 actuators.put(device.getModelId(), factory.createToF(values));
             } catch (Exception ex) {
                 Logger.getInstance().log(new LError("Line is not valid. Skipping Actuator..."), true);
-            }
-
-            if (Generator.USED_IDENTIFIERS_ACTUATORS < Integer.parseInt(values.get(0))) {
-                Generator.USED_IDENTIFIERS_ACTUATORS = Integer.parseInt(values.get(0));
             }
         }
 
@@ -239,13 +230,19 @@ public class CSVParser extends CSVHelper {
                                     Integer.parseInt(i)
                             );
 
-                            Device actuator = this.findActuator(map.getPk());
-                            Device sensor = this.findSensor(map.getFk());
+                            Place place = this.findActuatorPlace(map.getPk());
 
-                            if (actuator != null && sensor != null) {
-                                ((Actuator) actuator).sensors.add((Sensor) sensor);
+                            if (place != null) {
+                                Device actuator = place.getActuators().get(map.getPk());
+                                Device sensor = this.findSensor(map.getFk(), place.id);
+
+                                if (sensor != null) {
+                                    ((Actuator) actuator).sensors.add((Sensor) sensor);
+                                } else {
+                                    throw new Exception("Sensor #" + String.valueOf(map.getFk()) + " does not exist for place!");
+                                }
                             } else {
-                                throw new Exception("Device pair #" + String.valueOf(map.getPk()) + " and #" + String.valueOf(map.getFk()) + " does not exist!");
+                                throw new Exception("Actuator #" + String.valueOf(map.getPk()) + " does not exist!");
                             }
                         }
                         break;
@@ -254,14 +251,12 @@ public class CSVParser extends CSVHelper {
                 }
 
                 tempLines.add(line);
-            } catch (NumberFormatException ex) {
-                Logger.getInstance().log(new LError(ex.getMessage()), true);
             } catch (Exception ex) {
                 if (logErrors) {
                     Logger.getInstance().log(new LError(ex.getMessage()), true);
                 }
             }
-            
+
             line++;
         }
 
@@ -272,42 +267,26 @@ public class CSVParser extends CSVHelper {
         }
     }
 
-    private Device findSensor(Integer deviceId) {
+    private Device findSensor(Integer deviceId, Integer placeId) {
         Device found = null;
 
-        for (Map.Entry<Integer, Place> entry : Worker.getInstance().PLACES.entrySet()) {
-            Place place = entry.getValue();
-
-            for (Device device : place.getSensors()) {
-                if (Objects.equals(device.id, deviceId)) {
-                    found = device;
-                    break;
-                }
-            }
-
-            if (found != null) {
-                return found;
+        for (Map.Entry<Integer, Device> device : Worker.getInstance().PLACES.get(placeId).getSensors().entrySet()) {
+            if (Objects.equals(device.getValue().id, deviceId)) {
+                return device.getValue();
             }
         }
 
         return null;
     }
 
-    private Device findActuator(Integer deviceId) {
+    private Place findActuatorPlace(Integer deviceId) {
         Device found = null;
 
         for (Map.Entry<Integer, Place> entry : Worker.getInstance().PLACES.entrySet()) {
             Place place = entry.getValue();
 
-            for (Device device : place.getActuators()) {
-                if (Objects.equals(device.id, deviceId)) {
-                    found = device;
-                    break;
-                }
-            }
-
-            if (found != null) {
-                return found;
+            if (place.getActuators().get(deviceId) != null) {
+                return place;
             }
         }
 

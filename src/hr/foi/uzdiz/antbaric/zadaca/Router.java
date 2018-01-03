@@ -60,6 +60,7 @@ public class Router extends StateManager {
         IndexController controller = new IndexController(view, null);
         controller.init();
         INSTANCE.indexController = controller;
+        INSTANCE.indexController.init();
     }
 
     public void goTo(String viewId) {
@@ -94,7 +95,7 @@ public class Router extends StateManager {
                     }
 
                     Router.CONFIG.setDevicePerishability(Integer.parseInt(meta[1]));
-                    Logger.getInstance().log(new LNotification("PI % is set to " + meta[1]), Boolean.TRUE);
+                    Logger.getInstance().log(new LNotification("PI % is set to " + Router.CONFIG.getDevicePerishability()), Boolean.TRUE);
                 } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
                     Logger.getInstance().log(new LError("PI % must be a number (0-100)"), Boolean.TRUE);
                 }

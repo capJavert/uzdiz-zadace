@@ -52,26 +52,22 @@ public class PlaceController extends Controller<PlaceView, Integer> {
                 this.view.prepareTable(entry.getValue());
 
                 if (this.actuatorView != null) {
-                    Logger.getInstance().log(new LMessage("Actuators for " + entry.getValue().getNameAndId() + ": "), true);
-
-                    for (Device device : entry.getValue().getActuators()) {
-                        this.actuatorView.prepareTable((Actuator) device);
+                    if (entry.getValue().getActuators().entrySet().size() > 0) {
+                        Logger.getInstance().log(new LMessage("Actuators for " + entry.getValue().getNameAndId() + ": "), true);
                     }
 
-                    for (Device device : entry.getValue().ACTUATORS_TRASH) {
-                        this.actuatorView.prepareTable((Actuator) device);
+                    for (Map.Entry<Integer, Device> device : entry.getValue().getActuators().entrySet()) {
+                        this.actuatorView.prepareTable((Actuator) device.getValue());
                     }
                 }
 
                 if (this.sensorView != null) {
-                    Logger.getInstance().log(new LMessage("Sensors for " + entry.getValue().getNameAndId() + ": "), true);
-
-                    for (Device device : entry.getValue().getSensors()) {
-                        this.sensorView.prepareTable((Sensor) device);
+                    if (entry.getValue().getSensors().entrySet().size() > 0) {
+                        Logger.getInstance().log(new LMessage("Sensors for " + entry.getValue().getNameAndId() + ": "), true);
                     }
 
-                    for (Device device : entry.getValue().SENSORS_TRASH) {
-                        this.sensorView.prepareTable((Sensor) device);
+                    for (Map.Entry<Integer, Device> device : entry.getValue().getSensors().entrySet()) {
+                        this.sensorView.prepareTable((Sensor) device.getValue());
                     }
                 }
 

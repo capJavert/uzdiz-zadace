@@ -46,7 +46,6 @@ public class Main {
 
                 Generator generator = Generator.getInstance();
                 generator.setSeed(config.getSeed());
-                generator.setDevicePerishability(config.getDevicePerishability());
                 Logger.getInstance().setBufferSize(config.getRows() - config.getRowsForCommands() - 2);
 
                 Router.setConfig(config);
@@ -61,7 +60,7 @@ public class Main {
                     command = new Scanner(System.in).nextLine();
                 }
             } catch (IllegalArgumentException ex) {
-                Logger.getInstance().log(new LError(ex.getMessage()), false);
+                Logger.getInstance().log(new LError(ex.getMessage()), false);  
             }
         } else {
             Logger.getInstance().log(new LError("Error: Please check your arguments!"), false);

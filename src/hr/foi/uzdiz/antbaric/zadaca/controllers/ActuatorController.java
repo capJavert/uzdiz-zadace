@@ -41,16 +41,17 @@ public class ActuatorController extends Controller<ActuatorView, Integer> {
         Boolean exists = false;
 
         for (Map.Entry<Integer, Place> entry : Worker.getInstance().PLACES.entrySet()) {
-            for (Device device : entry.getValue().getActuators()) {
-                if (Objects.equals(device.id, this.model)) {
-                    this.view.prepareTable((Actuator) device);
+            for (Map.Entry<Integer, Device> device : entry.getValue().getActuators().entrySet()) {
+                
+                if (Objects.equals(device.getValue().id, this.model)) {
+                    this.view.prepareTable((Actuator) device.getValue());
 
                     if (this.sensorView != null) {
-                        if (((Actuator) device).sensors.size() > 0) {
-                            Logger.getInstance().log(new LMessage("Sensors for " + device.getNameAndId() + ": "), true);
+                        if (((Actuator) device.getValue()).sensors.size() > 0) {
+                            Logger.getInstance().log(new LMessage("Sensors for " + device.getValue().getNameAndId() + ": "), true);
                         }
 
-                        for (Sensor sensor : ((Actuator) device).sensors) {
+                        for (Sensor sensor : ((Actuator) device.getValue()).sensors) {
                             this.sensorView.prepareTable(sensor);
                         }
                     }

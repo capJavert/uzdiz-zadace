@@ -14,7 +14,6 @@ import hr.foi.uzdiz.antbaric.zadaca.models.Device;
 import hr.foi.uzdiz.antbaric.zadaca.models.LError;
 import hr.foi.uzdiz.antbaric.zadaca.models.LInfo;
 import hr.foi.uzdiz.antbaric.zadaca.models.LMessage;
-import hr.foi.uzdiz.antbaric.zadaca.models.LNotification;
 import hr.foi.uzdiz.antbaric.zadaca.models.LWarning;
 import hr.foi.uzdiz.antbaric.zadaca.models.Place;
 import hr.foi.uzdiz.antbaric.zadaca.models.Sensor;
@@ -24,8 +23,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.ListIterator;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
 /**
@@ -36,10 +34,10 @@ public class Worker extends Stateful {
 
     private static volatile Worker INSTANCE;
     private Configuration CONFIG = null;
-    public HashMap<Integer, Place> PLACES;
-    public HashMap<Integer, Device> SENSORS;
-    public HashMap<Integer, Device> ACTUATORS;
-    private HashMap<String, Integer> FAILED_DEVICES;
+    public ConcurrentHashMap<Integer, Place> PLACES;
+    public ConcurrentHashMap<Integer, Device> SENSORS;
+    public ConcurrentHashMap<Integer, Device> ACTUATORS;
+    private ConcurrentHashMap<String, Integer> FAILED_DEVICES;
 
     static {
         INSTANCE = new Worker();
@@ -70,17 +68,17 @@ public class Worker extends Stateful {
                 Place place = entry.getValue();
                 Logger.getInstance().log(new LMessage("Checking Place '" + place.getId() + "'"), true);
 
-                for (final ListIterator<Device> deviceIterator = place.getSensors().listIterator(); deviceIterator.hasNext();) {
-                    Sensor sensor = (Sensor) deviceIterator.next();
+                for (Map.Entry<Integer, Device> hEntry : place.getSensors().entrySet()) {
+                    Sensor sensor = (Sensor) hEntry.getValue();
 
                     if (!this.activateDevice(place.getId(), sensor)) {
                         place.SENSORS_TRASH.add(sensor);
-                        deviceIterator.remove();
+                        place.getSensors().remove(sensor.id);
                         Logger.getInstance().log(new LWarning("Replacing Sensor '" + sensor.getId() + "'"), true);
                         sensor = (Sensor) sensor.prototype(0);
 
                         if (sensor.getStatus() == 1) {
-                            deviceIterator.add(sensor);
+                            place.getSensors().put(sensor.id, sensor);
                             Logger.getInstance().log(new LMessage("Init OK '" + sensor.getId() + "'"), true);
                         } else {
                             Logger.getInstance().log(new LError("Init FAILED '" + sensor.getId() + "'"), true);
@@ -88,18 +86,18 @@ public class Worker extends Stateful {
                     }
                 }
 
-                for (final ListIterator<Device> deviceIterator = place.getActuators().listIterator(); deviceIterator.hasNext();) {
-                    Actuator actuator = (Actuator) deviceIterator.next();
+                for (Map.Entry<Integer, Device> hEntry : place.getActuators().entrySet()) {
+                    Actuator actuator = (Actuator) hEntry.getValue();
 
                     if (actuator.isSensorChanged()) {
                         if (!this.activateDevice(place.getId(), actuator)) {
                             place.ACTUATORS_TRASH.add(actuator);
-                            deviceIterator.remove();
+                            place.getActuators().remove(actuator.id);
                             Logger.getInstance().log(new LMessage("Replacing Actuator '" + actuator.getId() + "'"), true);
                             actuator = (Actuator) actuator.prototype(0);
 
                             if (actuator.getStatus() == 1) {
-                                deviceIterator.add(actuator);
+                                place.getActuators().put(actuator.id, actuator);
                                 Logger.getInstance().log(new LMessage("Init OK '" + actuator.getId() + "'"), true);
                             } else {
                                 Logger.getInstance().log(new LError("Init FAILED '" + actuator.getId() + "'"), true);
@@ -132,22 +130,10 @@ public class Worker extends Stateful {
         PLACES = adapter.getPlaces();
         SENSORS = adapter.getSensors();
         ACTUATORS = adapter.getActuators();
-        FAILED_DEVICES = new HashMap<>();
+        FAILED_DEVICES = new ConcurrentHashMap<>();
 
         Logger.getInstance().log(new LMessage("Assigning devices..."), true);
-
-        Logger.getInstance().log(new LNotification(String.valueOf(SENSORS.size())), Boolean.TRUE);
-        Logger.getInstance().log(new LNotification(String.valueOf(ACTUATORS.size())), Boolean.TRUE);
-
         adapter.mapDevices(new ArrayList<>(), Boolean.FALSE);
-
-        int count = 0;
-
-        for (Map.Entry<Integer, Place> entry : Worker.getInstance().PLACES.entrySet()) {
-            count += entry.getValue().getActuators().size();
-            count += entry.getValue().getSensors().size();
-        }
-        
         Logger.getInstance().log(new LMessage("Init system..."), true);
         this.initSystem();
     }
@@ -158,12 +144,12 @@ public class Worker extends Stateful {
 
             Logger.getInstance().log(new LMessage("Init devices at '" + place.getId() + " ID: " + place.getId() + "'"), true);
 
-            for (final ListIterator<Device> deviceIterator = place.getSensors().listIterator(); deviceIterator.hasNext();) {
-                final Device sensor = deviceIterator.next();
+            for (Map.Entry<Integer, Device> hEntry : place.getSensors().entrySet()) {
+                Device sensor = hEntry.getValue();
 
                 if (sensor.getStatus() == 0) {
                     place.SENSORS_TRASH.add(sensor);
-                    deviceIterator.remove();
+                    place.getSensors().remove(sensor.id);
                     Logger.getInstance().log(new LError("  Init FAILED '" + sensor.getId() + "'"), true);
                 } else {
                     FAILED_DEVICES.put(place.getId() + "." + sensor.getId(), 0);
@@ -171,12 +157,12 @@ public class Worker extends Stateful {
                 }
             }
 
-            for (final ListIterator<Device> deviceIterator = place.getActuators().listIterator(); deviceIterator.hasNext();) {
-                final Device actuator = deviceIterator.next();
+            for (Map.Entry<Integer, Device> hEntry : place.getActuators().entrySet()) {
+                Device actuator = hEntry.getValue();
 
                 if (actuator.getStatus() == 0) {
                     place.ACTUATORS_TRASH.add(actuator);
-                    deviceIterator.remove();
+                    place.getActuators().remove(actuator.id);
                     Logger.getInstance().log(new LError("  Init FAILED '" + actuator.getId() + "'"), true);
                 } else {
                     FAILED_DEVICES.put(place.getId() + "." + actuator.getId(), 0);
@@ -215,7 +201,6 @@ public class Worker extends Stateful {
         return System.currentTimeMillis() - startTimestamp > CONFIG.getPreciseInterval();
     }
 
-    
     @Override
     public Object save() {
         return new State(Worker.copy(this.PLACES));
@@ -231,20 +216,20 @@ public class Worker extends Stateful {
 
     private static class State {
 
-        private final HashMap<Integer, Place> state;
+        private final ConcurrentHashMap<Integer, Place> state;
 
-        public State(HashMap<Integer, Place> state) {
+        public State(ConcurrentHashMap<Integer, Place> state) {
             this.state = state;
         }
 
-        public HashMap<Integer, Place> getSavedState() {
+        public ConcurrentHashMap<Integer, Place> getSavedState() {
             return state;
         }
     }
 
     @SuppressWarnings("unchecked")
-    public static HashMap<Integer, Place> copy(Object orig) {
-        HashMap<Integer, Place> obj = null;
+    public static ConcurrentHashMap<Integer, Place> copy(Object orig) {
+        ConcurrentHashMap<Integer, Place> obj = null;
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             try (ObjectOutputStream out = new ObjectOutputStream(bos)) {
@@ -254,7 +239,7 @@ public class Worker extends Stateful {
 
             ObjectInputStream in = new ObjectInputStream(
                     new ByteArrayInputStream(bos.toByteArray()));
-            obj = (HashMap<Integer, Place>) in.readObject();
+            obj = (ConcurrentHashMap<Integer, Place>) in.readObject();
         } catch (IOException | ClassNotFoundException e) {
             Logger.getInstance().log(new LError(e.getMessage()), Boolean.TRUE);
         }

@@ -119,6 +119,10 @@ public class Actuator extends Device implements Serializable {
             this.id = Generator.getInstance().getUniqueIdentifier(DeviceEnum.ACTUATOR.toString());
         } else {
             this.id = id;
+
+            if (Generator.USED_IDENTIFIERS_ACTUATORS < this.id) {
+                Generator.USED_IDENTIFIERS_ACTUATORS = this.id;
+            }
         }
     }
 

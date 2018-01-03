@@ -104,7 +104,7 @@ public abstract class Device implements Serializable {
     }
 
     public String getNameAndId() {
-        return this.name + " ID: " + this.modelId;
+        return this.name + " ID: " + this.getId();
     }
 
     public String getId() {

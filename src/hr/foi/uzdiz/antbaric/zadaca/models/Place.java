@@ -8,6 +8,7 @@ package hr.foi.uzdiz.antbaric.zadaca.models;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Generator;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 
 /**
@@ -21,8 +22,8 @@ public class Place implements Serializable {
     public final Integer category;
     public final Integer actuatorsNum;
     public final Integer sensorsNum;
-    private final List<Device> actuators;
-    private final List<Device> sensors;
+    private final ConcurrentHashMap<Integer, Device> actuators;
+    private final ConcurrentHashMap<Integer, Device> sensors;
 
     public final List<Device> SENSORS_TRASH = new ArrayList<>();
     public final List<Device> ACTUATORS_TRASH = new ArrayList<>();
@@ -32,8 +33,8 @@ public class Place implements Serializable {
         this.category = category;
         this.sensorsNum = sensorsNum;
         this.actuatorsNum = actuatorsNum;
-        this.actuators = new ArrayList<>();
-        this.sensors = new ArrayList<>();
+        this.actuators = new ConcurrentHashMap<>();
+        this.sensors = new ConcurrentHashMap<>();
     }
 
     public Place(Integer id, String name, Integer category, Integer sensorsNum, Integer actuatorsNum) {
@@ -42,8 +43,8 @@ public class Place implements Serializable {
         this.category = category;
         this.sensorsNum = sensorsNum;
         this.actuatorsNum = actuatorsNum;
-        this.actuators = new ArrayList<>();
-        this.sensors = new ArrayList<>();
+        this.actuators = new ConcurrentHashMap<>();
+        this.sensors = new ConcurrentHashMap<>();
     }
 
     public String getId() {
@@ -76,20 +77,37 @@ public class Place implements Serializable {
         return sensorsNum;
     }
 
-    public List<Device> getActuators() {
+    public ConcurrentHashMap<Integer, Device> getActuators() {
         return actuators;
     }
 
-    public List<Device> getSensors() {
+    public ConcurrentHashMap<Integer, Device> getSensors() {
         return sensors;
     }
 
-    public void addSensor(Device sensor) {
-        this.sensors.add(sensor);
+    public void addSensor(Device sensor) throws Exception {
+        if (sensor.getType().equals(this.category) || sensor.getType().equals(2)) {
+            if (this.sensors.size() < this.sensorsNum) {
+                this.sensors.put(sensor.id, sensor);
+            } else {
+                throw new Exception("Place #" + this.getId() + " can hold " + this.sensorsNum + " sensors! Can't add device #" + sensor.id);
+            }
+        } else {
+            throw new Exception("Device #" + sensor.id + " type doesn't match Place #" + this.getId() + " type!");
+        }
+
     }
 
-    public void addActuator(Device actuator) {
-        this.actuators.add(actuator);
+    public void addActuator(Device actuator) throws Exception {
+        if (actuator.getType().equals(this.category) || actuator.getType().equals(2)) {
+            if (this.actuators.size() < this.actuatorsNum) {
+                this.actuators.put(actuator.id, actuator);
+            } else {
+                throw new Exception("Place #" + this.getId() + " can hold " + this.actuatorsNum + " actuators! Can't add device #" + actuator.id);
+            }
+        } else {
+            throw new Exception("Device #" + actuator.id + " type doesn't match Place #" + this.getId() + " type!");
+        }
     }
 
 }
