@@ -20,7 +20,7 @@ import java.util.Collections;
  */
 public class SensorView extends View {
 
-    private static final Integer NUMBER_OF_COLS = 8;
+    private static final Integer NUMBER_OF_COLS = 7;
     private static final Integer FIRST_COL_OFFSET = 3;
     private static final Integer COL_OFFSET = 5;
 
@@ -44,6 +44,10 @@ public class SensorView extends View {
 
         for (Field field : Sensor.class.getFields()) {
             try {
+                if ("value".equals(field.getName())) {
+                    continue;
+                }
+                
                 String header_part;
                 String row_part;
 
