@@ -24,6 +24,8 @@ public class Place implements Serializable {
     public final Integer sensorsNum;
     private final ConcurrentHashMap<Integer, Device> actuators;
     private final ConcurrentHashMap<Integer, Device> sensors;
+    private final ConcurrentHashMap<Integer, Place> subPlaces;
+    private Place parent;
 
     public final List<Device> SENSORS_TRASH = new ArrayList<>();
     public final List<Device> ACTUATORS_TRASH = new ArrayList<>();
@@ -35,6 +37,8 @@ public class Place implements Serializable {
         this.actuatorsNum = actuatorsNum;
         this.actuators = new ConcurrentHashMap<>();
         this.sensors = new ConcurrentHashMap<>();
+        this.subPlaces = new ConcurrentHashMap<>();
+        this.parent = null;
     }
 
     public Place(Integer id, String name, Integer category, Integer sensorsNum, Integer actuatorsNum) {
@@ -45,6 +49,8 @@ public class Place implements Serializable {
         this.actuatorsNum = actuatorsNum;
         this.actuators = new ConcurrentHashMap<>();
         this.sensors = new ConcurrentHashMap<>();
+        this.subPlaces = new ConcurrentHashMap<>();
+        this.parent = null;
     }
 
     public String getId() {
@@ -107,6 +113,15 @@ public class Place implements Serializable {
             }
         } else {
             throw new Exception("Device #" + actuator.id + " type doesn't match Place #" + this.getId() + " type!");
+        }
+    }
+    
+    public void addPlace(Place place) throws Exception {
+        if (place.parent == null) {
+            place.parent = this;
+            this.subPlaces.put(place.id, place);
+        } else {
+            throw new Exception("Place #" + place.getId() + " is already added to Place #" + place.parent.getId());
         }
     }
 

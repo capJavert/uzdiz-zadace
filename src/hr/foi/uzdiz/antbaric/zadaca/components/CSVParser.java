@@ -17,6 +17,7 @@ import hr.foi.uzdiz.antbaric.zadaca.models.DeviceMap;
 import hr.foi.uzdiz.antbaric.zadaca.models.LError;
 import hr.foi.uzdiz.antbaric.zadaca.models.MapEnum;
 import hr.foi.uzdiz.antbaric.zadaca.models.PlaceDeviceMap;
+import hr.foi.uzdiz.antbaric.zadaca.models.PlaceMap;
 import hr.foi.uzdiz.antbaric.zadaca.models.Sensor;
 import java.io.File;
 import java.io.FileInputStream;
@@ -163,7 +164,7 @@ public class CSVParser extends CSVHelper {
     public void mapDevices(List<Integer> lines, Boolean logErrors) {
         List<Integer> tempLines = new ArrayList<>();
 
-        List<List<String>> collection = this.readCsv(this.scheduleFilePath, 3);
+        List<List<String>> collection = this.readCsv(this.scheduleFilePath, 4);
 
         int line = 0;
 
@@ -223,9 +224,9 @@ public class CSVParser extends CSVHelper {
                         }
                         break;
                     case 1:
-                        for (String i : values.get(2).split(",")) {
+                        for (String i : values.subList(2, values.size())) {
                             map = new DeviceMap(
-                                    MapEnum.ACTUATOR_SENSOR,
+                                    MapEnum.PLACE_PLACE,
                                     Integer.parseInt(values.get(1)),
                                     Integer.parseInt(i)
                             );
@@ -246,8 +247,30 @@ public class CSVParser extends CSVHelper {
                             }
                         }
                         break;
+                    case 2:
+                        for (String i : values.subList(2, values.size())) {
+                            map = new PlaceMap(
+                                    MapEnum.ACTUATOR_SENSOR,
+                                    Integer.parseInt(values.get(1)),
+                                    Integer.parseInt(i)
+                            );
+
+                            Place place = Worker.getInstance().PLACES.get(map.getPk());
+                            Place subPlace = Worker.getInstance().PLACES.get(map.getFk());
+
+                            if (place != null) {
+                                if (subPlace != null) {
+                                    place.addPlace(subPlace);
+                                } else {
+                                    throw new Exception("Place #" + subPlace.getId() + " does not exist!");
+                                }
+                            } else {
+                                throw new Exception("Place #" + place.getId() + " does not exist!");
+                            }
+                        }
+                        break;
                     default:
-                        throw new Exception("Line type must be 0 or 1. Skipping...");
+                        throw new Exception("Line type must be 0, 1 or 2. Skipping...");
                 }
 
                 tempLines.add(line);

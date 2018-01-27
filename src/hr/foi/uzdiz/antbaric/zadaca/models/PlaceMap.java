@@ -9,6 +9,10 @@ package hr.foi.uzdiz.antbaric.zadaca.models;
  *
  * @author javert
  */
-public enum MapEnum {
-    PLACE_SENSOR, PLACE_ACTUATOR, ACTUATOR_SENSOR, PLACE_PLACE
+public class PlaceMap extends DeviceMap {
+    
+    public PlaceMap(MapEnum type, Integer pk, Integer fk) {
+        super(type, pk, fk);
+    }
+    
 }

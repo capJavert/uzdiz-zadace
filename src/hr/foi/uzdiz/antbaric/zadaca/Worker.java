@@ -12,7 +12,6 @@ import hr.foi.uzdiz.antbaric.zadaca.models.Actuator;
 import hr.foi.uzdiz.antbaric.zadaca.models.Configuration;
 import hr.foi.uzdiz.antbaric.zadaca.models.Device;
 import hr.foi.uzdiz.antbaric.zadaca.models.LError;
-import hr.foi.uzdiz.antbaric.zadaca.models.LInfo;
 import hr.foi.uzdiz.antbaric.zadaca.models.LMessage;
 import hr.foi.uzdiz.antbaric.zadaca.models.LNotification;
 import hr.foi.uzdiz.antbaric.zadaca.models.LWarning;
