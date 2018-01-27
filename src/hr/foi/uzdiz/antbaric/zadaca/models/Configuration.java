@@ -22,6 +22,9 @@ public class Configuration {
     private Integer cols;
     private Integer rowsForCommands;
     private Integer devicePerishability;
+    private Integer kMax;
+    private Integer kMin;
+    private Integer kPov;
 
     public Long getSeed() {
         return seed;
@@ -115,5 +118,30 @@ public class Configuration {
         this.devicePerishability = devicePerishability;
     }
 
+    public Integer getkMax() {
+        return kMax;
+    }
+
+    public void setkMax(Integer kMax) {
+        this.kMax = kMax;
+    }
+
+    public Integer getkMin() {
+        return kMin;
+    }
+
+    public void setkMin(Integer kMin) {
+        this.kMin = kMin;
+    }
+
+    public Integer getkPov() {
+        return kPov;
+    }
+
+    public void setkPov(Integer kPov) {
+        this.kPov = kPov;
+    }
+
+    
     
 }

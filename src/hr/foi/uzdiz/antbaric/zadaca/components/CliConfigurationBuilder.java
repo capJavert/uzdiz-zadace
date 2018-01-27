@@ -178,4 +178,31 @@ public class CliConfigurationBuilder implements ConfigurationBuilder {
         return this;
     }
 
+    @Override
+    public ConfigurationBuilder setKMax(String kMax) {
+        kMax = CliConfigurationBuilder.toValue(kMax);
+
+        this.configuration.setDevicePerishability(Integer.parseInt(kMax));
+
+        return this;
+    }
+
+    @Override
+    public ConfigurationBuilder setKMin(String kMin) {
+        kMin = CliConfigurationBuilder.toValue(kMin);
+
+        this.configuration.setDevicePerishability(Integer.parseInt(kMin));
+
+        return this;
+    }
+
+    @Override
+    public ConfigurationBuilder setKPov(String kPov) {
+        kPov = CliConfigurationBuilder.toValue(kPov);
+
+        this.configuration.setDevicePerishability(Integer.parseInt(kPov));
+
+        return this;
+    }
+
 }

@@ -91,6 +91,12 @@ public class Main {
                 builder.setScheduleFilePath(matcher.group());
             } else if (matcher.group().contains("-tcd")) {
                 builder.setInterval(matcher.group());
+            } else if (matcher.group().contains("-kmax")) {
+                builder.setKMax(matcher.group());
+            } else if (matcher.group().contains("-kmin")) {
+                builder.setKMin(matcher.group());
+            } else if (matcher.group().contains("-kpov")) {
+                builder.setKPov(matcher.group());
             }
         }
 

@@ -34,6 +34,12 @@ public interface ConfigurationBuilder {
     
     ConfigurationBuilder setDevicePerishability(String devicePerishability);
 
+    ConfigurationBuilder setKMax(String kMax);
+    
+    ConfigurationBuilder setKMin(String kMin);
+    
+    ConfigurationBuilder setKPov(String kPov);
+    
     Boolean isValid();
 
 }
