@@ -168,6 +168,27 @@ public class Router extends StateManager {
                     Logger.getInstance().log(new LInfo(line), Boolean.TRUE);
                 }
                 break;
+            case "SM":
+                Logger.getInstance().log(new LInfo("Don't come in yet!!! I am naked!!!!!"), Boolean.TRUE);
+                break;
+            case "TS":
+                Logger.getInstance().log(new LInfo("Don't come in yet!!! I am naked!!!!!"), Boolean.TRUE);
+                break;
+            case "TA":
+                Logger.getInstance().log(new LInfo("Don't come in yet!!! I am naked!!!!!"), Boolean.TRUE);
+                break;
+            case "CP":
+                try {
+                    if (Integer.parseInt(meta[1]) > 99 || Integer.parseInt(meta[1]) < 1) {
+                        throw new NumberFormatException();
+                    }
+
+                    Router.CONFIG.setDeviceFixInterval(Integer.parseInt(meta[1]));
+                    Logger.getInstance().log(new LNotification("CP is set to " + Router.CONFIG.getDeviceFixInterval()), Boolean.TRUE);
+                } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
+                    Logger.getInstance().log(new LError("CP n must be a number (1-99)"), Boolean.TRUE);
+                }
+                break;
             default:
                 viewId = "";
         }

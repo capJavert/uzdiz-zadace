@@ -25,7 +25,12 @@ public class Configuration {
     private Integer kMax;
     private Integer kMin;
     private Integer kPov;
+    private Integer deviceFixInterval;
 
+    public Configuration() {
+        this.deviceFixInterval = 1;
+    }
+    
     public Long getSeed() {
         return seed;
     }
@@ -142,6 +147,12 @@ public class Configuration {
         this.kPov = kPov;
     }
 
-    
+    public Integer getDeviceFixInterval() {
+        return deviceFixInterval;
+    }
+
+    public void setDeviceFixInterval(Integer deviceFixInterval) {
+        this.deviceFixInterval = deviceFixInterval;
+    }
     
 }
