@@ -7,6 +7,7 @@ package hr.foi.uzdiz.antbaric.zadaca;
 
 import hr.foi.uzdiz.antbaric.zadaca.components.StateManager;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.ActuatorController;
+import hr.foi.uzdiz.antbaric.zadaca.controllers.ActuatorInventoryController;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.GameController;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.IndexController;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.PlaceController;
@@ -19,6 +20,7 @@ import hr.foi.uzdiz.antbaric.zadaca.models.Configuration;
 import hr.foi.uzdiz.antbaric.zadaca.models.LError;
 import hr.foi.uzdiz.antbaric.zadaca.models.LInfo;
 import hr.foi.uzdiz.antbaric.zadaca.models.LNotification;
+import hr.foi.uzdiz.antbaric.zadaca.views.ActuatorInventoryView;
 import hr.foi.uzdiz.antbaric.zadaca.views.ActuatorView;
 import hr.foi.uzdiz.antbaric.zadaca.views.IndexView;
 import hr.foi.uzdiz.antbaric.zadaca.views.MazeView;
@@ -187,7 +189,13 @@ public class Router extends StateManager {
                 }
                 break;
             case "TA":
-                Logger.getInstance().log(new LInfo("Don't come in yet!!! I am naked!!!!!"), Boolean.TRUE);
+                if (meta.length > 1) {
+                    ActuatorInventoryView view = new ActuatorInventoryView();
+                    ActuatorInventoryController controller = new ActuatorInventoryController(view, Integer.parseInt(meta[1]));
+                    controller.init();
+                } else {
+                    viewId = "";
+                }
                 break;
             case "CP":
                 try {
