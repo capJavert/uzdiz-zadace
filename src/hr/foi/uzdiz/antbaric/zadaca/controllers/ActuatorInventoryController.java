@@ -55,7 +55,7 @@ public class ActuatorInventoryController extends Controller<ActuatorInventoryVie
         }
 
         if (!exists) {
-            Logger.getInstance().log(new LError("Actuator with that ID does not exist!"), true);
+            Logger.getInstance().log(new LError("Actuator model with that ID does not exist!"), true);
         }
     }
 

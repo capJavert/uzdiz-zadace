@@ -55,7 +55,7 @@ public class SensorInventoryController extends Controller<SensorInventoryView, I
         }
 
         if (!exists) {
-            Logger.getInstance().log(new LError("Sensor with that ID does not exist!"), true);
+            Logger.getInstance().log(new LError("Sensor model with that ID does not exist!"), true);
         }
     }
 
