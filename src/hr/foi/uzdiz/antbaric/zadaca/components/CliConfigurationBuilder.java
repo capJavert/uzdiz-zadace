@@ -76,7 +76,7 @@ public class CliConfigurationBuilder implements ConfigurationBuilder {
             this.setKMax("-kmax " + String.valueOf(100));
         }
 
-        if (this.configuration.getkMin()== null) {
+        if (this.configuration.getkMin() == null) {
             Logger.getInstance().log(new LWarning("-kmin argument not set, Setting: " + 5), Boolean.FALSE);
             this.setKMin("-kmin " + String.valueOf(5));
         }
@@ -84,6 +84,14 @@ public class CliConfigurationBuilder implements ConfigurationBuilder {
         if (this.configuration.getkPov() == null) {
             Logger.getInstance().log(new LWarning("-kpov argument not set, Setting: " + 5), Boolean.FALSE);
             this.setKPov("-kpov " + String.valueOf(5));
+        }
+
+        if (this.configuration.getkMin() > this.configuration.getkMax()) {
+            this.configuration.setkMin(this.configuration.getkMax());
+        }
+
+        if (this.configuration.getkPov() > this.configuration.getkMax()) {
+            this.configuration.setkPov(this.configuration.getkMax());
         }
 
         return this.configuration;
