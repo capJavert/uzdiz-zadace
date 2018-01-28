@@ -219,25 +219,31 @@ public class Router extends StateManager {
         }
     }
 
-    private final String help = "M x - ispis podataka mjesta x\n"
-            + "\n"
-            + "S x - ispis podataka senzora x\n"
-            + "\n"
-            + "A x - ispis podataka aktuatora x\n"
-            + "\n"
-            + "S - ispis statistike\n"
-            + "\n"
-            + "SP - spremi podatke (mjesta, uređaja)\n"
-            + "\n"
-            + "VP - vrati spremljene podatke (mjesta, uređaja)\n"
-            + "\n"
-            + "C n - izvršavanje n ciklusa dretve (1-100)\n"
-            + "\n"
-            + "VF [argumenti] - izvršavanje vlastite funkcionalnosti, po potrebni mogući su argumenti\n"
-            + "\n"
-            + "PI n - prosječni % ispravnosti uređaja (0-100)\n"
-            + "\n"
-            + "H - pomoć, ispis dopuštenih komandi i njihov opis\n"
-            + "\n"
-            + "I - izlaz.";
+    private final String help = "M x - ispis podataka mjesta x\n" +
+            "\n" +
+            "S x - ispis podataka senzora x\n" +
+            "\n" +
+            "A x - ispis podataka aktuatora x\n" +
+            "\n" +
+            "SM x - ispis strukture mjesta x\n" +
+            "\n" +
+            "TS x  - ispis podataka o kolekciji modela senzora x (npr. max broj, trenutni broj, broj zamjena, broj nabavljana itd.)\n" +
+            "\n" +
+            "TA x  - ispis podataka o kolekciji modela aktuatora x (npr. max broj, trenutni broj, broj zamjena, broj nabavljana itd.)\n" +
+            "\n" +
+            "S - ispis statistike\n" +
+            "\n" +
+            "SP - spremi podatke (mjesta, uređaja)\n" +
+            "\n" +
+            "VP - vrati spremljene podatke (mjesta, uređaja)\n" +
+            "\n" +
+            "C n - izvršavanje n ciklusa dretve (1-100)\n" +
+            "\n" +
+            "CP n - broj ciklusa dretve nakon kojih je uređaj popravljen i vraća se na raspolaganje (1-99)\n" +
+            "\n" +
+            "PI n - prosječni % ispravnosti uređaja (0-100)\n" +
+            "\n" +
+            "H - pomoć, ispis dopuštenih komandi i njihov opis\n" +
+            "\n" +
+            "I - izlaz.";
 }

@@ -111,26 +111,32 @@ public class Main {
         return args.length == 1 && args[0].equals("--help");
     }
 
-    private static final String HELP = "-br broj redaka na ekranu (24-40). Ako nije upisana opcija, uzima se 24.\n"
-            + "\n"
-            + "-bs broj stupaca na ekranu (80-160). Ako nije upisana opcija, uzima se 80.\n"
-            + "\n"
-            + "-brk broj redaka na ekranu za unos komandi (2-5). Ako nije upisana opcija, uzima se 2.\n"
-            + "\n"
-            + "-pi prosječni % ispravnosti uređaja (0-100). Ako nije upisana opcija, uzima se 50.\n"
-            + "\n"
-            + "-g sjeme za generator slučajnog broja (u intervalu 100 - 65535). Ako nije upisana opcija, uzima se broj milisekundi u trenutnom vremenu na bazi njegovog broja sekundi i broja milisekundi.\n"
-            + "\n"
-            + "-m naziv datoteke mjesta\n"
-            + "\n"
-            + "-s naziv datoteke senzora\n"
-            + "\n"
-            + "-a naziv datoteke aktuatora\n"
-            + "\n"
-            + "-r naziv datoteke rasporeda\n"
-            + "\n"
-            + "-tcd trajanje ciklusa dretve u sek. Ako nije upisana opcija, uzima se slučajni broj u intervalu 1 - 17.\n"
-            + "\n"
-            + "--help pomoć za korištenje opcija u programu.";
+    private static final String HELP = "-br broj redaka na ekranu (24-40). Ako nije upisana opcija, uzima se 24.\n" +
+            "\n" +
+            "-bs broj stupaca na ekranu (80-160). Ako nije upisana opcija, uzima se 80.\n" +
+            "\n" +
+            "-brk broj redaka na ekranu za unos komandi (2-5). Ako nije upisana opcija, uzima se 2.\n" +
+            "\n" +
+            "-pi prosječni % ispravnosti uređaja (0-100). Ako nije upisana opcija, uzima se 50.\n" +
+            "\n" +
+            "-g sjeme za generator slučajnog broja (u intervalu 100 - 65535). Ako nije upisana opcija, uzima se broj milisekundi u trenutnom vremenu na bazi njegovog broja sekundi i broja milisekundi.\n" +
+            "\n" +
+            "-m naziv datoteke mjesta\n" +
+            "\n" +
+            "-s naziv datoteke senzora\n" +
+            "\n" +
+            "-a naziv datoteke aktuatora\n" +
+            "\n" +
+            "-r naziv datoteke rasporeda\n" +
+            "\n" +
+            "-tcd trajanje ciklusa dretve u sek. Ako nije upisana opcija, uzima se slučajni broj u intervalu 1 - 17\n" +
+            "\n" +
+            "-kmax maksimalni broj uređaja za pojedini model uređaja. Ako nije upisana opcija, uzima se 100.\n" +
+            "\n" +
+            "-kmin minimalni broj uređaja za pojedini model uređaja (kmin <= kmax, k0 = kmin). Ako nije upisana opcija, uzima se 5.\n" +
+            "\n" +
+            "-kpov broj uređaja koji se dodaje važećem broju za pojedini model uređaja kada nema raspoloživih uređaja pojedinog modela uređaja (kmin <= kmax, ). Ako nije upisana opcija, uzima se 5.\n" +
+            "\n" +
+            "--help pomoć za korištenje opcija u programu.";
 
 }
