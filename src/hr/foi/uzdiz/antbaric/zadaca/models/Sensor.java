@@ -48,7 +48,7 @@ public class Sensor extends Device implements Serializable {
     }
 
     @Override
-    public Device prototype(Integer id) {
+    public Device prototype(Integer id) {  
         Device sensor = new Sensor(this.getModelId(), this.getName(), this.getType(), this.getUnitType(), this.getMin(), this.getMax(), this.getComment());
         sensor.setId(id);
 

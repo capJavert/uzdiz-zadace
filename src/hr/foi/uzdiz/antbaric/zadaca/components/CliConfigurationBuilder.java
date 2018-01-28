@@ -44,22 +44,22 @@ public class CliConfigurationBuilder implements ConfigurationBuilder {
             Logger.getInstance().log(new LWarning("-g argument not set, Setting: " + argValue), Boolean.FALSE);
             this.setSeed("-g " + String.valueOf(argValue));
         }
-        
+
         if (this.configuration.getRows() == null) {
             Logger.getInstance().log(new LWarning("-br argument not set, Setting: 24"), Boolean.FALSE);
             this.setRows("-br " + String.valueOf(24));
         }
-        
+
         if (this.configuration.getCols() == null) {
             Logger.getInstance().log(new LWarning("-bs argument not set, Setting: 80"), Boolean.FALSE);
             this.setCols("-bs " + String.valueOf(80));
         }
-        
+
         if (this.configuration.getRowsForCommands() == null) {
             Logger.getInstance().log(new LWarning("-brk argument not set, Setting: 2"), Boolean.FALSE);
             this.setRowsForCommands("-brk " + String.valueOf(2));
         }
-        
+
         if (this.configuration.getDevicePerishability() == null) {
             Logger.getInstance().log(new LWarning("-pi argument not set, Setting: 50"), Boolean.FALSE);
             this.setDevicePerishability("-pi " + String.valueOf(50));
@@ -69,6 +69,21 @@ public class CliConfigurationBuilder implements ConfigurationBuilder {
             Integer argValue = Generator.getInstance().fromInterval(1, 17);
             Logger.getInstance().log(new LWarning("-tcd argument not set, Setting: " + argValue), Boolean.FALSE);
             this.setInterval("-tcd " + String.valueOf(argValue));
+        }
+
+        if (this.configuration.getkMax() == null) {
+            Logger.getInstance().log(new LWarning("-kmax argument not set, Setting: " + 100), Boolean.FALSE);
+            this.setKMax("-kmax " + String.valueOf(100));
+        }
+
+        if (this.configuration.getkMin()== null) {
+            Logger.getInstance().log(new LWarning("-kmin argument not set, Setting: " + 5), Boolean.FALSE);
+            this.setKMin("-kmin " + String.valueOf(5));
+        }
+
+        if (this.configuration.getkPov() == null) {
+            Logger.getInstance().log(new LWarning("-kpov argument not set, Setting: " + 5), Boolean.FALSE);
+            this.setKPov("-kpov " + String.valueOf(5));
         }
 
         return this.configuration;
@@ -182,7 +197,7 @@ public class CliConfigurationBuilder implements ConfigurationBuilder {
     public ConfigurationBuilder setKMax(String kMax) {
         kMax = CliConfigurationBuilder.toValue(kMax);
 
-        this.configuration.setDevicePerishability(Integer.parseInt(kMax));
+        this.configuration.setkMax(Integer.parseInt(kMax));
 
         return this;
     }
@@ -191,7 +206,7 @@ public class CliConfigurationBuilder implements ConfigurationBuilder {
     public ConfigurationBuilder setKMin(String kMin) {
         kMin = CliConfigurationBuilder.toValue(kMin);
 
-        this.configuration.setDevicePerishability(Integer.parseInt(kMin));
+        this.configuration.setkMin(Integer.parseInt(kMin));
 
         return this;
     }
@@ -200,7 +215,7 @@ public class CliConfigurationBuilder implements ConfigurationBuilder {
     public ConfigurationBuilder setKPov(String kPov) {
         kPov = CliConfigurationBuilder.toValue(kPov);
 
-        this.configuration.setDevicePerishability(Integer.parseInt(kPov));
+        this.configuration.setkPov(Integer.parseInt(kPov));
 
         return this;
     }

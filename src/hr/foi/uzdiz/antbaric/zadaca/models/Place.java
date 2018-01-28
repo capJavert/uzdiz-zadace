@@ -5,7 +5,6 @@
  */
 package hr.foi.uzdiz.antbaric.zadaca.models;
 
-import hr.foi.uzdiz.antbaric.zadaca.helpers.Generator;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,7 +16,7 @@ import java.util.List;
  */
 public class Place implements Serializable {
 
-    public Integer id = null;
+    public final Integer id;
     public final String name;
     public final Integer category;
     public final Integer actuatorsNum;
@@ -29,17 +28,6 @@ public class Place implements Serializable {
 
     public final List<Device> SENSORS_TRASH = new ArrayList<>();
     public final List<Device> ACTUATORS_TRASH = new ArrayList<>();
-
-    public Place(String name, Integer category, Integer sensorsNum, Integer actuatorsNum) {
-        this.name = name;
-        this.category = category;
-        this.sensorsNum = sensorsNum;
-        this.actuatorsNum = actuatorsNum;
-        this.actuators = new ConcurrentHashMap<>();
-        this.sensors = new ConcurrentHashMap<>();
-        this.subPlaces = new ConcurrentHashMap<>();
-        this.parent = null;
-    }
 
     public Place(Integer id, String name, Integer category, Integer sensorsNum, Integer actuatorsNum) {
         this.id = id;
@@ -56,13 +44,7 @@ public class Place implements Serializable {
     public String getId() {
         return String.valueOf(id);
     }
-
-    public void setId() {
-        if (this.id == null) {
-            this.id = Generator.getInstance().getUniqueIdentifier("PLACE");
-        }
-    }
-
+    
     public String getName() {
         return name;
     }

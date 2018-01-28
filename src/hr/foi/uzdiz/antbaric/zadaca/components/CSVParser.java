@@ -13,8 +13,10 @@ import hr.foi.uzdiz.antbaric.zadaca.models.Actuator;
 import hr.foi.uzdiz.antbaric.zadaca.models.Device;
 import hr.foi.uzdiz.antbaric.zadaca.models.Place;
 import hr.foi.uzdiz.antbaric.zadaca.models.DeviceEnum;
+import hr.foi.uzdiz.antbaric.zadaca.models.DeviceInventoryItem;
 import hr.foi.uzdiz.antbaric.zadaca.models.DeviceMap;
 import hr.foi.uzdiz.antbaric.zadaca.models.LError;
+import hr.foi.uzdiz.antbaric.zadaca.models.LWarning;
 import hr.foi.uzdiz.antbaric.zadaca.models.MapEnum;
 import hr.foi.uzdiz.antbaric.zadaca.models.PlaceDeviceMap;
 import hr.foi.uzdiz.antbaric.zadaca.models.PlaceMap;
@@ -192,9 +194,27 @@ public class CSVParser extends CSVHelper {
                                 Device newSensor = Worker.getInstance().SENSORS.get(((PlaceDeviceMap) map).getModelFk());
 
                                 if (newSensor != null) {
-                                    newSensor = newSensor.prototype(map.getFk());
-                                    Worker.getInstance().SENSORS.put(newSensor.id, newSensor);
-                                    Worker.getInstance().PLACES.get(map.getPk()).addSensor(newSensor);
+                                    Worker.getInstance().SENSOR_INVENTORY.putIfAbsent(((PlaceDeviceMap) map).getModelFk(), new DeviceInventoryItem());
+
+                                    DeviceInventoryItem inventoryItem = Worker.getInstance().SENSOR_INVENTORY.get(((PlaceDeviceMap) map).getModelFk());
+
+                                    if (inventoryItem != null) {
+                                        if (inventoryItem.isFull()) {
+                                            Logger.getInstance().log(new LWarning("Inventory is full!"), Boolean.TRUE);
+                                            inventoryItem.makeOrder();
+                                        }
+
+                                        if (!inventoryItem.isFull()) {
+                                            inventoryItem.count += 1;
+                                            newSensor = newSensor.prototype(map.getFk());
+                                            Worker.getInstance().SENSORS.put(newSensor.id, newSensor);
+                                            Worker.getInstance().PLACES.get(map.getPk()).addSensor(newSensor);
+                                        } else {
+                                            Logger.getInstance().log(new LWarning("Can't add sensor! There is no available sensors!"), Boolean.TRUE);
+                                        }
+                                    } else {
+                                        throw new Exception("Inventory for device model missing!");
+                                    }
                                 } else {
                                     throw new Exception("Device model does not exist! Skipping...");
                                 }
@@ -211,9 +231,27 @@ public class CSVParser extends CSVHelper {
                                 Device newActuator = Worker.getInstance().ACTUATORS.get(((PlaceDeviceMap) map).getModelFk());
 
                                 if (newActuator != null) {
-                                    newActuator = newActuator.prototype(map.getFk());
-                                    Worker.getInstance().ACTUATORS.put(newActuator.id, newActuator);
-                                    Worker.getInstance().PLACES.get(map.getPk()).addActuator(newActuator);
+                                    Worker.getInstance().ACTUATOR_INVENTORY.putIfAbsent(((PlaceDeviceMap) map).getModelFk(), new DeviceInventoryItem());
+
+                                    DeviceInventoryItem inventoryItem = Worker.getInstance().ACTUATOR_INVENTORY.get(((PlaceDeviceMap) map).getModelFk());
+
+                                    if (inventoryItem != null) {
+                                        if (inventoryItem.isFull()) {
+                                            Logger.getInstance().log(new LWarning("Inventory is full!"), Boolean.TRUE);
+                                            inventoryItem.makeOrder();
+                                        }
+
+                                        if (!inventoryItem.isFull()) {
+                                            inventoryItem.count += 1;
+                                            newActuator = newActuator.prototype(map.getFk());
+                                            Worker.getInstance().ACTUATORS.put(newActuator.id, newActuator);
+                                            Worker.getInstance().PLACES.get(map.getPk()).addActuator(newActuator);
+                                        } else {
+                                            Logger.getInstance().log(new LWarning("Can't add actuator! There is no available actuators!"), Boolean.TRUE);
+                                        }
+                                    } else {
+                                        throw new Exception("Inventory for device model missing!");
+                                    }
                                 } else {
                                     throw new Exception("Device model does not exist! Skipping...");
                                 }
@@ -226,7 +264,7 @@ public class CSVParser extends CSVHelper {
                     case 1:
                         for (String i : values.subList(2, values.size())) {
                             map = new DeviceMap(
-                                    MapEnum.PLACE_PLACE,
+                                    MapEnum.ACTUATOR_SENSOR,
                                     Integer.parseInt(values.get(1)),
                                     Integer.parseInt(i)
                             );
@@ -250,7 +288,7 @@ public class CSVParser extends CSVHelper {
                     case 2:
                         for (String i : values.subList(2, values.size())) {
                             map = new PlaceMap(
-                                    MapEnum.ACTUATOR_SENSOR,
+                                    MapEnum.PLACE_PLACE,
                                     Integer.parseInt(values.get(1)),
                                     Integer.parseInt(i)
                             );

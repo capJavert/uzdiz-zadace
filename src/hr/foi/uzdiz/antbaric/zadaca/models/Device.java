@@ -23,6 +23,8 @@ public abstract class Device implements Serializable {
     public final Double max;
     public final String comment;
     public Double value;
+    private Boolean available = true;
+    private Boolean valid = true;
 
     public Device(Integer modelId, String name, Integer cateogry, Integer Type, Double min, Double max, String comment) {
         this.modelId = modelId;
@@ -116,5 +118,27 @@ public abstract class Device implements Serializable {
     public abstract void activate();
 
     public abstract void setId(Integer id);
+
+    public Boolean getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Boolean available) {
+        if (this.valid) {
+            this.available = available;
+        }
+    }
+
+    public Boolean getValid() {
+        return valid;
+    }
+
+    public void setValid(Boolean valid) {
+        this.valid = valid;
+        
+        if (!this.available) {
+            this.available = this.valid;   
+        }
+    }
 
 }
