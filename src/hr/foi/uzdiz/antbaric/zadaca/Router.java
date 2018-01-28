@@ -12,6 +12,7 @@ import hr.foi.uzdiz.antbaric.zadaca.controllers.IndexController;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.PlaceController;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.PlaceStructureController;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.SensorController;
+import hr.foi.uzdiz.antbaric.zadaca.controllers.SensorInventoryController;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.WorkerController;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
 import hr.foi.uzdiz.antbaric.zadaca.models.Configuration;
@@ -23,6 +24,7 @@ import hr.foi.uzdiz.antbaric.zadaca.views.IndexView;
 import hr.foi.uzdiz.antbaric.zadaca.views.MazeView;
 import hr.foi.uzdiz.antbaric.zadaca.views.PlaceStructureView;
 import hr.foi.uzdiz.antbaric.zadaca.views.PlaceView;
+import hr.foi.uzdiz.antbaric.zadaca.views.SensorInventoryView;
 import hr.foi.uzdiz.antbaric.zadaca.views.SensorView;
 import hr.foi.uzdiz.antbaric.zadaca.views.WorkerView;
 
@@ -176,7 +178,13 @@ public class Router extends StateManager {
                 }
                 break;
             case "TS":
-                Logger.getInstance().log(new LInfo("Don't come in yet!!! I am naked!!!!!"), Boolean.TRUE);
+                if (meta.length > 1) {
+                    SensorInventoryView view = new SensorInventoryView();
+                    SensorInventoryController controller = new SensorInventoryController(view, Integer.parseInt(meta[1]));
+                    controller.init();
+                } else {
+                    viewId = "";
+                }
                 break;
             case "TA":
                 Logger.getInstance().log(new LInfo("Don't come in yet!!! I am naked!!!!!"), Boolean.TRUE);

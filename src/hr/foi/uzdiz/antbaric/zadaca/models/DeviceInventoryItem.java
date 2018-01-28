@@ -18,12 +18,15 @@ public class DeviceInventoryItem {
     public Integer count;
     public Integer availableCount;
     private Integer orders;
+    private Integer replaceCount;
     public ConcurrentHashMap<Integer, Integer> failedCount;
 
     public DeviceInventoryItem() {
         this.count = 0;
         this.availableCount = Router.getConfig().getkMin();
         this.failedCount = new ConcurrentHashMap<>();
+        this.orders = 0;
+        this.replaceCount = 0;
     }
 
     public Boolean isFull() {
@@ -33,6 +36,7 @@ public class DeviceInventoryItem {
     public void decrement(Integer deviceId) {
         this.count -= 1;
         this.failedCount.put(deviceId, Router.getConfig().getDeviceFixInterval());
+        this.replaceCount += 1;
         
         if (this.count < 0) {
             this.count = 0;
@@ -43,6 +47,8 @@ public class DeviceInventoryItem {
         if (this.count >= Router.getConfig().getkMax()) {
             Logger.getInstance().log(new LWarning("Can't place order! Max Devices number is reached: " + Router.getConfig().getkMax()), Boolean.TRUE);
         } else {
+            this.orders += 1;
+            
             this.availableCount += Router.getConfig().getkPov();
 
             Logger.getInstance().log(new LNotification("Placing order for new devices: " + Router.getConfig().getkPov()), Boolean.TRUE);
@@ -54,6 +60,14 @@ public class DeviceInventoryItem {
                 Logger.getInstance().log(new LNotification("Devices received successfully!"), Boolean.TRUE);
             }
         }
+    }
+
+    public Integer getOrders() {
+        return orders;
+    }
+
+    public Integer getReplaceCount() {
+        return replaceCount;
     }
 
 }
