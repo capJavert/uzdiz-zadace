@@ -10,6 +10,7 @@ import hr.foi.uzdiz.antbaric.zadaca.controllers.ActuatorController;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.GameController;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.IndexController;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.PlaceController;
+import hr.foi.uzdiz.antbaric.zadaca.controllers.PlaceStructureController;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.SensorController;
 import hr.foi.uzdiz.antbaric.zadaca.controllers.WorkerController;
 import hr.foi.uzdiz.antbaric.zadaca.helpers.Logger;
@@ -20,6 +21,7 @@ import hr.foi.uzdiz.antbaric.zadaca.models.LNotification;
 import hr.foi.uzdiz.antbaric.zadaca.views.ActuatorView;
 import hr.foi.uzdiz.antbaric.zadaca.views.IndexView;
 import hr.foi.uzdiz.antbaric.zadaca.views.MazeView;
+import hr.foi.uzdiz.antbaric.zadaca.views.PlaceStructureView;
 import hr.foi.uzdiz.antbaric.zadaca.views.PlaceView;
 import hr.foi.uzdiz.antbaric.zadaca.views.SensorView;
 import hr.foi.uzdiz.antbaric.zadaca.views.WorkerView;
@@ -111,10 +113,8 @@ public class Router extends StateManager {
                     } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
                         Logger.getInstance().log(new LError("Actuator ID must be a number"), Boolean.TRUE);
                     }
-
                 } else {
                     viewId = "";
-                    Logger.getInstance().log(new LInfo("You won't find anything here, carry on..."), Boolean.TRUE);
                 }
                 break;
             case "S":
@@ -142,10 +142,8 @@ public class Router extends StateManager {
                     } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
                         Logger.getInstance().log(new LError("Actuator ID must be a number"), Boolean.TRUE);
                     }
-
                 } else {
                     viewId = "";
-                    Logger.getInstance().log(new LInfo("You won't find anything here, carry on..."), Boolean.TRUE);
                 }
                 break;
             case "C":
@@ -163,13 +161,19 @@ public class Router extends StateManager {
                 break;
             case "H":
                 viewId = "";
-                
+
                 for (String line : this.help.split("\\r?\\n")) {
                     Logger.getInstance().log(new LInfo(line), Boolean.TRUE);
                 }
                 break;
             case "SM":
-                Logger.getInstance().log(new LInfo("Don't come in yet!!! I am naked!!!!!"), Boolean.TRUE);
+                if (meta.length > 1) {
+                    PlaceStructureView view = new PlaceStructureView();
+                    PlaceStructureController controller = new PlaceStructureController(view, Integer.parseInt(meta[1]));
+                    controller.init();
+                } else {
+                    viewId = "";
+                }
                 break;
             case "TS":
                 Logger.getInstance().log(new LInfo("Don't come in yet!!! I am naked!!!!!"), Boolean.TRUE);
@@ -198,26 +202,26 @@ public class Router extends StateManager {
             this.indexController.update();
         }
     }
-    
-    private final String help = "M x - ispis podataka mjesta x\n" +
-        "\n" +
-        "S x - ispis podataka senzora x\n" +
-        "\n" +
-        "A x - ispis podataka aktuatora x\n" +
-        "\n" +
-        "S - ispis statistike\n" +
-        "\n" +
-        "SP - spremi podatke (mjesta, uređaja)\n" +
-        "\n" +
-        "VP - vrati spremljene podatke (mjesta, uređaja)\n" +
-        "\n" +
-        "C n - izvršavanje n ciklusa dretve (1-100)\n" +
-        "\n" +
-        "VF [argumenti] - izvršavanje vlastite funkcionalnosti, po potrebni mogući su argumenti\n" +
-        "\n" +
-        "PI n - prosječni % ispravnosti uređaja (0-100)\n" +
-        "\n" +
-        "H - pomoć, ispis dopuštenih komandi i njihov opis\n" +
-        "\n" +
-        "I - izlaz.";
+
+    private final String help = "M x - ispis podataka mjesta x\n"
+            + "\n"
+            + "S x - ispis podataka senzora x\n"
+            + "\n"
+            + "A x - ispis podataka aktuatora x\n"
+            + "\n"
+            + "S - ispis statistike\n"
+            + "\n"
+            + "SP - spremi podatke (mjesta, uređaja)\n"
+            + "\n"
+            + "VP - vrati spremljene podatke (mjesta, uređaja)\n"
+            + "\n"
+            + "C n - izvršavanje n ciklusa dretve (1-100)\n"
+            + "\n"
+            + "VF [argumenti] - izvršavanje vlastite funkcionalnosti, po potrebni mogući su argumenti\n"
+            + "\n"
+            + "PI n - prosječni % ispravnosti uređaja (0-100)\n"
+            + "\n"
+            + "H - pomoć, ispis dopuštenih komandi i njihov opis\n"
+            + "\n"
+            + "I - izlaz.";
 }

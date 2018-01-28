@@ -107,4 +107,12 @@ public class Place implements Serializable {
         }
     }
 
+    public ConcurrentHashMap<Integer, Place> getSubPlaces() {
+        return subPlaces;
+    }
+
+    public Place getParent() {
+        return parent;
+    }
+
 }
